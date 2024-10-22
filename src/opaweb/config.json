@@ -1,0 +1,26 @@
+{
+  "appname": "opaweb",
+  "debug": true,
+  "address": "0.0.0.0",
+  "acmehost": "admigo.uk.to",
+  "dirCache": "./certs",
+  "dirVid": "/mnt/terik/a_my/admigo_project/opachat/bin/vid",
+  "port": 443,
+  "crt": "/mnt/terik/a_my/admigo_project/admigo/bin/certs_local/server.crt",
+  "key": "/mnt/terik/a_my/admigo_project/admigo/bin/certs_local/server.key",
+  "readTimeout": 10,
+  "writeTimeout": 120,
+  "idleTimeout": 120,
+  "static": "static",
+  "ws": {
+    "wsurl": "wss://admigo.so:7778",
+    "perroom": 100,
+    "iceList": [
+      {
+        "urls": "turn:192.168.0.104:3478",
+        "username": "shpav",
+        "credential": "qw"
+      }
+    ]
+  }
+}
