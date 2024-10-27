@@ -8,6 +8,7 @@ import (
 	"opaweb/controllers"
 	"time"
 
+	"github.com/gorilla/csrf"
 	"golang.org/x/crypto/acme/autocert"
 )
 
@@ -16,15 +17,20 @@ func main() {
 
 	e := config.Env()
 
+	csrf_h := csrf.Protect(
+		[]byte(config.GetKeyCSRF()),
+		csrf.Path("/"),
+	)
+
 	if e.Debug {
-		startDevTLS(e)
+		startDevTLS(e, csrf_h)
 		return
 	}
 
-	startTLS(e)
+	startTLS(e, csrf_h)
 }
 
-func startDevTLS(e *config.Configuration) {
+func startDevTLS(e *config.Configuration, cs func(http.Handler) http.Handler) {
 	fmt.Printf("\n[%s] %s started\ncrt\t\t%s\nkey\t\t%s\naddress\t\t%s:%d\n",
 		"debug", e.Appname,
 		e.Crt, e.Key,
@@ -35,7 +41,7 @@ func startDevTLS(e *config.Configuration) {
 
 	server := &http.Server{
 		Addr:           fmt.Sprintf("%s:%d", e.Address, e.Port),
-		Handler:        mux,
+		Handler:        cs(mux),
 		ReadTimeout:    time.Duration(e.ReadTimeout * int64(time.Second)),
 		WriteTimeout:   time.Duration(e.WriteTimeout * int64(time.Second)),
 		MaxHeaderBytes: 1 << 20,
@@ -44,7 +50,7 @@ func startDevTLS(e *config.Configuration) {
 	log.Fatalln(server.ListenAndServeTLS(e.Crt, e.Key))
 }
 
-func startTLS(e *config.Configuration) {
+func startTLS(e *config.Configuration, cs func(http.Handler) http.Handler) {
 	fmt.Printf("\n[%s] %s started\nacmehost\t%s\ndirCache\t%s\naddress\t\t%s:%d\n",
 		"prod", e.Appname,
 		e.Acmehost, e.DirCache, e.Address, e.Port,
@@ -56,13 +62,11 @@ func startTLS(e *config.Configuration) {
 		Cache:      autocert.DirCache(e.DirCache),
 	}
 
-	// go http.ListenAndServe(":http", certManager.HTTPHandler(http.HandlerFunc(httpRedirect)))
-
 	mux := controllers.GetRouters()
 
 	server := &http.Server{
 		Addr:           fmt.Sprintf(":%d", e.Port),
-		Handler:        mux,
+		Handler:        cs(mux),
 		ReadTimeout:    time.Duration(e.ReadTimeout * int64(time.Second)),
 		WriteTimeout:   time.Duration(e.WriteTimeout * int64(time.Second)),
 		IdleTimeout:    time.Duration(e.IdleTimeout * int64(time.Second)),
