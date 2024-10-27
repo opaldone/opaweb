@@ -11,6 +11,7 @@ import (
 	"opaweb/config"
 	"os"
 
+	"github.com/gorilla/csrf"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -42,7 +43,11 @@ type AjaAns struct {
 }
 
 func WSChat(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	GenerateHTMLEmp(w, nil, []string{"wschat/ix"})
+	data := map[string]interface{}{
+		csrf.TemplateTag: csrf.TemplateField(r),
+	}
+
+	GenerateHTMLEmp(w, data, []string{"wschat/ix"})
 }
 
 func WsMeet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -54,8 +59,9 @@ func WsMeetGet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	uqroom := ps.ByName("uqroom")
 
 	data := map[string]interface{}{
-		"uqroom": uqroom,
-		"camic":  map[string]bool{"mic": true, "cam": true, "tophint": true},
+		csrf.TemplateTag: csrf.TemplateField(r),
+		"uqroom":         uqroom,
+		"camic":          map[string]bool{"mic": true, "cam": true, "tophint": true},
 	}
 
 	GenerateHTMLEmp(w, data, []string{"wschat/st_meet", "wschat/camic"})

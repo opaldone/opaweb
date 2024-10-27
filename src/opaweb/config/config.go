@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"opaweb/applog"
+	"opaweb/common"
 	"os"
 )
 
@@ -30,22 +31,32 @@ type wsConfig struct {
 }
 
 var config *Configuration
+var csrf_key string
 
 // LoadConfig loads config
 func LoadConfig() {
 	file, err := os.Open("config.json")
+
 	if err != nil {
 		applog.Danger("Cannot open config file", err)
 	}
+
 	decoder := json.NewDecoder(file)
 	config = &Configuration{}
 	err = decoder.Decode(config)
+
 	if err != nil {
 		applog.Danger("Cannot get configuration from file", err)
 	}
+
+	csrf_key = common.CreateUUID()
 }
 
 // Env returns config
 func Env() *Configuration {
 	return config
+}
+
+func GetKeyCSRF() string {
+	return csrf_key
 }

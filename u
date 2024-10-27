@@ -92,7 +92,7 @@ PP=(
     "$src/config.json;$bin/config.json"
     "$src/templates/site/layout_emp.html;$bin/templates/site/layout_emp.html"
     "$src/templates/site/layout_ajax.html;$bin/templates/site/layout_ajax.html"
-    "$src/static/css/reset.css;$bin/static/css/reset.css"
+    "$src/static/css/common/reset.css;$bin/static/css/common/reset.css"
 # wschat_page
     "$src/templates/site/wschat/ix.html;$bin/templates/site/wschat/ix.html"
     "$src/templates/site/wschat/st_meet.html;$bin/templates/site/wschat/st_meet.html"

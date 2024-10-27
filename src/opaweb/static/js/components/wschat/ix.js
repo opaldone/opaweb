@@ -71,8 +71,13 @@ $(function() {
       'cam': cam_inp.prop('checked') ? true : false
     };
 
+    let cs = document.getElementsByName("gorilla.csrf.Token")[0].value;
+
     let url = th.attr('href');
-    axios.post(url, obj)
+
+    axios.post(url, obj, {
+      headers: { "X-CSRF-Token": cs }
+    })
       .then(re => {
         ws_main.html(re.data.cont);
 
