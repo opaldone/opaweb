@@ -11,7 +11,7 @@ class Saver {
     req.responseType = 'blob';
     req.open('GET', file);
 
-    req.addEventListener('error', () => {console.err("download error");});
+    req.addEventListener('error', () => {console.error("download error");});
     req.addEventListener('load', () => {
       callback(req.response);
     });
@@ -39,16 +39,19 @@ class Saver {
       'fi': fi_in
     };
 
+    let cs = document.getElementsByName("gorilla.csrf.Token")[0].value;
     let url = this.re;
 
-    axios.post(url, obj)
+    axios.post(url, obj, {
+      headers: { "X-CSRF-Token": cs }
+    })
       .then(re => {
         if (re.data.res) {
           self.calling_rrec();
         }
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
       });
   }
 

@@ -6,6 +6,8 @@ import (
 	"html/template"
 	"net/http"
 	"opaweb/applog"
+
+	"github.com/gorilla/csrf"
 )
 
 func getSiteTemplates(filenames []string, fm template.FuncMap) (tmpl *template.Template) {
@@ -39,12 +41,26 @@ func getFm() (fm template.FuncMap) {
 	return
 }
 
-func GenerateHTMLEmp(writer http.ResponseWriter, data interface{}, filenames []string) {
+func GenerateHTMLEmp(w http.ResponseWriter, r *http.Request, data interface{}, filenames []string) {
 	funcMap := getFm()
+
+	if data == nil {
+		data = map[string]interface{}{
+			csrf.TemplateTag: csrf.TemplateField(r),
+		}
+	}
+
+	if data != nil {
+		_, ok := data.(map[string]interface{})[csrf.TemplateTag]
+
+		if !ok {
+			data.(map[string]interface{})[csrf.TemplateTag] = csrf.TemplateField(r)
+		}
+	}
 
 	filenames = append(filenames, "layout_emp")
 
-	getSiteTemplates(filenames, funcMap).ExecuteTemplate(writer, "layout_emp", data)
+	getSiteTemplates(filenames, funcMap).ExecuteTemplate(w, "layout_emp", data)
 }
 
 func GetHTMLAjax(data interface{}, filenames []string) string {

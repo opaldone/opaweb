@@ -212,7 +212,7 @@ class WSchat {
           this.th.anotherRecord(this.tg_rec, msg.content);
           break;
         case this.ws.TPS.EREC:
-          this.th.stoppedRecord(msg.content);
+          this.th.stoppedRecord(this.tg_rec, msg.content);
           break;
       }
     }

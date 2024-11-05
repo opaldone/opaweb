@@ -122,21 +122,19 @@ class TalkerHandler {
     some_button.addClass('on');
   }
 
-  stopRec(some_button) {
+  stopRec() {
     let jo = {
       'tp': this.opts.ws.TPS.EREC,
     };
 
     this.opts.ws.handler.send(JSON.stringify(jo));
-
-    some_button.removeClass('on');
   }
 
   toggleRecord(some_button) {
     if (!this.pc) return;
 
     if (some_button.is('.on')) {
-      this.stopRec(some_button);
+      this.stopRec();
       return;
     }
 
@@ -508,12 +506,16 @@ class TalkerHandler {
     el.classList.add('rec');
   }
 
-  setDownloadLink(js) {
+  setDownloadLink(some_button, js) {
     if (!js.uquser) return;
 
     if (js.uquser != this.opts.ws.uquser) return;
 
     if (!js.vili) return;
+
+    if (some_button.is('.on')) {
+      some_button.removeClass('on');
+    }
 
     let lire = $('#li-re').eq(0);
 
@@ -529,14 +531,14 @@ class TalkerHandler {
     });
   }
 
-  stoppedRecord(cont) {
+  stoppedRecord(some_button, cont) {
     let js = JSON.parse(cont);
 
     if (!js) {
       return this.opts.callError("Failed to parse stoppedRecord")
     }
 
-    this.setDownloadLink(js);
+    this.setDownloadLink(some_button, js);
 
     let oc = this.talkers[js.strid];
 
