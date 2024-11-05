@@ -19,6 +19,7 @@
       </script>
     </head>
     <body class="emp">
+      {{ .csrfField }}
       {{ block "content" . }}
       {{ end }}
       <script src="/static/js/libs/jquery.js"></script>
