@@ -207,6 +207,10 @@
   background-color: #3d3d3d;
 }
 
+.btn-rb:active {
+  background-color: #202020;
+}
+
 .btn-hint {
   position: relative;
 }

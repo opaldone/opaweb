@@ -68,24 +68,23 @@ func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	apitools.FormToJSON(r.Body, &re)
 
 	env := config.Env()
-	conf := env.Ws
 	s := WsSettings{}
 
 	s.UqRoom = re.UqRoom
 	s.UqUser = common.CreateUUID()
-	s.PerRoom = conf.PerRoom
+	s.PerRoom = env.Ws.PerRoom
 	s.Nik = re.Nik
 	s.Mic = re.Mic
 	s.Cam = re.Cam
 	s.Virt = false
 	s.WsUrl = fmt.Sprintf("%s/ws/%s/%s/%d?nik=%s",
-		conf.WsUrl,
+		env.Ws.WsUrl,
 		s.UqRoom,
 		s.UqUser,
 		s.PerRoom,
 		s.Nik,
 	)
-	s.IceList = conf.IceList
+	s.IceList = env.IceList
 
 	data := map[string]interface{}{
 		"sets":  s,
@@ -110,25 +109,25 @@ func WsVirt(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	uqroom := ps.ByName("uqroom")
 	ke := ps.ByName("ke")
 
-	conf := config.Env().Ws
+	env := config.Env()
 	s := WsSettings{}
 
 	s.UqRoom = uqroom
 	s.UqUser = common.CreateUUID()
-	s.PerRoom = conf.PerRoom
+	s.PerRoom = env.Ws.PerRoom
 	s.Nik = "virt"
 	s.Mic = false
 	s.Cam = false
 	s.Virt = true
 	s.WsUrl = fmt.Sprintf("%s/ws/%s/%s/%d?nik=%s&ke=%s",
-		conf.WsUrl,
+		env.Ws.WsUrl,
 		s.UqRoom,
 		s.UqUser,
 		s.PerRoom,
 		s.Nik,
 		ke,
 	)
-	s.IceList = conf.IceList
+	s.IceList = env.IceList
 
 	ob, _ := json.Marshal(s)
 

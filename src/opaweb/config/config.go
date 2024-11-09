@@ -8,26 +8,23 @@ import (
 )
 
 type Configuration struct {
-	Appname      string    `json:"appname"`
-	Debug        bool      `json:"debug"`
-	Address      string    `json:"address"`
-	Acmehost     string    `json:"acmehost"`
-	DirCache     string    `json:"dirCache"`
-	DirVid       string    `json:"dirVid"`
-	Port         int       `json:"port"`
-	Crt          string    `json:"crt,omitempty"`
-	Key          string    `json:"key,omitempty"`
-	ReadTimeout  int64     `json:"readTimeout"`
-	WriteTimeout int64     `json:"writeTimeout"`
-	IdleTimeout  int64     `json:"idleTimeout"`
-	Static       string    `json:"static"`
-	Ws           *wsConfig `json:"ws"`
+	Appname  string              `json:"appname"`
+	Debug    bool                `json:"debug"`
+	Address  string              `json:"address"`
+	Port     int                 `json:"port"`
+	Acmehost string              `json:"acmehost"`
+	DirCache string              `json:"dirCache"`
+	DirVid   string              `json:"dirVid"`
+	Crt      string              `json:"crt,omitempty"`
+	Key      string              `json:"key,omitempty"`
+	Static   string              `json:"static"`
+	Ws       *wsConfig           `json:"ws"`
+	IceList  []map[string]string `json:"iceList"`
 }
 
 type wsConfig struct {
-	WsUrl   string              `json:"wsurl"`
-	PerRoom int                 `json:"perroom"`
-	IceList []map[string]string `json:"iceList"`
+	WsUrl   string `json:"wsurl"`
+	PerRoom int    `json:"perroom"`
 }
 
 var config *Configuration
