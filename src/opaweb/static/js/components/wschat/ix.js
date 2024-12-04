@@ -81,6 +81,7 @@ $(function() {
       .then(re => {
         ws_main.html(re.data.cont);
 
+        doc.attr('title', re.data.sets.nik);
         let ws = new WSchat();
         ws.connectWs(re.data.sets);
       })

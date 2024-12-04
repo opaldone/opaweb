@@ -110,6 +110,7 @@ PP=(
     "$src/static/js/components/wschat/vmeter.js;$bin/static/js/wschat/vmeter.js"
     "$src/static/js/components/wschat/virt.js;$bin/static/js/wschat/virt.js"
     "$src/static/js/components/wschat/saver.js;$bin/static/js/wschat/saver.js"
+    "$src/static/js/components/wschat/saver_client.js;$bin/static/js/wschat/saver_client.js"
 )
 
 echo -en "\033]0;$TTL\a"
