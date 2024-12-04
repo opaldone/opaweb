@@ -33,13 +33,15 @@ class WSchat {
     this.doc = $(document);
     this.bd = $('body');
 
+    this.vid_self = $('#vid-self').eq(0);
+
     this.th = null;
 
     this.id_talkers = 'talkers'
     this.talkers_cont = document.getElementById(this.id_talkers);
     this.res = new Resie(this.talkers_cont);
 
-    $(window).on( "resize", this.doc_resize.bind(this));
+    $(window).on( "resize", this.docResize.bind(this));
 
     this.ch_sound = $('#cb-mic').eq(0);
     this.ch_sound.change(this.avChange.bind(this));
@@ -47,14 +49,19 @@ class WSchat {
     this.ch_video.change(this.avChange.bind(this));
 
     this.share_screen = $('#share-screen').eq(0);
-    this.share_screen.click(this.shareScreenChange.bind(this));
+    this.share_screen.click(this.toggleShareScreen.bind(this));
 
+    this.saver_client = new SaverClient();
     this.tg_rec = $('#tg-rec').eq(0);
-    this.tg_rec.click(this.toggleRecord.bind(this));
+    this.tg_rec.click(this.toggleRecordClent.bind(this));
+
+    this.tg_rec_serv = $('#tg-rec-serv').eq(0);
+    this.tg_rec_serv.click(this.toggleRecordServ.bind(this));
 
     this.KEYS = new Set();
     this.doc.bind('keydown', this.dockd.bind(this));
     this.doc.bind('keyup', this.docku.bind(this));
+
   }
 
   dockd(e) {
@@ -62,6 +69,7 @@ class WSchat {
 
     this.KEYS.add(e.which);
 
+    // Alt+Shift+Ctr+i
     if (
       this.KEYS.has(17) &&
       this.KEYS.has(16) &&
@@ -82,8 +90,17 @@ class WSchat {
     console.log(err);
   }
 
-  doc_resize() {
+  docResize() {
     this.res.resize();
+  }
+
+  vidSelfChange(cam) {
+    if (cam) {
+      this.vid_self.css({'opacity': 1});
+      return;
+    }
+
+    this.vid_self.css({'opacity': 0});
   }
 
   wsClear() {
@@ -125,23 +142,28 @@ class WSchat {
       'talkers_cont': this.talkers_cont,
       'res': this.res,
       'callError': this.onError,
+      'vid_self': this.vid_self,
     })
 
     this.th.startShow()
+
+    this.vidSelfChange(this.ws.cam);
   }
 
-  wsClose(e) {
-    console.log('https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent')
-    console.log(e)
+  wsClose() {
     this.wsClear()
   }
 
   getAvSet() {
-    return {
+    let se = {
       'sound': this.ch_sound.prop('checked'),
       'video': this.ch_video.prop('checked'),
       'screen_on': this.share_screen.is('.on')
     };
+
+    this.vidSelfChange(se.video);
+
+    return se;
   }
 
   avChange(ev) {
@@ -166,19 +188,28 @@ class WSchat {
     return false;
   }
 
-  shareScreenChange(ev) {
+  toggleShareScreen(ev) {
     if (!this.th) return;
-    let btn = $(ev.currentTarget);
-    let se = this.getAvSet();
 
-    this.th.toggleScreen(btn, se);
+    let btn = $(ev.currentTarget);
+
+    this.th.toggleScreen(btn, this.getAvSet.bind(this));
   }
 
-  toggleRecord(ev) {
+  toggleRecordServ(ev) {
     if (!this.th) return;
 
     let btn = $(ev.currentTarget);
-    this.th.toggleRecord(btn);
+
+    this.th.toggleRecordServ(btn);
+  }
+
+  toggleRecordClent(ev) {
+    if (!this.th) return;
+
+    let some_button = $(ev.currentTarget);
+
+    this.th.toggleRecordClent(this.saver_client, some_button);
   }
 
   wsMessage(e) {
@@ -206,13 +237,13 @@ class WSchat {
           this.th.screeChanged(msg.content);
           break;
         case this.ws.TPS.BREC:
-          this.th.startedRecord(msg.content);
+          this.th.startedRecordServ(msg.content);
           break;
         case this.ws.TPS.AREC:
-          this.th.anotherRecord(this.tg_rec, msg.content);
+          this.th.anotherRecordServ(this.tg_rec_serv, msg.content);
           break;
         case this.ws.TPS.EREC:
-          this.th.stoppedRecord(this.tg_rec, msg.content);
+          this.th.stoppedRecordServ(this.tg_rec_serv, msg.content);
           break;
       }
     }

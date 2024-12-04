@@ -9,48 +9,34 @@ class TalkerHandler {
     };
 
     this.opts = opts;
-
     this.scr_on = 'screen-on';
-
     this.talkers = {};
-
     this.pc = null;
     this.localStream = null;
-    this.localAudioStream = null;
-
     this.sharedStream = null;
-
     this.media = {
       audio: false,
       video: false
     };
-
     this.servers = {
       iceServers: this.opts.ws.iceList
     };
   }
 
-  setMediaSettings(ds) {
-    let imax = ds.length
-    for (let i = 0; i < imax; i++) {
-      if (~ds[i].kind.indexOf('audio') && !this.media.audio) {
-        this.media.audio = true
-        continue
-      }
-      if (~ds[i].kind.indexOf('video') && !this.media.video) {
-        this.media.video = true
-        continue
-      }
-      if (this.media.video && this.media.audio) break
-    }
+  setMicCam(el, oc) {
+    el.classList.remove('mic');
+    el.classList.remove('cam');
+
+    if (oc.mic) el.classList.add('mic');
+    if (oc.cam) el.classList.add('cam');
   }
 
-  shareScreen(some_button, se) {
+  shareScreen(some_button, fnSe) {
     window.navigator.mediaDevices.getDisplayMedia({'audio': false, 'video': true})
       .then(st => {
         some_button.addClass('on');
 
-        se.screen_on = true;
+        let se = fnSe();
 
         let jo = {
           'tp': this.opts.ws.TPS.SCRE,
@@ -59,13 +45,18 @@ class TalkerHandler {
         this.opts.ws.handler.send(JSON.stringify(jo));
 
         this.sharedStream = st;
+        let vtr = this.sharedStream.getVideoTracks()[0];
+
+        vtr.onended = () => {
+          this.videoBack(some_button, fnSe);
+        };
 
         this.pc.getSenders().forEach((sender) => {
           if (!sender) return;
           if (!sender.track) return;
 
           if (sender.track.kind == 'video') {
-            sender.replaceTrack(this.sharedStream.getTracks()[0]);
+            sender.replaceTrack(vtr);
           }
         });
       })
@@ -74,12 +65,12 @@ class TalkerHandler {
       });
   }
 
-  videoBack(some_button, se) {
+  videoBack(some_button, fnSe) {
     this.sharedStream.getTracks().forEach(tra => tra.stop());
     this.sharedStream = null;
     some_button.removeClass('on');
 
-    se.screen_on = false;
+    let se = fnSe();
 
     let jo = {
       'tp': this.opts.ws.TPS.SCRE,
@@ -101,18 +92,82 @@ class TalkerHandler {
     });
   }
 
-  toggleScreen(some_button, se) {
-    if (!this.pc) return;
+  avcChanged(cont) {
+    let js = JSON.parse(cont);
 
-    if (this.sharedStream) {
-      this.videoBack(some_button, se)
+    if (!js) {
+      return this.opts.callError("Failed to parse avcChanged")
+    }
+
+    let oc = this.talkers[js.strid];
+    if (!oc) return;
+
+    oc.mic = js.mic;
+    oc.cam = js.cam;
+
+    this.setMicCam(oc['el_uset'], oc);
+
+    let viop = 1;
+    if (!oc.cam) viop = 0
+
+    oc['el_video'].style.opacity = viop;
+  }
+
+  removeScreenOn() {
+    let some = '#' + this.opts.id_talkers + ' .' + this.scr_on;
+
+    if ($(some).length > 0) return;
+
+    this.opts.bd.removeClass(this.scr_on);
+  }
+
+  screeChanged(cont) {
+    let js = JSON.parse(cont);
+
+    if (!js) {
+      return this.opts.callError("Failed to parse screeChanged")
+    }
+
+    let oc = this.talkers[js.strid];
+    if (!oc) return;
+
+    let cont_vw = document.getElementById(js.strid);
+
+    if (js.screen_on) {
+      cont_vw.classList.add(this.scr_on);
+      oc['el_video'].style.opacity = 1;
+      this.opts.bd.addClass(this.scr_on);
+      this.opts.res.resize();
+
       return;
     }
 
-    this.shareScreen(some_button, se)
+    cont_vw.classList.remove(this.scr_on);
+
+    let viop = 1;
+    if (!js.cam) viop = 0;
+    oc['el_video'].style.opacity = viop;
+
+    if (oc.screen_on) oc.screen_on = false;
+    oc.mic = js.mic;
+    oc.cam = js.cam;
+    this.setMicCam(oc['el_uset'], oc);
+
+    this.removeScreenOn();
+    this.opts.res.resize();
+  }
+  toggleScreen(some_button, fnSe) {
+    if (!this.pc) return;
+
+    if (this.sharedStream) {
+      this.videoBack(some_button, fnSe)
+      return;
+    }
+
+    this.shareScreen(some_button, fnSe)
   }
 
-  beginRec(some_button) {
+  beginRecServ(some_button) {
     let jo = {
       'tp': this.opts.ws.TPS.BREC,
     };
@@ -122,7 +177,8 @@ class TalkerHandler {
     some_button.addClass('on');
   }
 
-  stopRec() {
+  stopRecServ() {
+    console.log("stopRecServ");
     let jo = {
       'tp': this.opts.ws.TPS.EREC,
     };
@@ -130,19 +186,7 @@ class TalkerHandler {
     this.opts.ws.handler.send(JSON.stringify(jo));
   }
 
-  toggleRecord(some_button) {
-    if (!this.pc) return;
-
-    if (some_button.is('.on')) {
-      this.stopRec();
-      return;
-    }
-
-    this.beginRec(some_button);
-    return;
-  }
-
-  anotherRecord(some_button, cont) {
+  anotherRecordServ(some_button, cont) {
     if (some_button.is('.on')) {
       some_button.removeClass('on');
     }
@@ -150,7 +194,7 @@ class TalkerHandler {
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.opts.callError("Failed to parse anotherRecord")
+      return this.opts.callError("Failed to parse anotherRecordServ")
     }
 
     let oc = this.talkers[js.strid];
@@ -162,6 +206,105 @@ class TalkerHandler {
     setTimeout(() => {
       el.classList.remove('allert-rec');
     }, 3000);
+  }
+
+  startedRecordServ(cont) {
+    let js = JSON.parse(cont);
+
+    if (!js) {
+      return this.opts.callError("Failed to parse startedRecordServ")
+    }
+
+    let oc = this.talkers[js.strid];
+    if (!oc) return;
+
+    let el = oc['el_uset'];
+    el.classList.add('rec');
+  }
+
+  stoppedRecordServ(some_button, cont) {
+    let js = JSON.parse(cont);
+
+    if (!js) {
+      return this.opts.callError("Failed to parse stoppedRecordServ")
+    }
+
+    this.setDownloadLinkServ(some_button, js);
+
+    let oc = this.talkers[js.strid];
+
+    if (!oc) {
+      return;
+    }
+
+    let el = oc['el_uset'];
+    el.classList.remove('rec');
+
+    if (oc.recording) oc.recording = false;
+  }
+
+  setDownloadLinkServ(some_button, js) {
+    if (!js.uquser) return;
+
+    if (js.uquser != this.opts.ws.uquser) return;
+
+    if (!js.vili) return;
+
+    if (some_button.is('.on')) {
+      some_button.removeClass('on');
+    }
+
+    let lire = $('#li-re').eq(0);
+
+    if (!lire[0]) return ;
+
+    let he = lire.attr('data-he');
+    let re = lire.attr('data-re');
+    he = he.replace('xxx', this.opts.ws.uqroom).replace('yyy', js.vili);
+
+    let sv = new Saver(this.opts.ws, lire[0], js.vili, re);
+    sv.download(he, (file) => {
+      sv.save(file);
+    });
+  }
+
+  toggleRecordServ(some_button) {
+    if (!this.pc) return;
+
+    if (some_button.is('.on')) {
+      this.stopRecServ();
+      return;
+    }
+
+    this.beginRecServ(some_button);
+    return;
+  }
+
+  toggleRecordClent(sv, some_button_in) {
+    if (Object.keys(this.talkers).length == 0) return;
+
+    if (some_button_in.is('.on')) {
+      sv.stopCapture();
+      return;
+    }
+
+    sv.startCapture(this.opts.ws.uqroom, some_button_in, this.talkers, this.localStream);
+    return;
+  }
+
+  setMediaSettings(ds) {
+    let imax = ds.length
+    for (let i = 0; i < imax; i++) {
+      if (~ds[i].kind.indexOf('audio') && !this.media.audio) {
+        this.media.audio = true
+        continue
+      }
+      if (~ds[i].kind.indexOf('video') && !this.media.video) {
+        this.media.video = true
+        continue
+      }
+      if (this.media.video && this.media.audio) break
+    }
   }
 
   startShow() {
@@ -197,12 +340,6 @@ class TalkerHandler {
       });
     }
 
-    if (this.localAudioStream != null) {
-      this.localAudioStream.getTracks().forEach(track => {
-        this.pc.addTrack(track, this.localAudioStream)
-      });
-    }
-
     let jo = {
       'tp': this.opts.ws.TPS.JOINROOM,
       'content': JSON.stringify({
@@ -210,6 +347,8 @@ class TalkerHandler {
         'video': this.opts.ws.cam
       })
     }
+
+    this.opts.vid_self[0].srcObject = this.localStream;
 
     this.opts.ws.handler.send(JSON.stringify(jo));
   }
@@ -333,14 +472,6 @@ class TalkerHandler {
     }
 
     this.checkTalkers();
-  }
-
-  setMicCam(el, oc) {
-    el.classList.remove('mic');
-    el.classList.remove('cam');
-
-    if (oc.mic) el.classList.add('mic');
-    if (oc.cam) el.classList.add('cam');
   }
 
   getUsetEl(id_in, oc) {
@@ -469,127 +600,6 @@ class TalkerHandler {
     this.doMeter(oc['audio'], canID);
 
     this.opts.res.resize()
-  }
-
-  avcChanged(cont) {
-    let js = JSON.parse(cont);
-
-    if (!js) {
-      return this.opts.callError("Failed to parse avcChanged")
-    }
-
-    let oc = this.talkers[js.strid];
-    if (!oc) return;
-
-    oc.mic = js.mic;
-    oc.cam = js.cam;
-
-    this.setMicCam(oc['el_uset'], oc);
-
-    let viop = 1;
-    if (!oc.cam) viop = 0
-
-    oc['el_video'].style.opacity = viop;
-  }
-
-  startedRecord(cont) {
-    let js = JSON.parse(cont);
-
-    if (!js) {
-      return this.opts.callError("Failed to parse startedRecord")
-    }
-
-    let oc = this.talkers[js.strid];
-    if (!oc) return;
-
-    let el = oc['el_uset'];
-    el.classList.add('rec');
-  }
-
-  setDownloadLink(some_button, js) {
-    if (!js.uquser) return;
-
-    if (js.uquser != this.opts.ws.uquser) return;
-
-    if (!js.vili) return;
-
-    if (some_button.is('.on')) {
-      some_button.removeClass('on');
-    }
-
-    let lire = $('#li-re').eq(0);
-
-    if (!lire[0]) return ;
-
-    let he = lire.attr('data-he');
-    let re = lire.attr('data-re');
-    he = he.replace('xxx', this.opts.ws.uqroom).replace('yyy', js.vili);
-
-    let sv = new Saver(this.opts.ws, lire[0], js.vili, re);
-    sv.download(he, (file) => {
-      sv.save(file);
-    });
-  }
-
-  stoppedRecord(some_button, cont) {
-    let js = JSON.parse(cont);
-
-    if (!js) {
-      return this.opts.callError("Failed to parse stoppedRecord")
-    }
-
-    this.setDownloadLink(some_button, js);
-
-    let oc = this.talkers[js.strid];
-
-    if (!oc) {
-      return;
-    }
-
-    let el = oc['el_uset'];
-    el.classList.remove('rec');
-
-    if (oc.recording) oc.recording = false;
-  }
-
-  removeScreenOn() {
-    let some = '#' + this.opts.id_talkers + ' .' + this.scr_on;
-
-    if ($(some).length > 0) return;
-
-    this.opts.bd.removeClass(this.scr_on);
-  }
-
-  screeChanged(cont) {
-    let js = JSON.parse(cont);
-
-    if (!js) {
-      return this.opts.callError("Failed to parse screeChanged")
-    }
-
-    let oc = this.talkers[js.strid];
-    if (!oc) return;
-
-    let cont_vw = document.getElementById(js.strid);
-
-    if (js.screen_on) {
-      cont_vw.classList.add(this.scr_on);
-      oc['el_video'].style.opacity = 1;
-      this.opts.bd.addClass(this.scr_on);
-      this.opts.res.resize();
-
-      return;
-    }
-
-    cont_vw.classList.remove(this.scr_on);
-    let viop = 1;
-    if (!js.cam) viop = 0;
-    oc['el_video'].style.opacity = viop;
-
-    if (oc.screen_on) oc.screen_on = false;
-
-    this.removeScreenOn();
-    this.opts.res.resize();
   }
 
   doMeter(str, cID) {
