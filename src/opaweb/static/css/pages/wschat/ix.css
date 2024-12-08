@@ -77,7 +77,7 @@
   margin: 0;
   padding: 33px;
   background-color: #2f2f2f;
-  box-shadow: 0 0 13px #171717;
+  box-shadow: 1px 1px 3px #171717;
   border-radius: 23px;
 }
 
@@ -172,11 +172,9 @@
 }
 
 .form-cbs-cont {
-  position: absolute;
   user-select: none;
-  top: 50%;
-  right: 8px;
-  transform: translateY(-50%);
+  margin-bottom: 10px;
+  padding: 0 33px;
 }
 
 .form-cbs {
@@ -185,13 +183,6 @@
 
 .lbl-tha {
   display: inline-block;
-}
-
-.lbl-tha.un {
-  font-size: 20px;
-  line-height: 22px;
-  color: #f0f0f0;
-  padding-right: 20px;
 }
 
 .btn-rb {
@@ -216,11 +207,11 @@
   background-color: #202020;
 }
 
-.btn-hint {
+.hint-able {
   position: relative;
 }
 
-.btn-hint:hover::after {
+.hint-able:hover::after {
   position: absolute;
   z-index: 1;
   content: attr(data-hint);
@@ -237,10 +228,16 @@
   border-radius: 7px;
 }
 
-.btn-hint.top-hint:hover::after {
+.hint-able.top-hint:hover::after {
   bottom: 100%;
   left: 50%;
   transform: translate(10%, -10%);
+}
+
+.hint-able.cen-hint:hover::after {
+  bottom: 100%;
+  left: -50%;
+  transform: none;
 }
 
 .ra-ico {
@@ -287,13 +284,5 @@
 @media (max-width: 640px) {
   #ws-cont {
     width: 100%;
-  }
-
-  .form-cbs-cont {
-    position: relative;
-    transform: none;
-    top: auto;
-    right: auto;
-    margin-top: 10px;
   }
 }
