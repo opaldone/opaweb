@@ -4,7 +4,10 @@
       <div id="ws-cont-screen">
         <div id="ws-cont">
           <div class="ws-header">
-            Configure yourself
+            Who are You today?
+          </div>
+          <div class="form-cbs-cont clearfix">
+            {{ template "camic" (index . "camic")}}
           </div>
           <div id="ws-form-cont">
             <div class="inp-con-ico">
@@ -17,15 +20,12 @@
                     </g>
                   </svg>
                 </span>
-                <input class="inp-wid" type="text" id="nik-name" placeholder="Display name" required />
-              </div>
-              <div class="form-cbs-cont clearfix">
-                {{ template "camic" (index . "camic")}}
+                <input class="inp-wid" type="text" id="nik-name" placeholder="Display nickname" required />
               </div>
             </div>
             <div class="form-btns clearfix">
               <input id="uqroom" type="hidden" value="{{ index . "uqroom" }}">
-              <button id="start-ws" href="{{ ro ("ws_me_start") }}" class="form-btn flo">Start</button>
+              <button id="start-ws" href="{{ ro ("ws_me_start") }}" class="form-btn flo">Go chat</button>
               <button id="ws-back" href="{{ ro ("home") }}" class="link-back">Back</button>
             </div>
           </div>
