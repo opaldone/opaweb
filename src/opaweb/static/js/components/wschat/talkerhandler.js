@@ -23,12 +23,20 @@ class TalkerHandler {
     };
   }
 
-  setMicCam(el, oc) {
+  setMicCam(oc) {
+    let elc = oc['el_container'];
+    let el = oc['el_uset'];
+
     el.classList.remove('mic');
     el.classList.remove('cam');
+    elc.classList.remove('cam');
 
     if (oc.mic) el.classList.add('mic');
-    if (oc.cam) el.classList.add('cam');
+
+    if (oc.cam) {
+      elc.classList.add('cam');
+      el.classList.add('cam');
+    }
   }
 
   shareScreen(some_button, fnSe) {
@@ -105,12 +113,7 @@ class TalkerHandler {
     oc.mic = js.mic;
     oc.cam = js.cam;
 
-    this.setMicCam(oc['el_uset'], oc);
-
-    let viop = 1;
-    if (!oc.cam) viop = 0
-
-    oc['el_video'].style.opacity = viop;
+    this.setMicCam(oc);
   }
 
   removeScreenOn() {
@@ -135,7 +138,6 @@ class TalkerHandler {
 
     if (js.screen_on) {
       cont_vw.classList.add(this.scr_on);
-      oc['el_video'].style.opacity = 1;
       this.opts.bd.addClass(this.scr_on);
       this.opts.res.resize();
 
@@ -144,18 +146,17 @@ class TalkerHandler {
 
     cont_vw.classList.remove(this.scr_on);
 
-    let viop = 1;
-    if (!js.cam) viop = 0;
-    oc['el_video'].style.opacity = viop;
-
     if (oc.screen_on) oc.screen_on = false;
+
     oc.mic = js.mic;
     oc.cam = js.cam;
-    this.setMicCam(oc['el_uset'], oc);
+
+    this.setMicCam(oc);
 
     this.removeScreenOn();
     this.opts.res.resize();
   }
+
   toggleScreen(some_button, fnSe) {
     if (!this.pc) return;
 
@@ -525,8 +526,6 @@ class TalkerHandler {
 
     el.classList.add('talker-uset');
 
-    this.setMicCam(el, oc);
-
     if (oc.recording) el.classList.add('rec');
 
     el.innerHTML = mc_h;
@@ -554,9 +553,6 @@ class TalkerHandler {
     vid.muted = true;
     vid.autoplay = true;
     vid.controls = false;
-    if (oc.cam) {
-      vid.style.opacity = 1
-    }
     if (oc['video']) {
       vid.srcObject = oc['video'];
     }
@@ -596,6 +592,8 @@ class TalkerHandler {
     oc['el_container'] = ta_co;
     oc['el_nik'] = nik_el;
     oc['el_uset'] = uset_el;
+
+    this.setMicCam(oc);
 
     this.doMeter(oc['audio'], canID);
 
