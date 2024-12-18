@@ -119,10 +119,8 @@
   line-height: 15px;
   width: auto;
   height: auto;
-  padding: 11px 10px 12px 10px;
-  border-radius: 0;
-  top: initial;
-  bottom: 0;
+  padding: 11px 15px 12px 15px;
+  border-radius: 0 7px 7px 0;
 }
 
 .vw video {
@@ -166,18 +164,18 @@
   position: absolute;
   z-index: 3;
   bottom: 0;
-  right: 7px;
-  padding-bottom: 7px;
+  right: 4px;
+  padding-bottom: 4px;
 }
 
 .vw .talker-uset .ra-ico {
   padding: 7px 8px;
-  background-color: #27272777;
-  border-radius: 13px;
+  background-color: #00000077;
+  border-radius: 7px;
 }
 
 .vw .talker-uset .ra-ico + .ra-ico {
-  margin-left: 7px;
+  margin-left: 4px;
 }
 
 .vw .talker-uset .ico-h {

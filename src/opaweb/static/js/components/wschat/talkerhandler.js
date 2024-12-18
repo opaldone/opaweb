@@ -179,7 +179,6 @@ class TalkerHandler {
   }
 
   stopRecServ() {
-    console.log("stopRecServ");
     let jo = {
       'tp': this.opts.ws.TPS.EREC,
     };
@@ -349,7 +348,9 @@ class TalkerHandler {
       })
     }
 
-    this.opts.vid_self[0].srcObject = this.localStream;
+    if (this.opts.vid_self) {
+      this.opts.vid_self.srcObject = this.localStream;
+    }
 
     this.opts.ws.handler.send(JSON.stringify(jo));
   }

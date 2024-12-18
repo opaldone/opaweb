@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
+
 	"opaweb/config"
 	"opaweb/controllers"
-	"time"
 
 	"github.com/gorilla/csrf"
 	"golang.org/x/crypto/acme/autocert"
@@ -21,7 +22,7 @@ var ct = map[string]int64{
 func main() {
 	runInit()
 
-	e := config.Env()
+	e := config.Env(false)
 
 	csrf_h := csrf.Protect(
 		[]byte(config.GetKeyCSRF()),

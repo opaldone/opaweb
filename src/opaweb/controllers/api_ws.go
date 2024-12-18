@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+
 	"opaweb/apitools"
 	"opaweb/applog"
 	"opaweb/common"
 	"opaweb/config"
-	"os"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -67,7 +68,7 @@ func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var re WsRequest
 	apitools.FormToJSON(r.Body, &re)
 
-	env := config.Env()
+	env := config.Env(true)
 	s := WsSettings{}
 
 	s.UqRoom = re.UqRoom
@@ -87,9 +88,10 @@ func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	s.IceList = env.IceList
 
 	data := map[string]interface{}{
-		"sets":  s,
-		"camic": map[string]bool{"mic": re.Mic, "cam": re.Cam, "tophint": false},
-		"debug": env.Debug,
+		"sets":    s,
+		"camic":   map[string]bool{"mic": re.Mic, "cam": re.Cam, "tophint": false},
+		"recserv": len(env.RecFolder) > 0,
+		"debug":   env.Debug,
 	}
 
 	co := GetHTMLAjax(data, []string{"wschat/sta", "wschat/camic"})
@@ -109,7 +111,7 @@ func WsVirt(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	uqroom := ps.ByName("uqroom")
 	ke := ps.ByName("ke")
 
-	env := config.Env()
+	env := config.Env(true)
 	s := WsSettings{}
 
 	s.UqRoom = uqroom
@@ -145,7 +147,9 @@ func getFi(uqroom_in, ke_in string) string {
 }
 
 func getPtFi(fn_in string) string {
-	pt := fmt.Sprintf("%s/%s", config.Env().DirVid, fn_in)
+	env := config.Env(true)
+
+	pt := fmt.Sprintf("%s/%s", env.RecFolder, fn_in)
 
 	return pt
 }
@@ -158,7 +162,6 @@ func WsVi(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	pt := getPtFi(fn)
 
 	f, err := os.Open(pt)
-
 	if err != nil {
 		applog.Danger("Vi opening file", err)
 		return
@@ -176,7 +179,6 @@ func WsVi(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.WriteHeader(http.StatusOK)
 
 	_, err = io.Copy(w, f)
-
 	if err != nil {
 		applog.Danger("Vi copying file", err)
 	}
@@ -207,7 +209,6 @@ func WsViRem(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	pt := getPtFi(fn)
 
 	err := os.Remove(pt)
-
 	if err != nil {
 		applog.Danger("Removing file", err)
 	}

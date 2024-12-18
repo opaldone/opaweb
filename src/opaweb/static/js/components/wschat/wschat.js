@@ -95,6 +95,8 @@ class WSchat {
   }
 
   vidSelfChange(cam) {
+    if (!this.vid_self[0]) return;
+
     if (cam) {
       this.vid_self.css({'opacity': 1});
       return;
@@ -135,15 +137,21 @@ class WSchat {
   }
 
   talk() {
-    this.th = new TalkerHandler({
+    let ob = {
       'ws': this.ws,
       'bd': this.bd,
       'id_talkers': this.id_talkers,
       'talkers_cont': this.talkers_cont,
       'res': this.res,
       'callError': this.onError,
-      'vid_self': this.vid_self,
-    })
+      'vid_self': null
+    };
+
+    if (this.vid_self[0] != undefined) {
+      ob.vid_self = this.vid_self[0];
+    }
+
+    this.th = new TalkerHandler(ob);
 
     this.th.startShow()
 
