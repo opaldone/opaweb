@@ -6,4 +6,5 @@ import (
 
 func runInit() {
 	config.LoadConfig()
+	config.SetCsrf()
 }

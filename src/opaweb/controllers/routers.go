@@ -2,8 +2,9 @@ package controllers
 
 import (
 	"net/http"
-	"opaweb/config"
 	"strings"
+
+	"opaweb/config"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -33,7 +34,7 @@ func init() {
 // GetRouters returns routers
 func GetRouters() (router *httprouter.Router) {
 	router = httprouter.New()
-	router.ServeFiles("/static/*filepath", http.Dir(config.Env().Static))
+	router.ServeFiles("/static/*filepath", http.Dir(config.Env(false).Static))
 
 	for _, r := range list {
 		router.Handle(r.method, r.pattern, r.handle)
@@ -48,7 +49,6 @@ func ro(alias string, pars ...string) string {
 
 	if len(pata) == 1 {
 		return pat
-
 	}
 
 	if len(pars) == 0 {
