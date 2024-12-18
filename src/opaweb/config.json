@@ -5,7 +5,7 @@
   "port": 443,
   "acmehost": "admigo.uk.to",
   "dirCache": "./certs",
-  "recFolder1": "/mnt/terik/a_my/admigo_project/opachat/bin/vid",
+  "recFolder": "/mnt/terik/a_my/admigo_project/opachat/bin/vid",
   "crt": "/mnt/terik/a_my/admigo_project/admigo/bin/certs_local/server.crt",
   "key": "/mnt/terik/a_my/admigo_project/admigo/bin/certs_local/server.key",
   "static": "static",
