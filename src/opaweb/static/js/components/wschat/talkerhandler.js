@@ -3,9 +3,9 @@ class TalkerHandler {
     this.CC = {
       'video': '-vid',
       'audio': '-au',
-      'can': '-can',
       'nik': '-nik',
-      'uset': '-uset'
+      'uset': '-uset',
+      'lit': '-lit'
     };
 
     this.opts = opts;
@@ -537,9 +537,9 @@ class TalkerHandler {
   createTalker(elid, oc) {
     let videoID = elid + this.CC.video;
     let audioID = elid + this.CC.audio;
-    let canID = elid + this.CC.can;
     let nikID = elid + this.CC.nik;
     let usetID = elid + this.CC.uset;
+    let litID = elid + this.CC.lit;
 
     let nik_el = document.createElement('span');
     nik_el.id = nikID;
@@ -569,10 +569,6 @@ class TalkerHandler {
       au.srcObject = oc['audio'];
     }
 
-    let canv = document.createElement('canvas');
-    canv.id = canID;
-    canv.classList.add('volme');
-
     let ta_co = document.createElement('div');
     ta_co.classList.add('vw');
     ta_co.id = elid;
@@ -580,51 +576,56 @@ class TalkerHandler {
       ta_co.classList.add(this.scr_on);
       this.opts.bd.addClass(this.scr_on);
     }
-    this.opts.talkers_cont.appendChild(ta_co);
+
+    let lit_el = document.createElement('li');
+    lit_el.id = litID;
+    let lit_nik = document.createTextNode(oc.nik);
+    lit_el.appendChild(lit_nik);
+
+    this.opts.ta_ul_cont.appendChild(lit_el);
 
     ta_co.appendChild(vid);
     ta_co.appendChild(au);
     ta_co.appendChild(nik_el);
     ta_co.appendChild(uset_el);
-    ta_co.appendChild(canv);
+
+    this.opts.talkers_cont.appendChild(ta_co);
 
     oc['el_video'] = vid;
     oc['el_audio'] = au;
     oc['el_container'] = ta_co;
     oc['el_nik'] = nik_el;
     oc['el_uset'] = uset_el;
+    oc['el_lit'] = lit_el;
 
     this.setMicCam(oc);
-
-    this.doMeter(oc['audio'], canID);
-
+    this.doMeter(oc['audio'], ta_co);
     this.opts.res.resize()
   }
 
-  doMeter(str, cID) {
+  doMeter(str, vcont) {
     if (str == undefined) return;
 
     const ctx = new AudioContext();
     ctx.audioWorklet.addModule('/static/js/wschat/vmeter.js')
       .then(() => {
         const micNode = ctx.createMediaStreamSource(str);
-
         const volumeMeterNode = new AudioWorkletNode(ctx, 'volume-meter');
-        const cn = document.getElementById(cID);
-        const canvasContext = cn.getContext("2d");
 
         volumeMeterNode.port.onmessage = ({data}) => {
-          let eda = data * 700;
-          let val = cn.height;
-          let prc = (eda / val) * 100;
+          let eda = data * 1000;
+          if (eda < 50) return;
 
-          if (prc > 100) {
-            eda = val;
+          if (vcont.hide_timer) {
+            clearTimeout(vcont.hide_timer);
+            vcont.hide_timer = 0;
           }
 
-          canvasContext.clearRect(0, 0, cn.width, val);
-          canvasContext.fillStyle = '#ff993377';
-          canvasContext.fillRect(0, val, cn.width, -eda);
+          vcont.style.outline = "3px solid #579957";
+
+          vcont.hide_timer = setTimeout(() => {
+            vcont.style.outline = "none";
+          }, 500);
         };
         micNode.connect(volumeMeterNode).connect(ctx.destination);
       })
@@ -640,6 +641,7 @@ class TalkerHandler {
 
     if (!oc) return;
 
+    oc['el_lit'].remove();
     oc['el_container'].remove();
     delete this.talkers[elid];
 

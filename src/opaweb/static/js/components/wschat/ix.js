@@ -8,8 +8,6 @@ $(function() {
   let btn_rb = '.camic-button';
   let cp_link = '#cp-link';
 
-  nik_name.val("Talker_" + Math.floor(Math.random() * 100));
-
   nik_name.on('keyup', ev => {
     ev.stopPropagation();
 

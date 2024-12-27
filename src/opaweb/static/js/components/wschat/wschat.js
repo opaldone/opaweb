@@ -41,6 +41,8 @@ class WSchat {
     this.talkers_cont = document.getElementById(this.id_talkers);
     this.res = new Resie(this.talkers_cont);
 
+    this.ta_ul_cont = document.getElementById('ta-ul');
+
     $(window).on( "resize", this.docResize.bind(this));
 
     this.ch_sound = $('#cb-mic').eq(0);
@@ -142,6 +144,7 @@ class WSchat {
       'bd': this.bd,
       'id_talkers': this.id_talkers,
       'talkers_cont': this.talkers_cont,
+      'ta_ul_cont': this.ta_ul_cont,
       'res': this.res,
       'callError': this.onError,
       'vid_self': null

@@ -47,7 +47,13 @@
     </div>
     <div id="talkers" class="clearfix"></div>
     {{ $sets := (index . "sets") }}
-    <div id="v-list">
+    <div id="v-list" style="display:none">
+      <div id="ta-list">
+        <ul id="ta-ul">
+        </ul>
+      </div>
+    </div>
+    <div id="self-vicont">
       <div id="v-list-hint" class="hint-able cen-hint" data-hint="{{ attr ($sets.Nik) }}">
         <div class="vw">
           <video id="vid-self" src="" autoplay muted></video>
