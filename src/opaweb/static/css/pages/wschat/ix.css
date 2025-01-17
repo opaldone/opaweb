@@ -1,11 +1,21 @@
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+input:-webkit-autofill:valid {
+  transition-delay: 5000s;
+}
+
 ::placeholder {
   color: #575757;
 }
 
 #ws-main {
+  position: relative;
   width: 100%;
   height: 100%;
   background-color: #272727;
+  overflow: hidden;
 }
 
 #ws-cont-screen {
@@ -65,6 +75,7 @@
   flex-direction: column;
   font-size: 20px;
   line-height: 22px;
+  font-weight: bold;
 }
 
 .ws-btn svg {
@@ -126,6 +137,7 @@
   border-radius: 7px;
   font-size: 16px;
   line-height: 18px;
+  font-weight: bold;
 }
 
 .form-btn:hover {
@@ -167,7 +179,9 @@
 .inp-wid:focus,
 .form-btn:focus,
 .link-back:focus,
-.btn-rb:focus {
+.btn-rb:focus,
+.tab-btn:focus,
+#ta-chat-send:focus {
   outline: 1px solid #575757;
 }
 
@@ -191,7 +205,7 @@
   justify-content: center;
   cursor: pointer;
   width: 45px;
-  height: 40px;
+  height: 45px;
   background-color: #373737;
   border-width: 0 1px 1px 0;
   border-style: solid;
@@ -213,11 +227,10 @@
 
 .hint-able:hover::after {
   position: absolute;
-  z-index: 1;
+  z-index: 5;
   content: attr(data-hint);
   bottom: -100%;
   left: 50%;
-  transform: translate(0%, -30%);
   background-color: #000;
   font-size: 12px;
   line-height: 15px;
@@ -231,13 +244,17 @@
 .hint-able.top-hint:hover::after {
   bottom: 100%;
   left: 50%;
-  transform: translate(10%, -10%);
+  transform: translate(10%, -30%);
 }
 
 .hint-able.cen-hint:hover::after {
   bottom: 100%;
-  left: -50%;
-  transform: none;
+  transform: translate(-50%, -30%);
+}
+
+.hint-able.le-hint:hover::after {
+  bottom: 100%;
+  transform: translate(-90%, -30%);
 }
 
 .ra-ico {

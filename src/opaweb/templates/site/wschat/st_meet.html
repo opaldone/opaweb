@@ -4,7 +4,7 @@
       <div id="ws-cont-screen">
         <div id="ws-cont">
           <div class="ws-header">
-            Who are You today?
+            Chat settings
           </div>
           <div class="form-cbs-cont clearfix">
             {{ template "camic" (index . "camic")}}
@@ -20,7 +20,7 @@
                     </g>
                   </svg>
                 </span>
-                <input class="inp-wid" type="text" id="nik-name" placeholder="Display nickname" required />
+                <input class="inp-wid" type="text" id="nik-name" placeholder="Nickname" required />
               </div>
             </div>
             <div class="form-btns clearfix">
@@ -37,12 +37,14 @@
   {{ define "styles" }}
     <link rel="stylesheet" type="text/css" href="/static/css/wschat/ix.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/wschat/room.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/wschat/tabs.css" />
   {{ end }}
 
   {{ define "scripts" }}
     <script src="/static/js/wschat/saver.js"></script>
     <script src="/static/js/wschat/saver_client.js"></script>
     <script src="/static/js/wschat/resie.js"></script>
+    <script src="/static/js/wschat/taber.js"></script>
     <script src="/static/js/wschat/talkerhandler.js"></script>
     <script src="/static/js/wschat/wschat.js"></script>
     <script src="/static/js/wschat/ix.js"></script>

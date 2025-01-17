@@ -1,5 +1,5 @@
 ;"use strict";
-$(function() {
+$(() => {
   let doc = $(document);
   let start_ws = '#start-ws';
   let back = '#ws-back';
@@ -7,8 +7,6 @@ $(function() {
   let ws_main = $('#ws-main').eq(0);
   let btn_rb = '.camic-button';
   let cp_link = '#cp-link';
-
-  nik_name.val("Talker_" + Math.floor(Math.random() * 100));
 
   nik_name.on('keyup', ev => {
     ev.stopPropagation();
@@ -64,9 +62,11 @@ $(function() {
 
     if (!nik_name[0].reportValidity()) return;
 
+    let nik_name_val = nik_name.val();
+
     let obj = {
       'uqroom': uqr_inp.val(),
-      'nik': nik_name.val(),
+      'nik': nik_name_val,
       'mic': mic_inp.prop('checked') ? true : false,
       'cam': cam_inp.prop('checked') ? true : false
     };

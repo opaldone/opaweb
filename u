@@ -102,6 +102,7 @@ PP=(
 # wschat_page css
     "$src/static/css/pages/wschat/ix.css;$bin/static/css/wschat/ix.css"
     "$src/static/css/pages/wschat/room.css;$bin/static/css/wschat/room.css"
+    "$src/static/css/pages/wschat/tabs.css;$bin/static/css/wschat/tabs.css"
 # wschat_page js
     "$src/static/js/components/wschat/ix.js;$bin/static/js/wschat/ix.js"
     "$src/static/js/components/wschat/wschat.js;$bin/static/js/wschat/wschat.js"
@@ -111,6 +112,7 @@ PP=(
     "$src/static/js/components/wschat/virt.js;$bin/static/js/wschat/virt.js"
     "$src/static/js/components/wschat/saver.js;$bin/static/js/wschat/saver.js"
     "$src/static/js/components/wschat/saver_client.js;$bin/static/js/wschat/saver_client.js"
+    "$src/static/js/components/wschat/taber.js;$bin/static/js/wschat/taber.js"
 )
 
 echo -en "\033]0;$TTL\a"

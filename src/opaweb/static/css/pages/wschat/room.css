@@ -5,6 +5,7 @@
   user-select: none;
   width: 100%;
   padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 #set-panel .lbl-tha + .lbl-tha {
@@ -27,25 +28,6 @@
   display: none;
 }
 
-#v-container {
-  width: 100%;
-  height: 100%;
-}
-
-#v-list {
-  display: flex;
-  align-items: start;
-  justify-content: end;
-  width: 100%;
-  height: auto;
-  padding: 0 10px 10px 0;
-}
-
-#v-list-hint {
-  font-size: 0;
-  line-height: 0;
-}
-
 #talkers {
   position: relative;
   display: flex;
@@ -54,7 +36,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: calc(100% - 55px - 160px);
+  height: calc(100% - 70px - 150px);
 }
 
 .vw {
@@ -62,23 +44,30 @@
   display: inline-block;
   background-color: #2f2f2f;
   line-height: 0;
-  border-width: 0 2px 2px 0;
-  border-style: solid;
-  border-color: #171717;
   border-radius: 13px;
   overflow: hidden;
+  box-shadow: 1px 1px 3px #171717;
 }
 
-#v-list .vw {
+#self-vicont {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+}
+
+#v-list-hint {
+  font-size: 0;
+  line-height: 0;
   width: 200px;
-  height: auto;
-  border: none;
-  border-radius: 13px;
 }
 
-#v-list video {
+#v-list-hint video {
   position: relative;
   opacity: 1;
+}
+
+#v-list-hint .vw {
+  min-height: 150px;
 }
 
 #talkers .vw.allert-rec {
@@ -200,15 +189,6 @@
 
 .vw .talker-uset.rec .ico-h.rec {
   display: inline-block;
-}
-
-.vw .volme {
-  position: absolute;
-  z-index: 4;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 150px;
 }
 
 /*
