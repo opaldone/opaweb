@@ -1,14 +1,14 @@
 class TalkerHandler {
-  constructor (opts) {
+  constructor (oin) {
+    this.oin = oin;
+
     this.CC = {
       'video': '-vid',
       'audio': '-au',
       'nik': '-nik',
-      'uset': '-uset',
-      'lit': '-lit'
+      'uset': '-uset'
     };
 
-    this.opts = opts;
     this.scr_on = 'screen-on';
     this.talkers = {};
     this.pc = null;
@@ -19,8 +19,13 @@ class TalkerHandler {
       video: false
     };
     this.servers = {
-      iceServers: this.opts.ws.iceList
+      iceServers: this.oin.ws.iceList
     };
+
+    this.taber = new Taber({
+      'doc': this.oin.doc,
+      'ws': this.oin.ws
+    });
   }
 
   setMicCam(oc) {
@@ -47,10 +52,10 @@ class TalkerHandler {
         let se = fnSe();
 
         let jo = {
-          'tp': this.opts.ws.TPS.SCRE,
+          'tp': this.oin.ws.TPS.SCRE,
           'content': JSON.stringify(se)
         };
-        this.opts.ws.handler.send(JSON.stringify(jo));
+        this.oin.ws.handler.send(JSON.stringify(jo));
 
         this.sharedStream = st;
         let vtr = this.sharedStream.getVideoTracks()[0];
@@ -69,7 +74,7 @@ class TalkerHandler {
         });
       })
       .catch(e => {
-        this.opts.callError(e)
+        this.oin.callError(e)
       });
   }
 
@@ -81,10 +86,10 @@ class TalkerHandler {
     let se = fnSe();
 
     let jo = {
-      'tp': this.opts.ws.TPS.SCRE,
+      'tp': this.oin.ws.TPS.SCRE,
       'content': JSON.stringify(se)
     };
-    this.opts.ws.handler.send(JSON.stringify(jo));
+    this.oin.ws.handler.send(JSON.stringify(jo));
 
     this.localStream.getTracks().forEach(tr => {
       if (tr.kind == 'video') {
@@ -104,7 +109,7 @@ class TalkerHandler {
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.opts.callError("Failed to parse avcChanged")
+      return this.oin.callError("Failed to parse avcChanged")
     }
 
     let oc = this.talkers[js.strid];
@@ -117,18 +122,18 @@ class TalkerHandler {
   }
 
   removeScreenOn() {
-    let some = '#' + this.opts.id_talkers + ' .' + this.scr_on;
+    let some = '#' + this.oin.id_talkers + ' .' + this.scr_on;
 
     if ($(some).length > 0) return;
 
-    this.opts.bd.removeClass(this.scr_on);
+    this.oin.bd.removeClass(this.scr_on);
   }
 
   screeChanged(cont) {
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.opts.callError("Failed to parse screeChanged")
+      return this.oin.callError("Failed to parse screeChanged")
     }
 
     let oc = this.talkers[js.strid];
@@ -138,8 +143,8 @@ class TalkerHandler {
 
     if (js.screen_on) {
       cont_vw.classList.add(this.scr_on);
-      this.opts.bd.addClass(this.scr_on);
-      this.opts.res.resize();
+      this.oin.bd.addClass(this.scr_on);
+      this.oin.res.resize();
 
       return;
     }
@@ -154,7 +159,7 @@ class TalkerHandler {
     this.setMicCam(oc);
 
     this.removeScreenOn();
-    this.opts.res.resize();
+    this.oin.res.resize();
   }
 
   toggleScreen(some_button, fnSe) {
@@ -170,20 +175,20 @@ class TalkerHandler {
 
   beginRecServ(some_button) {
     let jo = {
-      'tp': this.opts.ws.TPS.BREC,
+      'tp': this.oin.ws.TPS.BREC,
     };
 
-    this.opts.ws.handler.send(JSON.stringify(jo));
+    this.oin.ws.handler.send(JSON.stringify(jo));
 
     some_button.addClass('on');
   }
 
   stopRecServ() {
     let jo = {
-      'tp': this.opts.ws.TPS.EREC,
+      'tp': this.oin.ws.TPS.EREC,
     };
 
-    this.opts.ws.handler.send(JSON.stringify(jo));
+    this.oin.ws.handler.send(JSON.stringify(jo));
   }
 
   anotherRecordServ(some_button, cont) {
@@ -194,7 +199,7 @@ class TalkerHandler {
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.opts.callError("Failed to parse anotherRecordServ")
+      return this.oin.callError("Failed to parse anotherRecordServ")
     }
 
     let oc = this.talkers[js.strid];
@@ -212,7 +217,7 @@ class TalkerHandler {
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.opts.callError("Failed to parse startedRecordServ")
+      return this.oin.callError("Failed to parse startedRecordServ")
     }
 
     let oc = this.talkers[js.strid];
@@ -226,7 +231,7 @@ class TalkerHandler {
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.opts.callError("Failed to parse stoppedRecordServ")
+      return this.oin.callError("Failed to parse stoppedRecordServ")
     }
 
     this.setDownloadLinkServ(some_button, js);
@@ -243,10 +248,28 @@ class TalkerHandler {
     if (oc.recording) oc.recording = false;
   }
 
+  procChatMessage(cont) {
+    let js = JSON.parse(cont);
+
+    if (!js) {
+      return this.oin.callError("Failed to parse procChatMessage")
+    }
+
+    if (js.uquser == this.oin.ws.uquser) {
+      this.taber.create_el_chat('', js.chat_message);
+      return;
+    }
+
+    let oc = this.talkers[js.strid];
+    if (!oc) return;
+
+    this.taber.create_el_chat(oc.nik, js.chat_message);
+  }
+
   setDownloadLinkServ(some_button, js) {
     if (!js.uquser) return;
 
-    if (js.uquser != this.opts.ws.uquser) return;
+    if (js.uquser != this.oin.ws.uquser) return;
 
     if (!js.vili) return;
 
@@ -260,9 +283,9 @@ class TalkerHandler {
 
     let he = lire.attr('data-he');
     let re = lire.attr('data-re');
-    he = he.replace('xxx', this.opts.ws.uqroom).replace('yyy', js.vili);
+    he = he.replace('xxx', this.oin.ws.uqroom).replace('yyy', js.vili);
 
-    let sv = new Saver(this.opts.ws, lire[0], js.vili, re);
+    let sv = new Saver(this.oin.ws, lire[0], js.vili, re);
     sv.download(he, (file) => {
       sv.save(file);
     });
@@ -288,7 +311,7 @@ class TalkerHandler {
       return;
     }
 
-    sv.startCapture(this.opts.ws.uqroom, some_button_in, this.talkers, this.localStream);
+    sv.startCapture(this.oin.ws.uqroom, some_button_in, this.talkers, this.localStream);
     return;
   }
 
@@ -308,7 +331,7 @@ class TalkerHandler {
   }
 
   startShow() {
-    if (this.opts.ws.virt) {
+    if (this.oin.ws.virt) {
       this.call();
       return;
     }
@@ -324,7 +347,7 @@ class TalkerHandler {
         this.call();
       })
       .catch(e => {
-        this.opts.callError(e);
+        this.oin.callError(e);
       });
   }
 
@@ -341,38 +364,38 @@ class TalkerHandler {
     }
 
     let jo = {
-      'tp': this.opts.ws.TPS.JOINROOM,
+      'tp': this.oin.ws.TPS.JOINROOM,
       'content': JSON.stringify({
-        'sound': this.opts.ws.mic,
-        'video': this.opts.ws.cam
+        'sound': this.oin.ws.mic,
+        'video': this.oin.ws.cam
       })
     }
 
-    if (this.opts.vid_self) {
-      this.opts.vid_self.srcObject = this.localStream;
+    if (this.oin.vid_self) {
+      this.oin.vid_self.srcObject = this.localStream;
     }
 
-    this.opts.ws.handler.send(JSON.stringify(jo));
+    this.oin.ws.handler.send(JSON.stringify(jo));
   }
 
   onIceCandidate(e) {
     if (!e.candidate) return
 
-    if (!this.opts.ws.handler) return
+    if (!this.oin.ws.handler) return
 
     let jo = {
-      'tp': this.opts.ws.TPS.CANDIDATE,
+      'tp': this.oin.ws.TPS.CANDIDATE,
       'content': JSON.stringify(e.candidate)
     }
 
-    this.opts.ws.handler.send(JSON.stringify(jo));
+    this.oin.ws.handler.send(JSON.stringify(jo));
   }
 
   setCandidate(content) {
     let cand = JSON.parse(content)
 
     if (!cand) {
-      return this.opts.callError("failed to parse candidate")
+      return this.oin.callError("failed to parse candidate")
     }
 
     this.pc.addIceCandidate(cand)
@@ -382,7 +405,7 @@ class TalkerHandler {
     let offer = JSON.parse(content);
 
     if (!offer) {
-      return this.opts.callError("failed to parse offer");
+      return this.oin.callError("failed to parse offer");
     }
 
     this.pc.setRemoteDescription(offer);
@@ -390,11 +413,11 @@ class TalkerHandler {
       this.pc.setLocalDescription(answer);
 
       let jo = {
-        'tp': this.opts.ws.TPS.ANSWER,
+        'tp': this.oin.ws.TPS.ANSWER,
         'content': JSON.stringify(answer)
       }
 
-      this.opts.ws.handler.send(JSON.stringify(jo));
+      this.oin.ws.handler.send(JSON.stringify(jo));
     });
   }
 
@@ -415,11 +438,11 @@ class TalkerHandler {
     this.talkers[elid][e.track.kind] = str;
 
     let jo = {
-      'tp': this.opts.ws.TPS.WHOCO,
+      'tp': this.oin.ws.TPS.WHOCO,
       'content': ''
     }
 
-    this.opts.ws.handler.send(JSON.stringify(jo));
+    this.oin.ws.handler.send(JSON.stringify(jo));
   }
 
   checkTalkers() {
@@ -446,11 +469,11 @@ class TalkerHandler {
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.opts.callError("Failed to parse pushTalkers")
+      return this.oin.callError("Failed to parse pushTalkers")
     }
 
     if (!js.list) {
-      return this.opts.callError("No list pushTalkers")
+      return this.oin.callError("No list pushTalkers")
     }
 
     let list = js.list;
@@ -539,7 +562,6 @@ class TalkerHandler {
     let audioID = elid + this.CC.audio;
     let nikID = elid + this.CC.nik;
     let usetID = elid + this.CC.uset;
-    let litID = elid + this.CC.lit;
 
     let nik_el = document.createElement('span');
     nik_el.id = nikID;
@@ -574,33 +596,27 @@ class TalkerHandler {
     ta_co.id = elid;
     if (oc.screen_on) {
       ta_co.classList.add(this.scr_on);
-      this.opts.bd.addClass(this.scr_on);
+      this.oin.bd.addClass(this.scr_on);
     }
-
-    let lit_el = document.createElement('li');
-    lit_el.id = litID;
-    let lit_nik = document.createTextNode(oc.nik);
-    lit_el.appendChild(lit_nik);
-
-    this.opts.ta_ul_cont.appendChild(lit_el);
 
     ta_co.appendChild(vid);
     ta_co.appendChild(au);
     ta_co.appendChild(nik_el);
     ta_co.appendChild(uset_el);
 
-    this.opts.talkers_cont.appendChild(ta_co);
+    this.oin.talkers_cont.appendChild(ta_co);
+
+    this.taber.create_el_user(elid, oc);
 
     oc['el_video'] = vid;
     oc['el_audio'] = au;
     oc['el_container'] = ta_co;
     oc['el_nik'] = nik_el;
     oc['el_uset'] = uset_el;
-    oc['el_lit'] = lit_el;
 
     this.setMicCam(oc);
     this.doMeter(oc['audio'], ta_co);
-    this.opts.res.resize()
+    this.oin.res.resize()
   }
 
   doMeter(str, vcont) {
@@ -630,7 +646,7 @@ class TalkerHandler {
         micNode.connect(volumeMeterNode).connect(ctx.destination);
       })
       .catch(e => {
-        this.opts.callError(e)
+        this.oin.callError(e)
       });
   }
 
@@ -641,11 +657,12 @@ class TalkerHandler {
 
     if (!oc) return;
 
-    oc['el_lit'].remove();
     oc['el_container'].remove();
     delete this.talkers[elid];
 
-    this.opts.res.resize()
+    this.taber.remove_el_user(elid);
+
+    this.oin.res.resize()
   }
 
   endSession() {

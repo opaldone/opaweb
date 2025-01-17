@@ -26,7 +26,8 @@ class WSchat {
         BREC: "beginrecord",
         EREC: "endrecord",
         AREC: "anotherrecord",
-        RREC: "remrec"
+        RREC: "remrec",
+        CHAT: "chat"
       }
     };
 
@@ -40,8 +41,6 @@ class WSchat {
     this.id_talkers = 'talkers'
     this.talkers_cont = document.getElementById(this.id_talkers);
     this.res = new Resie(this.talkers_cont);
-
-    this.ta_ul_cont = document.getElementById('ta-ul');
 
     $(window).on( "resize", this.docResize.bind(this));
 
@@ -63,7 +62,6 @@ class WSchat {
     this.KEYS = new Set();
     this.doc.bind('keydown', this.dockd.bind(this));
     this.doc.bind('keyup', this.docku.bind(this));
-
   }
 
   dockd(e) {
@@ -144,10 +142,10 @@ class WSchat {
       'bd': this.bd,
       'id_talkers': this.id_talkers,
       'talkers_cont': this.talkers_cont,
-      'ta_ul_cont': this.ta_ul_cont,
       'res': this.res,
       'callError': this.onError,
-      'vid_self': null
+      'vid_self': null,
+      'doc': this.doc
     };
 
     if (this.vid_self[0] != undefined) {
@@ -155,7 +153,6 @@ class WSchat {
     }
 
     this.th = new TalkerHandler(ob);
-
     this.th.startShow()
 
     this.vidSelfChange(this.ws.cam);
@@ -255,6 +252,9 @@ class WSchat {
           break;
         case this.ws.TPS.EREC:
           this.th.stoppedRecordServ(this.tg_rec_serv, msg.content);
+          break;
+        case this.ws.TPS.CHAT:
+          this.th.procChatMessage(msg.content);
           break;
       }
     }

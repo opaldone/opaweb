@@ -1,5 +1,5 @@
 ;"use strict";
-$(function() {
+$(() => {
   let doc = $(document);
   let start_ws = '#start-ws';
   let back = '#ws-back';
@@ -62,9 +62,11 @@ $(function() {
 
     if (!nik_name[0].reportValidity()) return;
 
+    let nik_name_val = nik_name.val();
+
     let obj = {
       'uqroom': uqr_inp.val(),
-      'nik': nik_name.val(),
+      'nik': nik_name_val,
       'mic': mic_inp.prop('checked') ? true : false,
       'cam': cam_inp.prop('checked') ? true : false
     };
