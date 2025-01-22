@@ -91,7 +91,6 @@ func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		"sets":    s,
 		"camic":   map[string]bool{"mic": re.Mic, "cam": re.Cam, "tophint": false},
 		"recserv": len(env.RecFolder) > 0,
-		"debug":   env.Debug,
 	}
 
 	co := GetHTMLAjax(data, []string{"wschat/sta", "wschat/camic"})

@@ -29,17 +29,17 @@ func main() {
 		csrf.Path("/"),
 	)
 
-	if e.Debug {
-		startDevTLS(e, csrf_h)
+	if e.Acme {
+		startAcme(e, csrf_h)
 		return
 	}
 
-	startTLS(e, csrf_h)
+	startSelf(e, csrf_h)
 }
 
-func startDevTLS(e *config.Configuration, cs func(http.Handler) http.Handler) {
-	fmt.Printf("\n[%s] %s started\ncrt\t\t%s\nkey\t\t%s\naddress\t\t%s:%d\n",
-		"debug", e.Appname,
+func startSelf(e *config.Configuration, cs func(http.Handler) http.Handler) {
+	fmt.Printf("\n[%s] %s\ncrt\t\t%s\nkey\t\t%s\naddress\t\t%s:%d\n",
+		"self", e.Appname,
 		e.Crt, e.Key,
 		e.Address, e.Port,
 	)
@@ -51,15 +51,16 @@ func startDevTLS(e *config.Configuration, cs func(http.Handler) http.Handler) {
 		Handler:        cs(mux),
 		ReadTimeout:    time.Duration(ct["ReadTimeout"] * int64(time.Second)),
 		WriteTimeout:   time.Duration(ct["WriteTimeout"] * int64(time.Second)),
+		IdleTimeout:    time.Duration(ct["IdleTimeout"] * int64(time.Second)),
 		MaxHeaderBytes: 1 << 20,
 	}
 
 	log.Fatalln(server.ListenAndServeTLS(e.Crt, e.Key))
 }
 
-func startTLS(e *config.Configuration, cs func(http.Handler) http.Handler) {
-	fmt.Printf("\n[%s] %s started\nacmehost\t%s\ndirCache\t%s\naddress\t\t%s:%d\n",
-		"prod", e.Appname,
+func startAcme(e *config.Configuration, cs func(http.Handler) http.Handler) {
+	fmt.Printf("\n[%s] %s\nacmehost\t%s\ndirCache\t%s\naddress\t\t%s:%d\n",
+		"acme", e.Appname,
 		e.Acmehost, e.DirCache, e.Address, e.Port,
 	)
 
@@ -72,7 +73,7 @@ func startTLS(e *config.Configuration, cs func(http.Handler) http.Handler) {
 	mux := controllers.GetRouters()
 
 	server := &http.Server{
-		Addr:           fmt.Sprintf(":%d", e.Port),
+		Addr:           fmt.Sprintf("%s:%d", e.Address, e.Port),
 		Handler:        cs(mux),
 		ReadTimeout:    time.Duration(ct["ReadTimeout"] * int64(time.Second)),
 		WriteTimeout:   time.Duration(ct["WriteTimeout"] * int64(time.Second)),
