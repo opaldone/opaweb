@@ -1,9 +1,9 @@
 {
   "appname": "opaweb",
-  "debug": true,
   "address": "0.0.0.0",
   "port": 443,
-  "acmehost": "admigo.uk.to",
+  "acme": false,
+  "acmehost": "opaldone.click",
   "dirCache": "./certs",
   "recFolder": "/mnt/terik/a_my/admigo_project/opachat/bin/vid",
   "crt": "/mnt/terik/a_my/admigo_project/admigo/bin/certs_local/server.crt",

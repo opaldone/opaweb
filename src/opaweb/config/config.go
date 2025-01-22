@@ -10,9 +10,9 @@ import (
 
 type Configuration struct {
 	Appname   string              `json:"appname"`
-	Debug     bool                `json:"debug"`
 	Address   string              `json:"address"`
 	Port      int                 `json:"port"`
+	Acme      bool                `json:"acme"`
 	Acmehost  string              `json:"acmehost"`
 	DirCache  string              `json:"dirCache"`
 	RecFolder string              `json:"recFolder,omitempty"`
