@@ -56,7 +56,7 @@ ls -lash --group-directories-first bin
 ```
 ## About config
 The config file is located here __opaweb/bin/config.json__
-```json
+```JavaScript
 {
   "appname": "opaweb", // Just a name of application
   "address": "0.0.0.0", // IP address of the server, zeros mean current host
