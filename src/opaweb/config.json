@@ -2,13 +2,13 @@
   "appname": "opaweb",
   "address": "0.0.0.0",
   "port": 443,
+  "static": "static",
   "acme": false,
   "acmehost": "opaldone.click",
   "dirCache": "./certs",
-  "recFolder": "/mnt/terik/a_my/admigo_project/opachat/bin/vid",
   "crt": "/mnt/terik/a_my/admigo_project/admigo/bin/certs_local/server.crt",
   "key": "/mnt/terik/a_my/admigo_project/admigo/bin/certs_local/server.key",
-  "static": "static",
+  "recFolder": "/mnt/terik/a_my/admigo_project/opachat/bin/vid",
   "ws": {
     "wsurl": "wss://admigo.so:7778",
     "perroom": 100
