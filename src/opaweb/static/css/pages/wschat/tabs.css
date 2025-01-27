@@ -3,8 +3,8 @@
   z-index: 4;
   width: 25%;
   right: -25%;
-  top: 0;
-  height: 100%;
+  top: 30px;
+  height: calc(100% - 115px);
   padding: 20px;
   background-color: #ffffff;
   transition: right 0.3s ease;
@@ -19,16 +19,7 @@
 #tabs-control {
   display: flex;
   align-items: center;
-  padding: 0 20px 20px 0;
-}
-
-#tabs-control.tb-chat,
-#tabs-control.tb-users {
-  position: absolute;
-  z-index: 5;
-  padding: 0;
-  right: 20px;
-  bottom: 20px;
+  padding: 0 10px 10px 0;
 }
 
 .tab-btn {
@@ -67,20 +58,7 @@
 
 #tabs-control.tb-chat #tb-chat,
 #tabs-control.tb-users #tb-users {
-  background-color: #e7e7e7;
-  box-shadow: none;
-}
-
-#tabs-control.tb-chat .tab-btn,
-#tabs-control.tb-users .tab-btn {
-  background-color: #f5f5f5;
-  border: none;
-  box-shadow: 1px 1px 2px #c7c7c7;
-}
-
-#tabs-control.tb-chat .tab-btn:focus,
-#tabs-control.tb-users .tab-btn:focus {
-  outline: none;
+  background-color: #171717;
 }
 
 .v-tabs-content {
@@ -123,7 +101,7 @@
 
 .ta-ul-list {
   width: 100%;
-  height: calc(100% - 156px);
+  height: calc(100% - 91px);
   overflow: auto;
   padding-bottom: 45px;
 }
@@ -253,5 +231,7 @@
     width: 100%;
     right: -100%;
     border-radius: 0;
+    top: 0;
+    height: calc(100% - 85px);
   }
 }
