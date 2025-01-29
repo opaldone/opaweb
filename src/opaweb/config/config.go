@@ -12,13 +12,13 @@ type Configuration struct {
 	Appname   string              `json:"appname"`
 	Address   string              `json:"address"`
 	Port      int                 `json:"port"`
+	Static    string              `json:"static"`
 	Acme      bool                `json:"acme"`
 	Acmehost  string              `json:"acmehost"`
 	DirCache  string              `json:"dirCache"`
-	RecFolder string              `json:"recFolder,omitempty"`
 	Crt       string              `json:"crt,omitempty"`
 	Key       string              `json:"key,omitempty"`
-	Static    string              `json:"static"`
+	RecFolder string              `json:"recFolder,omitempty"`
 	Ws        *wsConfig           `json:"ws"`
 	IceList   []map[string]string `json:"iceList"`
 }
