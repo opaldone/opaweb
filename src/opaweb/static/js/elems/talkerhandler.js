@@ -623,7 +623,7 @@ class TalkerHandler {
     if (str == undefined) return;
 
     const ctx = new AudioContext();
-    ctx.audioWorklet.addModule('/static/js/wschat/vmeter.js')
+    ctx.audioWorklet.addModule('/static/js/elems/vmeter.js')
       .then(() => {
         const micNode = ctx.createMediaStreamSource(str);
         const volumeMeterNode = new AudioWorkletNode(ctx, 'volume-meter');

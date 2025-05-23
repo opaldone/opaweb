@@ -2,7 +2,6 @@
 $(() => {
   let doc = $(document);
   let start_ws = '#start-ws';
-  let back = '#ws-back';
   let nik_name = $('#nik-name').eq(0);
   let ws_main = $('#ws-main').eq(0);
   let btn_rb = '.camic-button';
@@ -36,17 +35,6 @@ $(() => {
     pa.addClass('checked');
     ch.prop('checked', true);
     ch.trigger('change');
-
-    return false;
-  });
-
-  doc.on('click', back, (ev) => {
-    ev.stopPropagation();
-    ev.preventDefault();
-
-    let th = $(ev.currentTarget);
-    let hr = th.attr('href');
-    window.location.href = hr;
 
     return false;
   });

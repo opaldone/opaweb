@@ -26,7 +26,7 @@
             <div class="form-btns clearfix">
               <input id="uqroom" type="hidden" value="{{ index . "uqroom" }}">
               <button id="start-ws" href="{{ ro ("ws_me_start") }}" class="form-btn flo">Start chat</button>
-              <button id="ws-back" href="{{ ro ("home") }}" class="link-back">Back</button>
+              <a id="ws-back" href="{{ ro ("home") }}" class="link-back">Back</a>
             </div>
           </div>
         </div>
@@ -35,17 +35,19 @@
   {{ end }}
 
   {{ define "styles" }}
-    <link rel="stylesheet" type="text/css" href="/static/css/wschat/ix.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/wschat/room.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/wschat/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/elems/ix.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/elems/room.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/elems/tabs.css" />
   {{ end }}
 
   {{ define "scripts" }}
-    <script src="/static/js/wschat/saver.js"></script>
-    <script src="/static/js/wschat/saver_client.js"></script>
-    <script src="/static/js/wschat/resie.js"></script>
-    <script src="/static/js/wschat/taber.js"></script>
-    <script src="/static/js/wschat/talkerhandler.js"></script>
-    <script src="/static/js/wschat/wschat.js"></script>
-    <script src="/static/js/wschat/ix.js"></script>
+    <script src="/static/external/js/axios.js"></script>
+    <script src="/static/js/inc/funcs.js"></script>
+    <script src="/static/js/elems/saver.js"></script>
+    <script src="/static/js/elems/saver_client.js"></script>
+    <script src="/static/js/elems/resie.js"></script>
+    <script src="/static/js/elems/taber.js"></script>
+    <script src="/static/js/elems/talkerhandler.js"></script>
+    <script src="/static/js/elems/wschat.js"></script>
+    <script src="/static/js/elems/ix.js"></script>
   {{ end }}

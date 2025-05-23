@@ -15,6 +15,7 @@ declare par=$1
 
 if [[ $par == "b" ]]; then
     cd "$src"
+    # declare err=$(go install -race 2>&1>/dev/null)
     declare err=$(go install 2>&1>/dev/null)
 
     if [[ ! -z $err ]]; then
@@ -35,6 +36,12 @@ if [[ $par == "b" ]]; then
     exit -1
 fi
 
+if [[ $par == "dd" ]]; then
+    cd "$src"
+    deadcode .
+    exit 0
+fi
+
 if [[ $par ]]; then
     echo -e "\nThe parameter \"$par\" is wrong\n"
     exit -1
@@ -42,8 +49,9 @@ fi
 
 if [[ -e $binka ]]; then
     cd $bin
-    echo -en "\033]0;$project\a"
-    $binka
+    # GORACE="log_path=$bin/rc halt_on_error=1" $binka
+    # $binka
+    $binka > /mnt/terik/a_my/temp/we.log 2>&1 &
 else
     echo -e "$binka not found\n"
 fi

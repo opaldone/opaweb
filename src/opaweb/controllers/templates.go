@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+
 	"opaweb/applog"
 
 	"github.com/gorilla/csrf"
@@ -14,7 +15,7 @@ func getSiteTemplates(filenames []string, fm template.FuncMap) (tmpl *template.T
 	var files []string
 
 	for _, file := range filenames {
-		files = append(files, fmt.Sprintf("templates/site/%s.html", file))
+		files = append(files, fmt.Sprintf("templates/%s.html", file))
 	}
 
 	if fm == nil {
@@ -41,7 +42,7 @@ func getFm() (fm template.FuncMap) {
 	return
 }
 
-func GenerateHTMLEmp(w http.ResponseWriter, r *http.Request, data interface{}, filenames []string) {
+func GenerateHTMLEmp(w http.ResponseWriter, r *http.Request, data interface{}, filenames ...string) {
 	funcMap := getFm()
 
 	if data == nil {
@@ -58,15 +59,15 @@ func GenerateHTMLEmp(w http.ResponseWriter, r *http.Request, data interface{}, f
 		}
 	}
 
-	filenames = append(filenames, "layout_emp")
+	filenames = append(filenames, "lays/layout")
 
-	getSiteTemplates(filenames, funcMap).ExecuteTemplate(w, "layout_emp", data)
+	getSiteTemplates(filenames, funcMap).ExecuteTemplate(w, "layout", data)
 }
 
 func GetHTMLAjax(data interface{}, filenames []string) string {
 	funcMap := getFm()
 
-	filenames = append(filenames, "layout_ajax")
+	filenames = append(filenames, "lays/layout_ajax")
 
 	t := getSiteTemplates(filenames, funcMap)
 
