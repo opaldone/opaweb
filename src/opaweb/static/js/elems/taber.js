@@ -1,36 +1,37 @@
 class Taber {
-  constructor (oin) {
+  constructor (fun_in, oin) {
+    this.fun = fun_in;
     this.oin = oin;
 
-    this.tb = $('#v-tabs').eq(0);
-    this.ctrls = $('#tabs-control').eq(0);
-    this.inp_chat = $('#ta-chat-inp').eq(0);
-    this.btn_chat = $('#ta-chat-send').eq(0);
-    this.tb_btn_chat = $('#tb-chat').eq(0);
-    this.tb_us_cnt = $('#tb-us-cnt').eq(0);
+    this.tb = document.getElementById('v-tabs');
+    this.ctrls = document.getElementById('tabs-control');
+    this.inp_chat = document.getElementById('ta-chat-inp');
+    this.btn_chat = document.getElementById('ta-chat-send');
+    this.tb_btn_chat = document.getElementById('tb-chat');
+    this.tb_us_cnt = document.getElementById('tb-us-cnt');
 
-    this.ul_chat = $('#ta-ul-chat').eq(0);
-    this.ul_users = $('#ta-ul-users').eq(0);
+    this.ul_chat = document.getElementById('ta-ul-chat');
+    this.ul_users = document.getElementById('ta-ul-users');
 
-    this.oin.doc.on('click', '.tab-btn', this.tb_click.bind(this));
-    this.inp_chat.on('keypress', this.inp_chat_press.bind(this));
-    this.btn_chat.on('click', this.btn_chat_click.bind(this));
+    this.inp_chat.addEventListener('keypress', this.inp_chat_press.bind(this));
+    this.btn_chat.addEventListener('click', this.btn_chat_click.bind(this));
 
     this.taids = [];
-    $('.tab-btn').each((_, el) => {
-      let elid = $(el).attr('id');
+    document.querySelectorAll('.tab-btn').forEach(el => {
+      let elid = el.getAttribute('id');
       this.taids.push(elid);
+      el.addEventListener('click', this.tb_click.bind(this));
     });
   }
 
   _rem_cls(cls) {
-    this.tb.removeClass(cls);
-    this.ctrls.removeClass(cls);
+    this.tb.classList.remove(cls);
+    this.ctrls.classList.remove(cls);
   }
 
   _add_cls(cls) {
-    this.tb.addClass(cls);
-    this.ctrls.addClass(cls);
+    this.tb.classList.add(cls);
+    this.ctrls.classList.add(cls);
   }
 
   _clear_cls(tid) {
@@ -41,11 +42,11 @@ class Taber {
   }
 
   tb_click(e) {
-    let btn = $(e.currentTarget);
-    let tid = btn.attr('id');
-    let cl_tid = '.' + tid;
+    let btn = e.currentTarget;
 
-    if (this.tb.is(cl_tid)) {
+    let tid = btn.getAttribute('id');
+
+    if (this.tb.classList.contains(tid)) {
       this._rem_cls(tid);
       return;
     }
@@ -56,7 +57,7 @@ class Taber {
     if (tid == 'tb-chat') {
       setTimeout(() => {
         this.inp_chat.focus();
-        this.tb_btn_chat.removeClass('notif');
+        this.tb_btn_chat.classList.remove('notif');
       }, 300);
     }
   }
@@ -73,11 +74,11 @@ class Taber {
   }
 
   btn_chat_click() {
-    let msg = this.inp_chat.val();
+    let msg = this.inp_chat.value;
 
     this.send_message(msg);
 
-    this.inp_chat.val('');
+    this.inp_chat.value = '';
     this.inp_chat.focus();
   }
 
@@ -92,7 +93,7 @@ class Taber {
     }
 
     if (e.keyCode == 13) {
-      this.btn_chat.trigger('click');
+      this.fun.trigger(this.btn_chat, 'click');
       e.preventDefault();
       return false;
     }
@@ -132,19 +133,22 @@ class Taber {
       .replace(/#TM#/, tms)
       .replace(/#MSG#/, msg_p);
 
-    let li = $(lis);
+    let tem = document.createElement('template');
+    tem.innerHTML = lis;
+    tem.content.querySelectorAll('li').forEach(li => {
+      this.ul_chat.append(li);
+    });
 
-    this.ul_chat.append(li);
-    this.ul_chat.scrollTop(this.ul_chat[0].scrollHeight);
+    this.ul_chat.scrollTop = this.ul_chat.scrollHeight;
 
-    if (!this.tb.is('.tb-chat')) {
-      this.tb_btn_chat.addClass('notif');
+    if (!this.tb.classList.contains('tb-chat')) {
+      this.tb_btn_chat.classList.add('notif');
     }
   }
 
   set_count_users() {
-    let len = this.ul_users.children().length;
-    this.tb_us_cnt.text(len + 1);
+    let len = this.ul_users.children.length;
+    this.tb_us_cnt.textContent = len + 1;
   }
 
   create_el_user(elid, oc) {
@@ -159,8 +163,12 @@ class Taber {
       .replace(/#LID#/, litID)
       .replace(/#NIK#/, oc.nik);
 
-    let li = $(lis);
-    this.ul_users.append(li);
+
+    let tem = document.createElement('template');
+    tem.innerHTML = lis;
+    tem.content.querySelectorAll('li').forEach(li => {
+      this.ul_users.append(li);
+    });
 
     this.set_count_users();
   }

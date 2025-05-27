@@ -1,76 +1,120 @@
 ;"use strict";
-$(() => {
-  let doc = $(document);
-  let start_ws = '#start-ws';
-  let nik_name = $('#nik-name').eq(0);
-  let ws_main = $('#ws-main').eq(0);
-  let btn_rb = '.camic-button';
-  let cp_link = '#cp-link';
+class Starter {
+  constructor() {
+    this.fun = new Funcs();
+    this.fun.ready(this.handler.bind(this));
 
-  nik_name.on('keyup', ev => {
+    this.nik_name = null;
+    this.start_ws = null;
+    this.ws_main = null;
+  }
+
+  nik_name_keyup(ev) {
     ev.stopPropagation();
 
     if (ev.key !== "Enter") return;
 
-    doc[0].querySelector(start_ws).click()
+    this.fun.trigger(this.start_ws, 'click');
 
     ev.preventDefault();
-  });
+  }
 
-  doc.on('click', btn_rb, (ev) => {
+  btn_rb_click(ev) {
     ev.stopPropagation();
     ev.preventDefault();
 
-    let th = $(ev.currentTarget);
-    let pa = th.parents('.lbl-tha').eq(0);
-    ch = pa.find('.tp-tha-rb').eq(0);
+    let th = ev.currentTarget;
+    let pa = this.fun.parent(th, '.lbl-tha');
+    let ch = pa.querySelector('.tp-tha-rb');
 
-    if (ch.prop('checked')) {
-      pa.removeClass('checked');
-      ch.prop('checked', false);
-      ch.trigger('change');
+    if (ch.checked) {
+      pa.classList.remove('checked');
+      ch.checked = false;
+      this.fun.trigger(ch, 'change');
       return false;
     }
 
-    pa.addClass('checked');
-    ch.prop('checked', true);
-    ch.trigger('change');
+    pa.classList.add('checked');
+    ch.checked = true;
+    this.fun.trigger(ch, 'change');
 
     return false;
-  });
+  }
 
-  doc.on('click', start_ws, (ev) => {
+  cp_link_click(ev) {
     ev.stopPropagation();
     ev.preventDefault();
 
-    let th = $(ev.currentTarget);
-    let mic_inp = $('#cb-mic').eq(0);
-    let cam_inp = $('#cb-cam').eq(0);
-    let uqr_inp = $('#uqroom').eq(0);
+    let btn = ev.currentTarget;
 
-    if (!nik_name[0].reportValidity()) return;
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      btn.setAttribute('data-hint', 'The link has been copied');
+      setTimeout(() => {
+        btn.setAttribute('data-hint', 'Copy link');
+      }, 1000);
+    });
 
-    let nik_name_val = nik_name.val();
+    return false;
+  }
+
+   makeid(len) {
+    var ret = '';
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var cl = chars.length;
+    for ( var i = 0; i < len; i++ ) {
+      ret += chars.charAt(Math.floor(Math.random() * cl));
+    }
+    return ret;
+  }
+
+  docon() {
+    document.querySelectorAll('.camic-button').forEach(btn_rb => {
+      if (this.fun.once(btn_rb, 'btn_rb_click')) return;
+      btn_rb.addEventListener('click', this.btn_rb_click.bind(this));
+    });
+
+    let cp_link = document.getElementById('cp-link');
+    if (!this.fun.once(cp_link, 'cp_link_click')) {
+      cp_link.addEventListener('click', this.cp_link_click.bind(this));
+    }
+  }
+
+  start_ws_click(ev) {
+    ev.stopPropagation();
+    ev.preventDefault();
+
+    let th = ev.currentTarget;
+
+    let mic_inp = document.getElementById('cb-mic');
+    let cam_inp = document.getElementById('cb-cam');
+    let uqr_inp = document.getElementById('uqroom');
+
+    if (this.nik_name.value.length == 0) {
+      this.nik_name.value = 'user_' + this.makeid(5);
+    }
 
     let obj = {
-      'uqroom': uqr_inp.val(),
-      'nik': nik_name_val,
-      'mic': mic_inp.prop('checked') ? true : false,
-      'cam': cam_inp.prop('checked') ? true : false
+      'uqroom': uqr_inp.value,
+      'nik': this.nik_name.value,
+      'mic': mic_inp.checked,
+      'cam': cam_inp.checked
     };
 
     let cs = document.getElementsByName("gorilla.csrf.Token")[0].value;
 
-    let url = th.attr('href');
+    let url = th.getAttribute('href');
 
     axios.post(url, obj, {
       headers: { "X-CSRF-Token": cs }
     })
       .then(re => {
-        ws_main.html(re.data.cont);
+        this.ws_main.innerHTML = re.data.cont;
 
-        doc.attr('title', re.data.sets.nik);
-        let ws = new WSchat();
+        this.docon();
+
+        document.title = re.data.sets.nik;
+
+        let ws = new WSchat(this.fun);
         ws.connectWs(re.data.sets);
       })
       .catch(err => {
@@ -78,22 +122,20 @@ $(() => {
       });
 
     return false;
-  });
+  }
 
-  doc.on('click', cp_link, (ev) => {
-    ev.stopPropagation();
-    ev.preventDefault();
+  handler() {
+    this.nik_name = document.getElementById('nik-name');
+    this.start_ws = document.getElementById('start-ws');
+    this.ws_main = document.getElementById ('ws-main');
 
-    let btn = $(ev.currentTarget);
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      btn.attr({'data-hint': 'The link has been copied'});
-      setTimeout(() => {
-        btn.attr({'data-hint': 'Copy link'});
-      }, 1000);
-    });
+    this.nik_name.addEventListener('keyup', this.nik_name_keyup.bind(this));
+    this.start_ws.addEventListener('click', this.start_ws_click.bind(this));
 
-    return false;
-  });
+    this.docon();
 
-  nik_name.focus();
-});
+    this.nik_name.focus();
+  }
+}
+
+new Starter();

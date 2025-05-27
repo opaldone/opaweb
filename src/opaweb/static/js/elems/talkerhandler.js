@@ -1,6 +1,7 @@
 class TalkerHandler {
-  constructor (oin) {
-    this.oin = oin;
+  constructor(fun_in, oin_in) {
+    this.fun = fun_in;
+    this.oin = oin_in;
 
     this.CC = {
       'video': '-vid',
@@ -22,8 +23,7 @@ class TalkerHandler {
       iceServers: this.oin.ws.iceList
     };
 
-    this.taber = new Taber({
-      'doc': this.oin.doc,
+    this.taber = new Taber(this.fun, {
       'ws': this.oin.ws
     });
   }
@@ -47,7 +47,7 @@ class TalkerHandler {
   shareScreen(some_button, fnSe) {
     window.navigator.mediaDevices.getDisplayMedia({'audio': false, 'video': true})
       .then(st => {
-        some_button.addClass('on');
+        some_button.classList.add('on');
 
         let se = fnSe();
 
@@ -81,7 +81,7 @@ class TalkerHandler {
   videoBack(some_button, fnSe) {
     this.sharedStream.getTracks().forEach(tra => tra.stop());
     this.sharedStream = null;
-    some_button.removeClass('on');
+    some_button.classList.remove('on');
 
     let se = fnSe();
 
@@ -121,14 +121,6 @@ class TalkerHandler {
     this.setMicCam(oc);
   }
 
-  removeScreenOn() {
-    let some = '#' + this.oin.id_talkers + ' .' + this.scr_on;
-
-    if ($(some).length > 0) return;
-
-    this.oin.bd.removeClass(this.scr_on);
-  }
-
   screeChanged(cont) {
     let js = JSON.parse(cont);
 
@@ -143,7 +135,7 @@ class TalkerHandler {
 
     if (js.screen_on) {
       cont_vw.classList.add(this.scr_on);
-      this.oin.bd.addClass(this.scr_on);
+      document.body.classList.add(this.scr_on);
       this.oin.res.resize();
 
       return;
@@ -158,7 +150,7 @@ class TalkerHandler {
 
     this.setMicCam(oc);
 
-    this.removeScreenOn();
+    document.body.classList.remove(this.scr_on);
     this.oin.res.resize();
   }
 
