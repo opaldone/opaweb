@@ -8,12 +8,12 @@ class SaverClient {
 
   actButton() {
     if (!this.someButton) return;
-    this.someButton.addClass('on');
+    this.someButton.classList.add('on');
   }
 
   deaButton() {
     if (!this.someButton) return;
-    this.someButton.removeClass('on');
+    this.someButton.classList.remove('on');
   }
 
   checkCodecsSupported() {

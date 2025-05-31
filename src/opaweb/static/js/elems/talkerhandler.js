@@ -172,7 +172,7 @@ class TalkerHandler {
 
     this.oin.ws.handler.send(JSON.stringify(jo));
 
-    some_button.addClass('on');
+    some_button.classList.add('on');
   }
 
   stopRecServ() {
@@ -184,8 +184,8 @@ class TalkerHandler {
   }
 
   anotherRecordServ(some_button, cont) {
-    if (some_button.is('.on')) {
-      some_button.removeClass('on');
+    if (some_button.classList.contains('on')) {
+      some_button.classList.remove('on');
     }
 
     let js = JSON.parse(cont);
@@ -265,19 +265,19 @@ class TalkerHandler {
 
     if (!js.vili) return;
 
-    if (some_button.is('.on')) {
-      some_button.removeClass('on');
+    if (some_button.classList.contains('on')) {
+      some_button.classList.remove('on');
     }
 
-    let lire = $('#li-re').eq(0);
+    let lire = document.getElementById('li-re');
 
-    if (!lire[0]) return ;
+    if (!lire) return ;
 
-    let he = lire.attr('data-he');
-    let re = lire.attr('data-re');
+    let he = lire.getAttribute('data-he');
+    let re = lire.getAttribute('data-re');
     he = he.replace('xxx', this.oin.ws.uqroom).replace('yyy', js.vili);
 
-    let sv = new Saver(this.oin.ws, lire[0], js.vili, re);
+    let sv = new Saver(this.oin.ws, lire, js.vili, re);
     sv.download(he, (file) => {
       sv.save(file);
     });
@@ -286,7 +286,7 @@ class TalkerHandler {
   toggleRecordServ(some_button) {
     if (!this.pc) return;
 
-    if (some_button.is('.on')) {
+    if (some_button.classList.contains('on')) {
       this.stopRecServ();
       return;
     }
@@ -296,9 +296,7 @@ class TalkerHandler {
   }
 
   toggleRecordClent(sv, some_button_in) {
-    if (Object.keys(this.talkers).length == 0) return;
-
-    if (some_button_in.is('.on')) {
+    if (some_button_in.classList.contains('on')) {
       sv.stopCapture();
       return;
     }
