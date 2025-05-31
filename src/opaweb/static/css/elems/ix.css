@@ -30,6 +30,11 @@ input:-webkit-autofill:valid {
   width: 30%;
 }
 
+#ws-cont-btns {
+  width: 100%;
+  text-align: center;
+}
+
 #ws-create-form {
   display: flex;
   align-items: center;
@@ -47,6 +52,9 @@ input:-webkit-autofill:valid {
 }
 
 .ws-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 250px;
   height: 250px;
   border: none;

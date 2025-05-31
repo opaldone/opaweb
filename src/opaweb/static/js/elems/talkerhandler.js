@@ -1,6 +1,7 @@
 class TalkerHandler {
-  constructor (oin) {
-    this.oin = oin;
+  constructor(fun_in, oin_in) {
+    this.fun = fun_in;
+    this.oin = oin_in;
 
     this.CC = {
       'video': '-vid',
@@ -22,8 +23,7 @@ class TalkerHandler {
       iceServers: this.oin.ws.iceList
     };
 
-    this.taber = new Taber({
-      'doc': this.oin.doc,
+    this.taber = new Taber(this.fun, {
       'ws': this.oin.ws
     });
   }
@@ -47,7 +47,7 @@ class TalkerHandler {
   shareScreen(some_button, fnSe) {
     window.navigator.mediaDevices.getDisplayMedia({'audio': false, 'video': true})
       .then(st => {
-        some_button.addClass('on');
+        some_button.classList.add('on');
 
         let se = fnSe();
 
@@ -81,7 +81,7 @@ class TalkerHandler {
   videoBack(some_button, fnSe) {
     this.sharedStream.getTracks().forEach(tra => tra.stop());
     this.sharedStream = null;
-    some_button.removeClass('on');
+    some_button.classList.remove('on');
 
     let se = fnSe();
 
@@ -121,14 +121,6 @@ class TalkerHandler {
     this.setMicCam(oc);
   }
 
-  removeScreenOn() {
-    let some = '#' + this.oin.id_talkers + ' .' + this.scr_on;
-
-    if ($(some).length > 0) return;
-
-    this.oin.bd.removeClass(this.scr_on);
-  }
-
   screeChanged(cont) {
     let js = JSON.parse(cont);
 
@@ -143,7 +135,7 @@ class TalkerHandler {
 
     if (js.screen_on) {
       cont_vw.classList.add(this.scr_on);
-      this.oin.bd.addClass(this.scr_on);
+      document.body.classList.add(this.scr_on);
       this.oin.res.resize();
 
       return;
@@ -158,7 +150,7 @@ class TalkerHandler {
 
     this.setMicCam(oc);
 
-    this.removeScreenOn();
+    document.body.classList.remove(this.scr_on);
     this.oin.res.resize();
   }
 
@@ -180,7 +172,7 @@ class TalkerHandler {
 
     this.oin.ws.handler.send(JSON.stringify(jo));
 
-    some_button.addClass('on');
+    some_button.classList.add('on');
   }
 
   stopRecServ() {
@@ -192,8 +184,8 @@ class TalkerHandler {
   }
 
   anotherRecordServ(some_button, cont) {
-    if (some_button.is('.on')) {
-      some_button.removeClass('on');
+    if (some_button.classList.contains('on')) {
+      some_button.classList.remove('on');
     }
 
     let js = JSON.parse(cont);
@@ -273,19 +265,19 @@ class TalkerHandler {
 
     if (!js.vili) return;
 
-    if (some_button.is('.on')) {
-      some_button.removeClass('on');
+    if (some_button.classList.contains('on')) {
+      some_button.classList.remove('on');
     }
 
-    let lire = $('#li-re').eq(0);
+    let lire = document.getElementById('li-re');
 
-    if (!lire[0]) return ;
+    if (!lire) return ;
 
-    let he = lire.attr('data-he');
-    let re = lire.attr('data-re');
+    let he = lire.getAttribute('data-he');
+    let re = lire.getAttribute('data-re');
     he = he.replace('xxx', this.oin.ws.uqroom).replace('yyy', js.vili);
 
-    let sv = new Saver(this.oin.ws, lire[0], js.vili, re);
+    let sv = new Saver(this.oin.ws, lire, js.vili, re);
     sv.download(he, (file) => {
       sv.save(file);
     });
@@ -294,7 +286,7 @@ class TalkerHandler {
   toggleRecordServ(some_button) {
     if (!this.pc) return;
 
-    if (some_button.is('.on')) {
+    if (some_button.classList.contains('on')) {
       this.stopRecServ();
       return;
     }
@@ -304,9 +296,7 @@ class TalkerHandler {
   }
 
   toggleRecordClent(sv, some_button_in) {
-    if (Object.keys(this.talkers).length == 0) return;
-
-    if (some_button_in.is('.on')) {
+    if (some_button_in.classList.contains('on')) {
       sv.stopCapture();
       return;
     }
@@ -623,7 +613,7 @@ class TalkerHandler {
     if (str == undefined) return;
 
     const ctx = new AudioContext();
-    ctx.audioWorklet.addModule('/static/js/wschat/vmeter.js')
+    ctx.audioWorklet.addModule('/static/js/elems/vmeter.js')
       .then(() => {
         const micNode = ctx.createMediaStreamSource(str);
         const volumeMeterNode = new AudioWorkletNode(ctx, 'volume-meter');

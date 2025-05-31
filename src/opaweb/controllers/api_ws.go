@@ -43,7 +43,7 @@ type AjaAns struct {
 }
 
 func WSChat(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	GenerateHTMLEmp(w, r, nil, []string{"wschat/ix"})
+	GenerateHTMLEmp(w, r, nil, "stru/ix")
 }
 
 func WsMeet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -59,7 +59,7 @@ func WsMeetGet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		"camic":  map[string]bool{"mic": true, "cam": true, "tophint": true},
 	}
 
-	GenerateHTMLEmp(w, r, data, []string{"wschat/st_meet", "wschat/camic"})
+	GenerateHTMLEmp(w, r, data, "stru/st_meet", "stru/camic")
 }
 
 func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -93,7 +93,7 @@ func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		"recserv": len(env.RecFolder) > 0,
 	}
 
-	co := GetHTMLAjax(data, []string{"wschat/sta", "wschat/camic"})
+	co := GetHTMLAjax(data, []string{"stru/sta", "stru/camic"})
 
 	ans := AjaAns{
 		Res:  true,
@@ -136,7 +136,7 @@ func WsVirt(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		"ob": string(ob),
 	}
 
-	GenerateHTMLEmp(w, r, data, []string{"wschat/virt"})
+	GenerateHTMLEmp(w, r, data, "stru/virt")
 }
 
 func getFi(uqroom_in, ke_in string) string {

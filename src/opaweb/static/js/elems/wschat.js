@@ -1,5 +1,7 @@
 class WSchat {
-  constructor() {
+  constructor(fun_in) {
+    this.fun = fun_in;
+
     this.ws = {
       uqroom: null,
       uquser: null,
@@ -31,10 +33,7 @@ class WSchat {
       }
     };
 
-    this.doc = $(document);
-    this.bd = $('body');
-
-    this.vid_self = $('#vid-self').eq(0);
+    this.vid_self = document.getElementById('vid-self');
 
     this.th = null;
 
@@ -42,26 +41,26 @@ class WSchat {
     this.talkers_cont = document.getElementById(this.id_talkers);
     this.res = new Resie(this.talkers_cont);
 
-    $(window).on( "resize", this.docResize.bind(this));
+    window.addEventListener('resize', this.docResize.bind(this));
 
-    this.ch_sound = $('#cb-mic').eq(0);
-    this.ch_sound.change(this.avChange.bind(this));
-    this.ch_video = $('#cb-cam').eq(0);
-    this.ch_video.change(this.avChange.bind(this));
+    this.ch_sound = document.getElementById('cb-mic');
+    this.ch_sound.addEventListener('change', this.avChange.bind(this));
+    this.ch_video = document.getElementById('cb-cam');
+    this.ch_video.addEventListener('change', this.avChange.bind(this));
 
-    this.share_screen = $('#share-screen').eq(0);
-    this.share_screen.click(this.toggleShareScreen.bind(this));
+    this.share_screen = document.getElementById('share-screen');
+    this.share_screen.addEventListener('click', this.toggleShareScreen.bind(this));
 
     this.saver_client = new SaverClient();
-    this.tg_rec = $('#tg-rec').eq(0);
-    this.tg_rec.click(this.toggleRecordClent.bind(this));
+    this.tg_rec = document.getElementById('tg-rec');
+    this.tg_rec.addEventListener('click', this.toggleRecordClent.bind(this));
 
-    this.tg_rec_serv = $('#tg-rec-serv').eq(0);
-    this.tg_rec_serv.click(this.toggleRecordServ.bind(this));
+    this.tg_rec_serv = document.getElementById('tg-rec-serv');
+    this.tg_rec_serv.addEventListener('click', this.toggleRecordServ.bind(this));
 
     this.KEYS = new Set();
-    this.doc.bind('keydown', this.dockd.bind(this));
-    this.doc.bind('keyup', this.docku.bind(this));
+    document.addEventListener('keydown', this.dockd.bind(this));
+    document.addEventListener('keyup', this.docku.bind(this));
   }
 
   dockd(e) {
@@ -95,14 +94,14 @@ class WSchat {
   }
 
   vidSelfChange(cam) {
-    if (!this.vid_self[0]) return;
+    if (!this.vid_self) return;
 
     if (cam) {
-      this.vid_self.css({'opacity': 1});
+      this.vid_self.style.opacity = 1;
       return;
     }
 
-    this.vid_self.css({'opacity': 0});
+    this.vid_self.style.opacity =  0;
   }
 
   wsClear() {
@@ -139,20 +138,18 @@ class WSchat {
   talk() {
     let ob = {
       'ws': this.ws,
-      'bd': this.bd,
       'id_talkers': this.id_talkers,
       'talkers_cont': this.talkers_cont,
       'res': this.res,
       'callError': this.onError,
       'vid_self': null,
-      'doc': this.doc
     };
 
-    if (this.vid_self[0] != undefined) {
-      ob.vid_self = this.vid_self[0];
+    if (this.vid_self) {
+      ob.vid_self = this.vid_self;
     }
 
-    this.th = new TalkerHandler(ob);
+    this.th = new TalkerHandler(this.fun, ob);
     this.th.startShow()
 
     this.vidSelfChange(this.ws.cam);
@@ -164,9 +161,9 @@ class WSchat {
 
   getAvSet() {
     let se = {
-      'sound': this.ch_sound.prop('checked'),
-      'video': this.ch_video.prop('checked'),
-      'screen_on': this.share_screen.is('.on')
+      'sound': this.ch_sound.checked,
+      'video': this.ch_video.checked,
+      'screen_on': this.share_screen.classList.contains('on')
     };
 
     this.vidSelfChange(se.video);
@@ -199,7 +196,7 @@ class WSchat {
   toggleShareScreen(ev) {
     if (!this.th) return;
 
-    let btn = $(ev.currentTarget);
+    let btn = ev.currentTarget;
 
     this.th.toggleScreen(btn, this.getAvSet.bind(this));
   }
@@ -207,7 +204,7 @@ class WSchat {
   toggleRecordServ(ev) {
     if (!this.th) return;
 
-    let btn = $(ev.currentTarget);
+    let btn = ev.currentTarget;
 
     this.th.toggleRecordServ(btn);
   }
@@ -215,7 +212,7 @@ class WSchat {
   toggleRecordClent(ev) {
     if (!this.th) return;
 
-    let some_button = $(ev.currentTarget);
+    let some_button = ev.currentTarget;
 
     this.th.toggleRecordClent(this.saver_client, some_button);
   }
@@ -258,12 +255,5 @@ class WSchat {
           break;
       }
     }
-  }
-
-  closeWs() {
-    if (!this.th) return;
-
-    this.th.endSession();
-    window.location.reload();
   }
 }
