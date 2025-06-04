@@ -73,7 +73,7 @@ func startAcme(e *config.Configuration, cs func(http.Handler) http.Handler) {
 	mux := controllers.GetRouters()
 
 	server := &http.Server{
-		Addr:           fmt.Sprintf("%s:%d", e.Address, e.Port),
+		Addr:           fmt.Sprintf(":%d", e.Port),
 		Handler:        cs(mux),
 		ReadTimeout:    time.Duration(ct["ReadTimeout"] * int64(time.Second)),
 		WriteTimeout:   time.Duration(ct["WriteTimeout"] * int64(time.Second)),
