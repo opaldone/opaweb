@@ -184,6 +184,8 @@ class TalkerHandler {
   }
 
   anotherRecordServ(some_button, cont) {
+    if (!some_button) return;
+
     if (some_button.classList.contains('on')) {
       some_button.classList.remove('on');
     }
@@ -220,6 +222,8 @@ class TalkerHandler {
   }
 
   stoppedRecordServ(some_button, cont) {
+    if (!some_button) return;
+
     let js = JSON.parse(cont);
 
     if (!js) {
