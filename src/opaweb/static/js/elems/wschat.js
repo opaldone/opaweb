@@ -56,7 +56,9 @@ class WSchat {
     this.tg_rec.addEventListener('click', this.toggleRecordClent.bind(this));
 
     this.tg_rec_serv = document.getElementById('tg-rec-serv');
-    this.tg_rec_serv.addEventListener('click', this.toggleRecordServ.bind(this));
+    if (this.tg_rec_serv) {
+      this.tg_rec_serv.addEventListener('click', this.toggleRecordServ.bind(this));
+    }
 
     this.KEYS = new Set();
     document.addEventListener('keydown', this.dockd.bind(this));
