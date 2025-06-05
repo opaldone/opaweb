@@ -38,11 +38,12 @@ func main() {
 }
 
 func startSelf(e *config.Configuration, cs func(http.Handler) http.Handler) {
-	fmt.Printf("\n[%s] %s\ntime\t\t%s\ncrt\t\t\t%s\nkey\t\t\t%s\naddress\t\t%s:%d\n",
+	fmt.Printf("\n[%s] %s\ntime\t\t%s\ncrt\t\t\t%s\nkey\t\t\t%s\naddress\t\t%s:%d\nwsurl\t\t%s\n",
 		"self", e.Appname,
 		time.Now().Format("2006-01-02 15:04:05"),
 		e.Crt, e.Key,
 		e.Address, e.Port,
+		e.Ws.WsUrl,
 	)
 
 	mux := controllers.GetRouters()
@@ -60,10 +61,11 @@ func startSelf(e *config.Configuration, cs func(http.Handler) http.Handler) {
 }
 
 func startAcme(e *config.Configuration, cs func(http.Handler) http.Handler) {
-	fmt.Printf("\n[%s] %s\ntime\t\t%s\nacmehost\t%s\ndirCache\t%s\naddress\t\t%s:%d\n",
+	fmt.Printf("\n[%s] %s\ntime\t\t%s\nacmehost\t%s\ndirCache\t%s\naddress\t\t%s:%d\nwsurl\t\t%s\n",
 		"acme", e.Appname,
 		time.Now().Format("2006-01-02 15:04:05"),
 		e.Acmehost, e.DirCache, e.Address, e.Port,
+		e.Ws.WsUrl,
 	)
 
 	certManager := &autocert.Manager{
@@ -84,7 +86,7 @@ func startAcme(e *config.Configuration, cs func(http.Handler) http.Handler) {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	go http.ListenAndServe(":http", certManager.HTTPHandler(nil))
+	// go http.ListenAndServe(":http", certManager.HTTPHandler(nil))
 
 	log.Fatalln(server.ListenAndServeTLS("", ""))
 }
