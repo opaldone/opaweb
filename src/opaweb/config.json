@@ -10,7 +10,7 @@
   "key": "/mnt/terik/a_my/admigo_project/admigo/bin/certs_local/server.key",
   "recFolder": "/mnt/terik/a_my/admigo_project/opachat/bin/vid",
   "ws": {
-    "wsurl": "wss://admigo.so:7778",
+    "wsurl": "wss://admigo.so:8080",
     "perroom": 100
   },
   "iceList": [

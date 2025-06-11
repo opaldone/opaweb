@@ -4,11 +4,11 @@ class Taber {
     this.oin = oin;
 
     this.tb = document.getElementById('v-tabs');
-    this.ctrls = document.getElementById('tabs-control');
-    this.inp_chat = document.getElementById('ta-chat-inp');
-    this.btn_chat = document.getElementById('ta-chat-send');
     this.tb_btn_chat = document.getElementById('tb-chat');
     this.tb_us_cnt = document.getElementById('tb-us-cnt');
+
+    this.inp_chat = document.getElementById('ta-chat-inp');
+    this.btn_chat = document.getElementById('ta-chat-send');
 
     this.ul_chat = document.getElementById('ta-ul-chat');
     this.ul_users = document.getElementById('ta-ul-users');
@@ -24,14 +24,14 @@ class Taber {
     });
   }
 
-  _rem_cls(cls) {
-    this.tb.classList.remove(cls);
-    this.ctrls.classList.remove(cls);
+  _rem_cls(tid) {
+    this.tb.classList.remove(tid);
+    document.getElementById(tid).classList.remove('act');
   }
 
-  _add_cls(cls) {
-    this.tb.classList.add(cls);
-    this.ctrls.classList.add(cls);
+  _add_cls(tid) {
+    this.tb.classList.add(tid);
+    document.getElementById(tid).classList.add('act');
   }
 
   _clear_cls(tid) {
@@ -162,7 +162,6 @@ class Taber {
     lis = lis
       .replace(/#LID#/, litID)
       .replace(/#NIK#/, oc.nik);
-
 
     let tem = document.createElement('template');
     tem.innerHTML = lis;

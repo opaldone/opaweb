@@ -1,6 +1,6 @@
 {{ define "content" }}
   <div id="set-panel">
-    {{ template "camic" (index . "camic")}}
+    {{ template "camic" (index . "camic") }}
     <div class="lbl-tha">
       <button class="btn-rb hint-able" id="share-screen" data-hint="Share Screen">
         <span class="ra-ico">
@@ -12,84 +12,9 @@
         </span>
       </button>
     </div>
-    {{ if (index . "recserv") }}
-      <div class="lbl-tha">
-        <button id="tg-rec-serv" class="btn-rb hint-able" data-hint="Start record on server">
-          <span class="ra-ico">
-            <svg width="20" height="20" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#575757" class="bi bi-record-btn">
-              <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-              <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
-            </svg>
-          </span>
-        </button>
-        <a class="lbl-tha"
-          id="li-re"
-          href=""
-          download=""
-          data-he="{{ ro "vi" "xxx" "yyy" }}"
-          data-re="{{ ro "vi_rem" }}"
-        ></a>
-      </div>
-    {{ end }}
-    <div class="lbl-tha">
-      <button id="tg-rec" class="btn-rb hint-able" data-hint="Start record on client">
-        <span class="ra-ico">
-          <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <g>
-            <path fill="none" d="M0 0h24v24H0z"/>
-            <path class="pa-st" d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-5a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" fill="#575757"/>
-            </g>
-          </svg>
-        </span>
-      </button>
-    </div>
+    {{ template "_reca" . }}
+    {{ template "_tabtns" }}
   </div>
   <div id="talkers" class="clearfix"></div>
-  {{ $sets := (index . "sets") }}
-  <div id="self-vicont">
-    <div id="v-list-hint" class="hint-able cen-hint" data-hint="{{ attr ($sets.Nik) }}">
-      <div class="vw">
-        <video id="vid-self" src="" autoplay muted></video>
-      </div>
-    </div>
-    <div id="tabs-control" class="clearfix">
-      <button id="tb-chat" class="tab-btn hint-able le-hint" data-hint="Chat">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z" fill="#78C072"/>
-          <path d="M15 12C15 12.5523 15.4477 13 16 13C16.5523 13 17 12.5523 17 12C17 11.4477 16.5523 11 16 11C15.4477 11 15 11.4477 15 12Z" fill="#000000"/>
-          <path d="M11 12C11 12.5523 11.4477 13 12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12Z" fill="#000000"/>
-          <path d="M7 12C7 12.5523 7.44772 13 8 13C8.55228 13 9 12.5523 9 12C9 11.4477 8.55228 11 8 11C7.44772 11 7 11.4477 7 12Z" fill="#000000"/>
-        </svg>
-      </button>
-      <button id="tb-users" class="tab-btn hint-able le-hint" data-hint="Participants">
-        <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path fill="#3080F8" d="M20.35,6.71a3.694,3.694,0,0,1-2.61,3.53A5.91,5.91,0,0,0,18,8.5a5.99,5.99,0,0,0-2.93-5.15A3.769,3.769,0,0,1,16.65,3,3.707,3.707,0,0,1,20.35,6.71ZM19.6,11.3a1.646,1.646,0,0,0-1.25.15,3.33,3.33,0,0,1-1.39.41,5.1,5.1,0,0,1-.7.85A5.425,5.425,0,0,1,19.92,17h.69a1.228,1.228,0,0,0,1.09-.63,2.551,2.551,0,0,0,.3-1.21v-.71A3.241,3.241,0,0,0,19.6,11.3ZM8.93,3.35A3.769,3.769,0,0,0,7.35,3a3.7,3.7,0,0,0-1.09,7.24A5.91,5.91,0,0,1,6,8.5,5.99,5.99,0,0,1,8.93,3.35ZM7.74,12.71a5.1,5.1,0,0,1-.7-.85,3.33,3.33,0,0,1-1.39-.41A1.646,1.646,0,0,0,4.4,11.3,3.241,3.241,0,0,0,2,14.45v.71a2.551,2.551,0,0,0,.3,1.21A1.224,1.224,0,0,0,3.38,17h.7A5.425,5.425,0,0,1,7.74,12.71Zm7.84,1.36a2.333,2.333,0,0,0-.53-.07,2.033,2.033,0,0,0-.99.26,4.268,4.268,0,0,1-4.12,0A2.033,2.033,0,0,0,8.95,14a2.333,2.333,0,0,0-.53.07A3.955,3.955,0,0,0,5.5,17.9v.87a3.073,3.073,0,0,0,.37,1.46A1.455,1.455,0,0,0,7.18,21h9.64a1.455,1.455,0,0,0,1.31-.77,3.073,3.073,0,0,0,.37-1.46V17.9A3.955,3.955,0,0,0,15.58,14.07ZM16.5,8.5A4.5,4.5,0,1,0,12,13,4.5,4.5,0,0,0,16.5,8.5Z"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-  <div id="v-tabs">
-    <div id="ta-list-users" class="v-tabs-content">
-      <div class="v-tab-head fle">
-        <span>Participants</span>
-        <span id="tb-us-cnt">1</span>
-      </div>
-      <ul id="ta-ul-users" class="ta-ul-list"></ul>
-    </div>
-    <div id="ta-list-chat" class="v-tabs-content">
-      <div class="v-tab-head">
-        Chat of meeting
-      </div>
-      <ul id="ta-ul-chat" class="ta-ul-list"></ul>
-      <div id="ta-chat-bot-con">
-        <textarea id="ta-chat-inp" rows="1"></textarea>
-        <button id="ta-chat-send">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7.39999 6.32003L15.89 3.49003C19.7 2.22003 21.77 4.30003 20.51 8.11003L17.68 16.6C15.78 22.31 12.66 22.31 10.76 16.6L9.91999 14.08L7.39999 13.24C1.68999 11.34 1.68999 8.23003 7.39999 6.32003Z" stroke="#78C072" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M10.11 13.6501L13.69 10.0601" stroke="#78C072" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </div>
-    </div>
-  </div>
+  {{ template "_selfvi" . }}
 {{ end }}

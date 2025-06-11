@@ -16,6 +16,9 @@ W_FILES=(
     "$src/templates/stru/ix.html;$bin/templates/stru/ix.html"
     "$src/templates/stru/st_meet.html;$bin/templates/stru/st_meet.html"
     "$src/templates/stru/sta.html;$bin/templates/stru/sta.html"
+    "$src/templates/stru/_reca.html;$bin/templates/stru/_reca.html"
+    "$src/templates/stru/_selfvi.html;$bin/templates/stru/_selfvi.html"
+    "$src/templates/stru/_tabtns.html;$bin/templates/stru/_tabtns.html"
     "$src/templates/stru/camic.html;$bin/templates/stru/camic.html"
     "$src/templates/stru/virt.html;$bin/templates/stru/virt.html"
 # css

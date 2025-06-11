@@ -42,7 +42,7 @@ func getFm() (fm template.FuncMap) {
 	return
 }
 
-func GenerateHTMLEmp(w http.ResponseWriter, r *http.Request, data interface{}, filenames ...string) {
+func GenerateHTMLEmp(w http.ResponseWriter, r *http.Request, data interface{}, pages ...string) {
 	funcMap := getFm()
 
 	if data == nil {
@@ -59,17 +59,25 @@ func GenerateHTMLEmp(w http.ResponseWriter, r *http.Request, data interface{}, f
 		}
 	}
 
-	filenames = append(filenames, "lays/layout")
+	list_pages := []string{
+		"lays/layout",
+	}
 
-	getSiteTemplates(filenames, funcMap).ExecuteTemplate(w, "layout", data)
+	list_pages = append(list_pages, pages...)
+
+	getSiteTemplates(list_pages, funcMap).ExecuteTemplate(w, "layout", data)
 }
 
-func GetHTMLAjax(data interface{}, filenames []string) string {
+func GetHTMLAjax(data interface{}, pages ...string) string {
 	funcMap := getFm()
 
-	filenames = append(filenames, "lays/layout_ajax")
+	list_pages := []string{
+		"lays/layout_ajax",
+	}
 
-	t := getSiteTemplates(filenames, funcMap)
+	list_pages = append(list_pages, pages...)
+
+	t := getSiteTemplates(list_pages, funcMap)
 
 	var buf bytes.Buffer
 
