@@ -93,7 +93,10 @@ func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		"recserv": len(env.RecFolder) > 0,
 	}
 
-	co := GetHTMLAjax(data, []string{"stru/sta", "stru/camic"})
+	co := GetHTMLAjax(data,
+		"stru/sta", "stru/camic",
+		"stru/_reca", "stru/_tabtns", "stru/_selfvi",
+	)
 
 	ans := AjaAns{
 		Res:  true,

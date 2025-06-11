@@ -260,11 +260,6 @@ input:-webkit-autofill:valid {
   transform: translate(-50%, -30%);
 }
 
-.hint-able.le-hint:hover::after {
-  bottom: 100%;
-  transform: translate(-90%, -30%);
-}
-
 .ra-ico {
   display: inline-block;
   line-height: 0;
@@ -309,5 +304,15 @@ input:-webkit-autofill:valid {
 @media (max-width: 640px) {
   #ws-cont {
     width: 100%;
+  }
+
+  .btn-rb {
+    width: 35px;
+    height: 35px;
+  }
+
+  .ra-ico svg {
+    width: 15px;
+    height: 15px;
   }
 }

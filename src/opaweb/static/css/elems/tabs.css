@@ -1,10 +1,10 @@
 #v-tabs {
   position: absolute;
   z-index: 4;
-  width: 25%;
-  right: -25%;
-  top: 30px;
-  height: calc(100% - 115px);
+  width: 35%;
+  right: -35%;
+  top: 75px;
+  height: calc(100% - 160px);
   padding: 20px;
   background-color: #ffffff;
   transition: right 0.3s ease;
@@ -16,33 +16,15 @@
   right: 0;
 }
 
-#tabs-control {
-  display: flex;
-  align-items: center;
-  padding: 0 10px 10px 0;
-}
-
 .tab-btn {
   position: relative;
-  display:  flex;
-  align-items: center;
-  justify-content: center;
-  width: 45px;
-  height: 45px;
-  border-width: 0 1px 1px 0;
-  border-style: solid;
-  border-color: #171717;
-  border-radius: 7px;
-  background-color: #373737;
-  cursor: pointer;
 }
 
-.tab-btn + .tab-btn {
-  margin-left: 7px;
-}
-
-.tab-btn:hover {
-  background-color: #3d3d3d;
+.tab-btn.act {
+  background-color: #070707;
+  box-shadow: 0px 0px 1px inset #777;
+  outline: none;
+  border: none;
 }
 
 .tab-btn.notif:before {
@@ -54,11 +36,6 @@
   height: 10px;
   border-radius: 50%;
   background-color: #ff5511;
-}
-
-#tabs-control.tb-chat #tb-chat,
-#tabs-control.tb-users #tb-users {
-  background-color: #171717;
 }
 
 .v-tabs-content {
@@ -212,26 +189,19 @@
 * MEDIA
 */
 
-@media (max-width: 1300px) {
-  #v-tabs {
-    width: 35%;
-    right: -35%;
-  }
-}
-
 @media (max-width: 1024px) {
   #v-tabs {
-    width: 45%;
-    right: -45%;
+    width: 55%;
+    right: -55%;
   }
 }
 
 @media (max-width: 640px) {
   #v-tabs {
+    top: 65px;
+    height: calc(100% - 150px);
     width: 100%;
     right: -100%;
     border-radius: 0;
-    top: 0;
-    height: calc(100% - 85px);
   }
 }
