@@ -260,6 +260,12 @@ input:-webkit-autofill:valid {
   transform: translate(-50%, -30%);
 }
 
+.hint-able.le-hint:hover::after {
+  bottom: 100%;
+  transform: translate(-100%, -30%);
+}
+
+
 .ra-ico {
   display: inline-block;
   line-height: 0;
