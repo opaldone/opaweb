@@ -1,10 +1,10 @@
 package main
 
 import (
-	"opaweb/config"
+	"opaweb/common"
 )
 
 func runInit() {
-	config.LoadConfig()
-	config.SetCsrf()
+	common.LoadConfig()
+	common.SetCsrf()
 }

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"opaweb/config"
+	"opaweb/common"
 	"opaweb/controllers"
 
 	"github.com/gorilla/csrf"
@@ -22,10 +22,10 @@ var ct = map[string]int64{
 func main() {
 	runInit()
 
-	e := config.Env(false)
+	e := common.Env(false)
 
 	csrf_h := csrf.Protect(
-		[]byte(config.GetKeyCSRF()),
+		[]byte(common.GetKeyCSRF()),
 		csrf.Path("/"),
 	)
 
@@ -37,8 +37,8 @@ func main() {
 	startSelf(e, csrf_h)
 }
 
-func startSelf(e *config.Configuration, cs func(http.Handler) http.Handler) {
-	fmt.Printf("\n[%s] %s\ntime\t\t%s\ncrt\t\t\t%s\nkey\t\t\t%s\naddress\t\t%s:%d\nwsurl\t\t%s\n",
+func startSelf(e *common.Configuration, cs func(http.Handler) http.Handler) {
+	fmt.Printf("\n[%s] %s\ntime\t\t%s\ncrt\t\t%s\nkey\t\t%s\naddress\t\t%s:%d\nwsurl\t\t%s\n",
 		"self", e.Appname,
 		time.Now().Format("2006-01-02 15:04:05"),
 		e.Crt, e.Key,
@@ -60,7 +60,7 @@ func startSelf(e *config.Configuration, cs func(http.Handler) http.Handler) {
 	log.Fatalln(server.ListenAndServeTLS(e.Crt, e.Key))
 }
 
-func startAcme(e *config.Configuration, cs func(http.Handler) http.Handler) {
+func startAcme(e *common.Configuration, cs func(http.Handler) http.Handler) {
 	fmt.Printf("\n[%s] %s\ntime\t\t%s\nacmehost\t%s\ndirCache\t%s\naddress\t\t%s:%d\nwsurl\t\t%s\n",
 		"acme", e.Appname,
 		time.Now().Format("2006-01-02 15:04:05"),

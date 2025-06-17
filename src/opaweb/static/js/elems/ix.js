@@ -57,7 +57,7 @@ class Starter {
     return false;
   }
 
-   makeid(len) {
+  makeid(len) {
     var ret = '';
     var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var cl = chars.length;
@@ -83,7 +83,7 @@ class Starter {
     ev.stopPropagation();
     ev.preventDefault();
 
-    let th = ev.currentTarget;
+    let this_btn = ev.currentTarget;
 
     let mic_inp = document.getElementById('cb-mic');
     let cam_inp = document.getElementById('cb-cam');
@@ -101,13 +101,12 @@ class Starter {
     };
 
     let cs = document.getElementsByName("gorilla.csrf.Token")[0].value;
-
-    let url = th.getAttribute('href');
+    let url = this_btn.getAttribute('href');
 
     axios.post(url, obj, {
       headers: { "X-CSRF-Token": cs }
     })
-      .then(re => {
+      .then((re) => {
         this.ws_main.innerHTML = re.data.cont;
 
         this.docon();

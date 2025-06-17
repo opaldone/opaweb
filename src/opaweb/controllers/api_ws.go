@@ -7,47 +7,18 @@ import (
 	"net/http"
 	"os"
 
-	"opaweb/apitools"
 	"opaweb/applog"
 	"opaweb/common"
-	"opaweb/config"
 
 	"github.com/julienschmidt/httprouter"
 )
-
-type WsRequest struct {
-	UqRoom string `json:"uqroom,omitempty"`
-	Nik    string `json:"nik,omitempty"`
-	Mic    bool   `json:"mic,omitempty"`
-	Cam    bool   `json:"cam,omitempty"`
-	Ke     string `json:"ke,omitempty"`
-	Fi     string `json:"fi,omitempty"`
-}
-
-type WsSettings struct {
-	WsUrl   string              `json:"wsurl,omitempty"`
-	UqRoom  string              `json:"uqroom,omitempty"`
-	UqUser  string              `json:"uquser,omitempty"`
-	PerRoom int                 `json:"perroom,omitempty"`
-	Nik     string              `json:"nik,omitempty"`
-	Mic     bool                `json:"mic"`
-	Cam     bool                `json:"cam"`
-	Virt    bool                `json:"virt"`
-	IceList []map[string]string `json:"iceList"`
-}
-
-type AjaAns struct {
-	Res  bool        `json:"res"`
-	Sets *WsSettings `json:"sets,omitempty"`
-	Cont string      `json:"cont,omitempty"`
-}
 
 func WSChat(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	GenerateHTMLEmp(w, r, nil, "stru/ix")
 }
 
 func WsMeet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	uqroom := common.CreateUUID()
+	uqroom := common.CreateUID()
 	http.Redirect(w, r, ro("ws_me_get", uqroom), http.StatusSeeOther)
 }
 
@@ -65,32 +36,12 @@ func WsMeetGet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var re WsRequest
-	apitools.FormToJSON(r.Body, &re)
-
-	env := config.Env(true)
-	s := WsSettings{}
-
-	s.UqRoom = re.UqRoom
-	s.UqUser = common.CreateUUID()
-	s.PerRoom = env.Ws.PerRoom
-	s.Nik = re.Nik
-	s.Mic = re.Mic
-	s.Cam = re.Cam
-	s.Virt = false
-	s.WsUrl = fmt.Sprintf("%s/ws/%s/%s/%d?nik=%s",
-		env.Ws.WsUrl,
-		s.UqRoom,
-		s.UqUser,
-		s.PerRoom,
-		s.Nik,
-	)
-	s.IceList = env.IceList
+	wse := common.GetSetsFromReq(r)
 
 	data := map[string]interface{}{
-		"sets":    s,
-		"camic":   map[string]bool{"mic": re.Mic, "cam": re.Cam, "tophint": false},
-		"recserv": len(env.RecFolder) > 0,
+		"sets":    wse,
+		"camic":   map[string]bool{"mic": wse.Mic, "cam": wse.Cam, "tophint": false},
+		"recserv": wse.Recserv,
 	}
 
 	co := GetHTMLAjax(data,
@@ -98,9 +49,9 @@ func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		"stru/_reca", "stru/_tabtns", "stru/_selfvi",
 	)
 
-	ans := AjaAns{
+	ans := common.AjaAns{
 		Res:  true,
-		Sets: &s,
+		Sets: wse,
 		Cont: co,
 	}
 
@@ -110,30 +61,9 @@ func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 func WsVirt(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	uqroom := ps.ByName("uqroom")
-	ke := ps.ByName("ke")
+	wse := common.GetSetsForVirt(ps)
 
-	env := config.Env(true)
-	s := WsSettings{}
-
-	s.UqRoom = uqroom
-	s.UqUser = common.CreateUUID()
-	s.PerRoom = env.Ws.PerRoom
-	s.Nik = "virt"
-	s.Mic = false
-	s.Cam = false
-	s.Virt = true
-	s.WsUrl = fmt.Sprintf("%s/ws/%s/%s/%d?nik=%s&ke=%s",
-		env.Ws.WsUrl,
-		s.UqRoom,
-		s.UqUser,
-		s.PerRoom,
-		s.Nik,
-		ke,
-	)
-	s.IceList = env.IceList
-
-	ob, _ := json.Marshal(s)
+	ob, _ := json.Marshal(wse)
 
 	data := map[string]interface{}{
 		"ob": string(ob),
@@ -149,7 +79,7 @@ func getFi(uqroom_in, ke_in string) string {
 }
 
 func getPtFi(fn_in string) string {
-	env := config.Env(true)
+	env := common.Env(true)
 
 	pt := fmt.Sprintf("%s/%s", env.RecFolder, fn_in)
 
@@ -189,12 +119,11 @@ func WsVi(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 func WsViRem(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var re WsRequest
-	apitools.FormToJSON(r.Body, &re)
+	re := common.GetWsReq(r)
 
 	fn := getFi(re.UqRoom, re.Ke)
 
-	ans := AjaAns{
+	ans := common.AjaAns{
 		Res: false,
 	}
 

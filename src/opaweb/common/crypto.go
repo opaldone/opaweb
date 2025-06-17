@@ -2,20 +2,12 @@ package common
 
 import (
 	"crypto/rand"
-	"crypto/sha1"
 	"fmt"
+
 	"opaweb/applog"
 )
 
-// Encrypt hash plaintext with SHA-1
-func Encrypt(plaintext string) (cryptext string) {
-	cryptext = fmt.Sprintf("%x", sha1.Sum([]byte(plaintext)))
-	return
-}
-
-// CreateUUID create a random UUID with from RFC 4122
-// adapted from http://github.com/nu7hatch/gouuid
-func CreateUUID() (uuid string) {
+func CreateUID() (uuid string) {
 	u := new([16]byte)
 	_, err := rand.Read(u[:])
 	if err != nil {

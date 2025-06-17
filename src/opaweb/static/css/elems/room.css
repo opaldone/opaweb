@@ -68,7 +68,8 @@
 }
 
 #v-list-hint .vw {
-  min-height: 75px;
+  width: 100px;
+  height: 75px;
 }
 
 #talkers .vw.allert-rec {

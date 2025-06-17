@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"opaweb/config"
+	"opaweb/common"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -34,7 +34,7 @@ func init() {
 // GetRouters returns routers
 func GetRouters() (router *httprouter.Router) {
 	router = httprouter.New()
-	router.ServeFiles("/static/*filepath", http.Dir(config.Env(false).Static))
+	router.ServeFiles("/static/*filepath", http.Dir(common.Env(false).Static))
 
 	for _, r := range list {
 		router.Handle(r.method, r.pattern, r.handle)

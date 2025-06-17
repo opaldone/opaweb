@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"opaweb/applog"
+	"opaweb/common"
 
 	"github.com/gorilla/csrf"
 )
@@ -37,6 +38,11 @@ func getFm() (fm template.FuncMap) {
 			return template.HTML(s)
 		},
 		"ro": ro,
+		"dd": func(v interface{}) template.HTML {
+			return template.HTML(
+				common.ShowJson(v, false),
+			)
+		},
 	}
 
 	return

@@ -1,11 +1,10 @@
-package config
+package common
 
 import (
 	"encoding/json"
 	"os"
 
 	"opaweb/applog"
-	"opaweb/common"
 )
 
 type Configuration struct {
@@ -48,10 +47,6 @@ func LoadConfig() {
 	}
 }
 
-func SetCsrf() {
-	csrf_key = common.CreateUUID()
-}
-
 // Env returns config
 func Env(reload bool) *Configuration {
 	if reload {
@@ -59,6 +54,10 @@ func Env(reload bool) *Configuration {
 	}
 
 	return config
+}
+
+func SetCsrf() {
+	csrf_key = CreateUID()
 }
 
 func GetKeyCSRF() string {
