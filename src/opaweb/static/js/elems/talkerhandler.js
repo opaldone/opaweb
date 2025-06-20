@@ -10,7 +10,6 @@ class TalkerHandler {
       'uset': '-uset'
     };
 
-    this.scr_on = 'screen-on';
     this.talkers = {};
     this.pc = null;
     this.localStream = null;
@@ -134,14 +133,15 @@ class TalkerHandler {
     let cont_vw = document.getElementById(js.strid);
 
     if (js.screen_on) {
-      cont_vw.classList.add(this.scr_on);
-      document.body.classList.add(this.scr_on);
+      cont_vw.classList.add(this.oin.scr_on);
+      document.body.classList.add(this.oin.scr_on);
+      if (!oc.screen_on) oc.screen_on = true;
       this.oin.res.resize();
 
       return;
     }
 
-    cont_vw.classList.remove(this.scr_on);
+    cont_vw.classList.remove(this.oin.scr_on);
 
     if (oc.screen_on) oc.screen_on = false;
 
@@ -150,7 +150,7 @@ class TalkerHandler {
 
     this.setMicCam(oc);
 
-    document.body.classList.remove(this.scr_on);
+    document.body.classList.remove(this.oin.scr_on);
     this.oin.res.resize();
   }
 
@@ -589,8 +589,8 @@ class TalkerHandler {
     ta_co.classList.add('vw');
     ta_co.id = elid;
     if (oc.screen_on) {
-      ta_co.classList.add(this.scr_on);
-      this.oin.bd.addClass(this.scr_on);
+      ta_co.classList.add(this.oin.scr_on);
+      document.body.classList.add(this.oin.scr_on);
     }
 
     ta_co.appendChild(vid);

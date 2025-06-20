@@ -33,13 +33,15 @@ class WSchat {
       }
     };
 
+    this.scr_on = 'screen-on';
+
     this.vid_self = document.getElementById('vid-self');
 
     this.th = null;
 
     this.id_talkers = 'talkers'
     this.talkers_cont = document.getElementById(this.id_talkers);
-    this.res = new Resie(this.talkers_cont);
+    this.res = new Resie(this.talkers_cont, this.scr_on);
 
     window.addEventListener('resize', this.docResize.bind(this));
 
@@ -145,6 +147,7 @@ class WSchat {
       'res': this.res,
       'callError': this.onError,
       'vid_self': null,
+      'scr_on': this.scr_on
     };
 
     if (this.vid_self) {
