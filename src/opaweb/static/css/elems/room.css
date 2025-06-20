@@ -104,14 +104,17 @@
   height: 100%;
 }
 
-.vw.cam .talker-nik,
-.vw.screen-on .talker-nik {
+.vw.cam .talker-nik {
   font-size: 13px;
   line-height: 15px;
   width: auto;
   height: auto;
   padding: 11px 15px 12px 15px;
   border-radius: 0 7px 7px 0;
+}
+
+.vw.screen-on .talker-nik {
+  display: none;
 }
 
 .vw video {
@@ -138,6 +141,7 @@
 
 #talkers .vw.screen-on {
   background-color: #272727;
+  box-shadow: none;
 }
 
 #talkers .vw.screen-on video {

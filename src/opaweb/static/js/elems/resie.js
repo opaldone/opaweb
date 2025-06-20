@@ -2,8 +2,9 @@ class Resie {
   _margin = 10;
   _ratio = this.ratio()
 
-  constructor(dish_in) {
+  constructor(dish_in, scr_on_in) {
     this._dish = dish_in;
+    this.scr_on = scr_on_in;
   }
 
   ratio() {
@@ -22,6 +23,7 @@ class Resie {
       let el = this._dish.children[s];
 
       if (window.getComputedStyle(el).display === 'none') continue;
+      if (el.classList.contains(this.scr_on)) continue;
 
       ret++;
     }
@@ -57,9 +59,19 @@ class Resie {
       let el = this._dish.children[s];
 
       if (window.getComputedStyle(el).display === 'none') continue;
+      if (el.classList.contains(this.scr_on)) {
+        if (el.style.width != '100%') {
+          console.log(
+            el.style.width,
+            el.style.width == '100%',
+          );
+          el.style.width = '100%';
+        }
+      } else {
+        el.style.width = width + "px"
+      }
 
       el.style.margin = this._margin + "px"
-      el.style.width = width + "px"
       el.style.height = (width * this._ratio) + "px"
     }
   }
