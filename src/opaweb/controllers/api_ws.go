@@ -25,12 +25,12 @@ func WsMeet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 func WsMeetGet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	uqroom := ps.ByName("uqroom")
 
-	data := map[string]interface{}{
+	info := map[string]interface{}{
 		"uqroom": uqroom,
 		"camic":  map[string]bool{"mic": true, "cam": true, "tophint": true},
 	}
 
-	GenerateHTMLEmp(w, r, data, "stru/st_meet", "stru/camic")
+	GenerateHTMLEmp(w, r, info, "stru/st_meet", "stru/camic")
 }
 
 func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -65,11 +65,11 @@ func WsVirt(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	ob, _ := json.Marshal(wse)
 
-	data := map[string]interface{}{
+	info := map[string]interface{}{
 		"ob": string(ob),
 	}
 
-	GenerateHTMLEmp(w, r, data, "stru/virt")
+	GenerateHTMLEmp(w, r, info, "stru/virt")
 }
 
 func getFi(uqroom_in, ke_in string) string {

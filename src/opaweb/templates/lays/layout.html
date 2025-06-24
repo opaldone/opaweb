@@ -1,6 +1,9 @@
 {{ define "layout" }}
+  {{ $lang := index . "lang" }}
+  {{ $stat := index . "stat" }}
+  {{ $needtra := index . "needtra" }}
   <!DOCTYPE html>
-  <html lang="en">
+  <html lang="{{ $lang }}" stat="{{ $stat }}" tra="{{ $needtra }}">
     <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=9">

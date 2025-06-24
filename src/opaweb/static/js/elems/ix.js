@@ -48,9 +48,9 @@ class Starter {
     let btn = ev.currentTarget;
 
     navigator.clipboard.writeText(window.location.href).then(() => {
-      btn.setAttribute('data-hint', 'The link has been copied');
+      btn.setAttribute('data-hint', window.lang.re('The link has been copied'));
       setTimeout(() => {
-        btn.setAttribute('data-hint', 'Copy link');
+        btn.setAttribute('data-hint', window.lang.re('Copy link'));
       }, 1000);
     });
 
@@ -113,7 +113,7 @@ class Starter {
 
         document.title = re.data.sets.nik;
 
-        let ws = new WSchat(this.fun);
+        let ws = new WSchat(this.fun, false);
         ws.connectWs(re.data.sets);
       })
       .catch(err => {

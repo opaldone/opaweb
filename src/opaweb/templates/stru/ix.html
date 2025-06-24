@@ -1,4 +1,4 @@
-{{ define "title" }}Websocket Video Chat{{ end }}
+{{ define "title" }}{{ re "Video Chat" }}{{ end }}
 {{ define "styles" }}
   <link rel="stylesheet" type="text/css" href="/static/css/elems/ix.css" />
 {{ end }}
@@ -27,7 +27,7 @@
                 <path style="fill:#333E48;" d="M185.065,122.631h-48.639c-1.686,0-3.055-1.368-3.055-3.055c0-1.688,1.368-3.054,3.055-3.054 h48.639c1.687,0,3.055,1.366,3.055,3.054C188.12,121.263,186.752,122.631,185.065,122.631z"/>
                 <path style="fill:#333E48;" d="M179.501,136.83h-37.513c-1.687,0-3.054-1.368-3.054-3.056c0-1.687,1.367-3.054,3.054-3.054 h37.513c1.687,0,3.055,1.367,3.055,3.054C182.556,135.462,181.188,136.83,179.501,136.83z"/>
               </svg>
-              Create chat
+              {{ re "Create chat" }}
             </span>
           </a>
         </div>

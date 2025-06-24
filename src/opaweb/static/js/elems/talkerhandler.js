@@ -1,7 +1,8 @@
 class TalkerHandler {
-  constructor(fun_in, oin_in) {
+  constructor(fun_in, oin_in, is_virt_in) {
     this.fun = fun_in;
     this.oin = oin_in;
+    this.is_virt = is_virt_in;
 
     this.CC = {
       'video': '-vid',
@@ -22,9 +23,11 @@ class TalkerHandler {
       iceServers: this.oin.ws.iceList
     };
 
-    this.taber = new Taber(this.fun, {
-      'ws': this.oin.ws
-    });
+    if (!this.is_virt) {
+      this.taber = new Taber(this.fun, {
+        'ws': this.oin.ws
+      });
+    }
   }
 
   setMicCam(oc) {
@@ -600,7 +603,9 @@ class TalkerHandler {
 
     this.oin.talkers_cont.appendChild(ta_co);
 
-    this.taber.create_el_user(elid, oc);
+    if (this.taber) {
+      this.taber.create_el_user(elid, oc);
+    }
 
     oc['el_video'] = vid;
     oc['el_audio'] = au;

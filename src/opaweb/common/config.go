@@ -18,6 +18,7 @@ type Configuration struct {
 	Crt       string              `json:"crt,omitempty"`
 	Key       string              `json:"key,omitempty"`
 	RecFolder string              `json:"recFolder,omitempty"`
+	Lang      string              `json:"lang"`
 	Ws        *wsConfig           `json:"ws"`
 	IceList   []map[string]string `json:"iceList"`
 }
