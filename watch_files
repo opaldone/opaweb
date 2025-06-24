@@ -10,6 +10,7 @@ C_FOLDERS=(
 W_FILES=(
 # json
     "$src/config.json;$bin/config.json"
+    "$src/static/tra/ru/messages.json;$bin/static/tra/ru/messages.json"
 # html
     "$src/templates/lays/layout.html;$bin/templates/lays/layout.html"
     "$src/templates/lays/layout_ajax.html;$bin/templates/lays/layout_ajax.html"
@@ -30,6 +31,7 @@ W_FILES=(
     "$src/static/css/elems/tabs.css;$bin/static/css/elems/tabs.css"
 # js
     "$src/static/js/inc/funcs.js;$bin/static/js/inc/funcs.js"
+    "$src/static/js/inc/lang.js;$bin/static/js/inc/lang.js"
     "$src/static/js/elems/ix.js;$bin/static/js/elems/ix.js"
     "$src/static/js/elems/wschat.js;$bin/static/js/elems/wschat.js"
     "$src/static/js/elems/resie.js;$bin/static/js/elems/resie.js"

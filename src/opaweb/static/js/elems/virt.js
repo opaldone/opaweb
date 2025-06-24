@@ -6,7 +6,7 @@ class VirtStarter {
   }
 
   handler() {
-    let ws = new WSchat();
+    let ws = new WSchat(this.fun, true);
     ws.connectWs(window.VIRT_OB);
   }
 }

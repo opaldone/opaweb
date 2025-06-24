@@ -1,18 +1,19 @@
-{{ define "title" }}Video Chat{{ end }}
+{{ define "title" }}{{ re "Chat settings" }}{{ end }}
 {{ define "styles" }}
   <link rel="stylesheet" type="text/css" href="/static/css/elems/ix.css" />
   <link rel="stylesheet" type="text/css" href="/static/css/elems/room.css" />
   <link rel="stylesheet" type="text/css" href="/static/css/elems/tabs.css" />
 {{ end }}
 {{ define "content" }}
+  {{ $info := (index . "info") }}
   <div id="ws-main">
     <div id="ws-cont-screen">
       <div id="ws-cont">
         <div class="ws-header">
-          Chat settings
+          {{ re "Chat settings" }}
         </div>
         <div class="form-cbs-cont clearfix">
-          {{ template "camic" (index . "camic")}}
+          {{ template "camic" (index $info "camic")}}
         </div>
         <div id="ws-form-cont">
           <div class="inp-con-ico">
@@ -25,13 +26,13 @@
                   </g>
                 </svg>
               </span>
-              <input class="inp-wid" type="text" id="nik-name" placeholder="Unique name" />
+              <input class="inp-wid" type="text" id="nik-name" placeholder="{{ re "Unique name" }}" />
             </div>
           </div>
           <div class="form-btns clearfix">
-            <input id="uqroom" type="hidden" value="{{ index . "uqroom" }}">
-            <button id="start-ws" href="{{ ro ("ws_me_start") }}" class="form-btn flo">Start chat</button>
-            <a id="ws-back" href="{{ ro ("home") }}" class="link-back">Back</a>
+            <input id="uqroom" type="hidden" value="{{ index $info "uqroom" }}">
+            <button id="start-ws" href="{{ ro ("ws_me_start") }}" class="form-btn flo">{{ re "Start chat" }}</button>
+            <a id="ws-back" href="{{ ro ("home") }}" class="link-back">{{ re "Back" }}</a>
           </div>
         </div>
       </div>
@@ -41,6 +42,7 @@
 {{ define "scripts" }}
   <script src="/static/external/js/axios.js"></script>
   <script src="/static/js/inc/funcs.js"></script>
+  <script src="/static/js/inc/lang.js"></script>
   <script src="/static/js/elems/saver.js"></script>
   <script src="/static/js/elems/saver_client.js"></script>
   <script src="/static/js/elems/resie.js"></script>

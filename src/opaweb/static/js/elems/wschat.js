@@ -1,5 +1,6 @@
 class WSchat {
-  constructor(fun_in) {
+  constructor(fun_in, is_virt_in) {
+    this.is_virt = is_virt_in;
     this.fun = fun_in;
 
     this.ws = {
@@ -45,26 +46,28 @@ class WSchat {
 
     window.addEventListener('resize', this.docResize.bind(this));
 
-    this.ch_sound = document.getElementById('cb-mic');
-    this.ch_sound.addEventListener('change', this.avChange.bind(this));
-    this.ch_video = document.getElementById('cb-cam');
-    this.ch_video.addEventListener('change', this.avChange.bind(this));
+    if (!this.is_virt) {
+      this.ch_sound = document.getElementById('cb-mic');
+      this.ch_sound.addEventListener('change', this.avChange.bind(this));
+      this.ch_video = document.getElementById('cb-cam');
+      this.ch_video.addEventListener('change', this.avChange.bind(this));
 
-    this.share_screen = document.getElementById('share-screen');
-    this.share_screen.addEventListener('click', this.toggleShareScreen.bind(this));
+      this.share_screen = document.getElementById('share-screen');
+      this.share_screen.addEventListener('click', this.toggleShareScreen.bind(this));
 
-    this.saver_client = new SaverClient();
-    this.tg_rec = document.getElementById('tg-rec');
-    this.tg_rec.addEventListener('click', this.toggleRecordClent.bind(this));
+      this.saver_client = new SaverClient();
+      this.tg_rec = document.getElementById('tg-rec');
+      this.tg_rec.addEventListener('click', this.toggleRecordClent.bind(this));
 
-    this.tg_rec_serv = document.getElementById('tg-rec-serv');
-    if (this.tg_rec_serv) {
-      this.tg_rec_serv.addEventListener('click', this.toggleRecordServ.bind(this));
+      this.tg_rec_serv = document.getElementById('tg-rec-serv');
+      if (this.tg_rec_serv) {
+        this.tg_rec_serv.addEventListener('click', this.toggleRecordServ.bind(this));
+      }
+
+      this.KEYS = new Set();
+      document.addEventListener('keydown', this.dockd.bind(this));
+      document.addEventListener('keyup', this.docku.bind(this));
     }
-
-    this.KEYS = new Set();
-    document.addEventListener('keydown', this.dockd.bind(this));
-    document.addEventListener('keyup', this.docku.bind(this));
   }
 
   dockd(e) {
@@ -154,7 +157,7 @@ class WSchat {
       ob.vid_self = this.vid_self;
     }
 
-    this.th = new TalkerHandler(this.fun, ob);
+    this.th = new TalkerHandler(this.fun, ob, this.is_virt);
     this.th.startShow()
 
     this.vidSelfChange(this.ws.cam);

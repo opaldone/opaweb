@@ -8,6 +8,7 @@ import (
 
 	"opaweb/applog"
 	"opaweb/common"
+	"opaweb/lang"
 
 	"github.com/gorilla/csrf"
 )
@@ -43,26 +44,28 @@ func getFm() (fm template.FuncMap) {
 				common.ShowJson(v, false),
 			)
 		},
+		"re": lang.Re,
 	}
 
 	return
 }
 
-func GenerateHTMLEmp(w http.ResponseWriter, r *http.Request, data interface{}, pages ...string) {
+func GenerateHTMLEmp(w http.ResponseWriter, r *http.Request, info interface{}, pages ...string) {
 	funcMap := getFm()
 
-	if data == nil {
-		data = map[string]interface{}{
-			csrf.TemplateTag: csrf.TemplateField(r),
-		}
+	data := map[string]interface{}{
+		csrf.TemplateTag: csrf.TemplateField(r),
 	}
 
-	if data != nil {
-		_, ok := data.(map[string]interface{})[csrf.TemplateTag]
+	if info != nil {
+		data["info"] = info
+	}
 
-		if !ok {
-			data.(map[string]interface{})[csrf.TemplateTag] = csrf.TemplateField(r)
-		}
+	data["lang"] = common.Env(false).Lang
+	data["stat"] = common.Env(false).Static
+	data["needtra"] = 0
+	if lang.NeedTra() {
+		data["needtra"] = 1
 	}
 
 	list_pages := []string{

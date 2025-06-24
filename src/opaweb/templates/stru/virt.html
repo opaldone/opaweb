@@ -8,7 +8,8 @@
   </div>
 {{ end }}
 {{ define "scripts" }}
-  {{ $ob := (index . "ob") }}
+  {{ $info := index . "info" }}
+  {{ $ob := (index $info "ob") }}
   <script>
     window.VIRT_OB = JSON.parse({{ safe $ob }});
   </script>
