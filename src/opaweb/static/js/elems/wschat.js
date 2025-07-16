@@ -46,6 +46,8 @@ class WSchat {
 
     window.addEventListener('resize', this.docResize.bind(this));
 
+    this.loga = null;
+
     if (!this.is_virt) {
       this.ch_sound = document.getElementById('cb-mic');
       this.ch_sound.addEventListener('change', this.avChange.bind(this));
@@ -67,6 +69,8 @@ class WSchat {
       this.KEYS = new Set();
       document.addEventListener('keydown', this.dockd.bind(this));
       document.addEventListener('keyup', this.docku.bind(this));
+
+      this.loga = new Loga(this.fun);
     }
   }
 
@@ -92,8 +96,13 @@ class WSchat {
     this.KEYS.delete(e.which);
   }
 
-  onError(err) {
+  showError(err) {
+    console.log('--- HANDLER ERROR ---');
     console.log(err);
+    console.log('--------------------');
+    if (!this.loga) return;
+
+    this.loga.add_error(err);
   }
 
   docResize() {
@@ -133,9 +142,14 @@ class WSchat {
 
   startWs() {
     this.ws.handler = new WebSocket(this.ws.wsurl);
+    this.ws.handler.onerror = this.wsError.bind(this);
     this.ws.handler.onopen = this.wsOpen.bind(this);
     this.ws.handler.onclose = this.wsClose.bind(this);
     this.ws.handler.onmessage = this.wsMessage.bind(this);
+  }
+
+  wsError(ev) {
+    this.showError("WebSocket error: " + ev.target.url);
   }
 
   wsOpen() {
@@ -148,7 +162,7 @@ class WSchat {
       'id_talkers': this.id_talkers,
       'talkers_cont': this.talkers_cont,
       'res': this.res,
-      'callError': this.onError,
+      'callError': this.showError,
       'vid_self': null,
       'scr_on': this.scr_on
     };

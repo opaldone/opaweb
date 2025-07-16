@@ -1,5 +1,5 @@
 # Opaweb
-This is a web server for video and audio conferences and it is a client for the [opachat](https://github.com/opaldone/opachat). With the ability of recording a chat session, both on the server and on the client.
+This is a Web Server for video and audio conferences and it is a client for the [opachat](https://github.com/opaldone/opachat). With the ability of recording a chat session, both on the server and on the client.
 
 ## It depends on these great packages
 ![@gorilla](https://avatars.githubusercontent.com/u/489566?s=15&v=4) https://github.com/gorilla/csrf \
@@ -60,14 +60,17 @@ The config file is located here __opaweb/bin/config.json__
 {
   "appname": "opaweb", // Just a name of application
   "address": "0.0.0.0", // IP address of the server, zeros mean current host
-  "port": 443, // Port, don't forget to open for firewall.
+  "port": 443, // Port, don't forget to open for firewall
+  "static": "static", // The folder that stores the frontend part of the site
   "acme": false, // Set to true if You need to use acme/autocert
   "acmehost": "opaldone.click", // The domain name, set acme: true
   "dirCache": "./certs", // The folder where acme/autocert will store the keys, set acme: true
   "crt": "/server.crt", // The path to your HTTPS cert key, set acme: false
   "key": "/server.key", // The path to your HTTPS key, set acme: false
+  "recFolder": "/mnt/terik/a_my/admigo_project/opachat/bin/vid", // Folder for temporary copying of the recorded session
+  "lang": "en", // Language of the site
   "ws": {
-    "wsurl": "wss://opaldone.click:7778", // URL of the opachat server
+    "wsurl": "wss://opaldone.click:8080", // URL of the opachat server
     "perroom": 100 // How many persons can be in one room
   },
   "iceList": [ // Settings of WebRTC turn server
