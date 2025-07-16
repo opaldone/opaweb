@@ -61,10 +61,6 @@ class Resie {
       if (window.getComputedStyle(el).display === 'none') continue;
       if (el.classList.contains(this.scr_on)) {
         if (el.style.width != '100%') {
-          console.log(
-            el.style.width,
-            el.style.width == '100%',
-          );
           el.style.width = '100%';
         }
       } else {
