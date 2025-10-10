@@ -36,6 +36,7 @@ class WSchat {
 
     this.scr_on = 'screen-on';
 
+    this.v_list_hint = document.getElementById('v-list-hint');
     this.vid_self = document.getElementById('vid-self');
 
     this.th = null;
@@ -96,13 +97,10 @@ class WSchat {
     this.KEYS.delete(e.which);
   }
 
-  showError(err) {
-    console.log('--- HANDLER ERROR ---');
-    console.log(err);
-    console.log('--------------------');
+  showLog(msg, err) {
     if (!this.loga) return;
 
-    this.loga.add_error(err);
+    this.loga.add_log(msg, err);
   }
 
   docResize() {
@@ -113,11 +111,11 @@ class WSchat {
     if (!this.vid_self) return;
 
     if (cam) {
-      this.vid_self.style.opacity = 1;
+      this.v_list_hint.classList.remove('hide');
       return;
     }
 
-    this.vid_self.style.opacity =  0;
+    this.v_list_hint.classList.add('hide');
   }
 
   wsClear() {
@@ -149,7 +147,7 @@ class WSchat {
   }
 
   wsError(ev) {
-    this.showError("WebSocket error: " + ev.target.url);
+    this.showLog("WebSocket error: " + ev.target.url, true);
   }
 
   wsOpen() {
@@ -162,7 +160,7 @@ class WSchat {
       'id_talkers': this.id_talkers,
       'talkers_cont': this.talkers_cont,
       'res': this.res,
-      'callError': this.showError,
+      'showLog': this.showLog.bind(this),
       'vid_self': null,
       'scr_on': this.scr_on
     };

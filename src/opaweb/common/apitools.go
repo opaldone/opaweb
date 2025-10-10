@@ -21,7 +21,7 @@ type WsRequest struct {
 }
 
 type WsSettings struct {
-	WsUrl   string              `json:"wsurl,omitempty"`
+	WsURL   string              `json:"wsurl,omitempty"`
 	UqRoom  string              `json:"uqroom,omitempty"`
 	UqUser  string              `json:"uquser,omitempty"`
 	PerRoom int                 `json:"perroom,omitempty"`
@@ -39,7 +39,7 @@ type AjaAns struct {
 	Cont string      `json:"cont,omitempty"`
 }
 
-func doJsonFromBody(body io.Reader, v interface{}) {
+func doJSONFromBody(body io.Reader, v any) {
 	decoder := json.NewDecoder(body)
 	if err := decoder.Decode(v); err != nil {
 		applog.Danger("Cannot parse form", err)
@@ -60,8 +60,8 @@ func newSettings(uqroom, nik, wsurl, ke string,
 	res.Cam = cam
 	res.Virt = virt
 	res.Recserv = len(env.RecFolder) > 0
-	res.WsUrl = fmt.Sprintf(wsurl,
-		env.Ws.WsUrl,
+	res.WsURL = fmt.Sprintf(wsurl,
+		env.Ws.WsURL,
 		res.UqRoom,
 		res.UqUser,
 		res.PerRoom,
@@ -77,7 +77,7 @@ func newSettings(uqroom, nik, wsurl, ke string,
 
 func GetSetsFromReq(r *http.Request) (wset *WsSettings) {
 	var re WsRequest
-	doJsonFromBody(r.Body, &re)
+	doJSONFromBody(r.Body, &re)
 
 	wset = newSettings(
 		re.UqRoom, re.Nik,
@@ -103,7 +103,7 @@ func GetSetsForVirt(ps httprouter.Params) (wset *WsSettings) {
 
 func GetWsReq(r *http.Request) (wre *WsRequest) {
 	var re WsRequest
-	doJsonFromBody(r.Body, &re)
+	doJSONFromBody(r.Body, &re)
 
 	wre = &re
 

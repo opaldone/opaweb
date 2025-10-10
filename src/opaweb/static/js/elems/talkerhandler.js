@@ -76,7 +76,7 @@ class TalkerHandler {
         });
       })
       .catch(e => {
-        this.oin.callError(e)
+        this.oin.showLog(e, true)
       });
   }
 
@@ -111,7 +111,7 @@ class TalkerHandler {
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.oin.callError("Failed to parse avcChanged")
+      return this.oin.showLog("Failed to parse avcChanged", true)
     }
 
     let oc = this.talkers[js.strid];
@@ -127,7 +127,7 @@ class TalkerHandler {
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.oin.callError("Failed to parse screeChanged")
+      return this.oin.showLog("Failed to parse screeChanged", true)
     }
 
     let oc = this.talkers[js.strid];
@@ -196,7 +196,7 @@ class TalkerHandler {
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.oin.callError("Failed to parse anotherRecordServ")
+      return this.oin.showLog("Failed to parse anotherRecordServ", true);
     }
 
     let oc = this.talkers[js.strid];
@@ -214,7 +214,7 @@ class TalkerHandler {
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.oin.callError("Failed to parse startedRecordServ")
+      return this.oin.showLog("Failed to parse startedRecordServ", true);
     }
 
     let oc = this.talkers[js.strid];
@@ -230,7 +230,7 @@ class TalkerHandler {
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.oin.callError("Failed to parse stoppedRecordServ")
+      return this.oin.showLog("Failed to parse stoppedRecordServ", true);
     }
 
     this.setDownloadLinkServ(some_button, js);
@@ -251,7 +251,7 @@ class TalkerHandler {
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.oin.callError("Failed to parse procChatMessage")
+      return this.oin.showLog("Failed to parse procChatMessage", true);
     }
 
     if (js.uquser == this.oin.ws.uquser) {
@@ -344,7 +344,7 @@ class TalkerHandler {
         this.call();
       })
       .catch(e => {
-        this.oin.callError(e);
+        this.oin.showLog(e, true);
       });
   }
 
@@ -392,7 +392,7 @@ class TalkerHandler {
     let cand = JSON.parse(content)
 
     if (!cand) {
-      return this.oin.callError("failed to parse candidate")
+      return this.oin.showLog("failed to parse candidate", true);
     }
 
     this.pc.addIceCandidate(cand)
@@ -402,7 +402,7 @@ class TalkerHandler {
     let offer = JSON.parse(content);
 
     if (!offer) {
-      return this.oin.callError("failed to parse offer");
+      return this.oin.showLog("failed to parse offer", true);
     }
 
     this.pc.setRemoteDescription(offer);
@@ -466,11 +466,11 @@ class TalkerHandler {
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.oin.callError("Failed to parse pushTalkers")
+      return this.oin.showLog("Failed to parse pushTalkers", true);
     }
 
     if (!js.list) {
-      return this.oin.callError("No list pushTalkers")
+      return this.oin.showLog("No list pushTalkers", true);
     }
 
     let list = js.list;
@@ -645,7 +645,7 @@ class TalkerHandler {
         micNode.connect(volumeMeterNode).connect(ctx.destination);
       })
       .catch(e => {
-        this.oin.callError(e)
+        this.oin.showLog(e, true);
       });
   }
 

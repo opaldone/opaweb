@@ -1,3 +1,4 @@
+// Package common
 package common
 
 import (
@@ -6,6 +7,8 @@ import (
 
 	"opaweb/applog"
 )
+
+const RLEN = 7
 
 func CreateUID() (uuid string) {
 	u := new([16]byte)
@@ -21,4 +24,10 @@ func CreateUID() (uuid string) {
 	u[6] = (u[6] & 0xF) | (0x4 << 4)
 	uuid = fmt.Sprintf("%x-%x-%x-%x-%x", u[0:4], u[4:6], u[6:8], u[8:10], u[10:])
 	return
+}
+
+func RandUID() string {
+	b := make([]byte, RLEN)
+	rand.Read(b)
+	return fmt.Sprintf("%x", b)
 }

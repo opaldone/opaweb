@@ -26,10 +26,12 @@ class Loga {
     return false;
   }
 
-  add_error(err) {
-    let lis = '<li>#MSG#</li>';
-
-    lis = lis.replace(/#MSG#/, err);
+  add_log(msg, err) {
+    let lis = '<li';
+    if (err) {
+      lis += ' class="err"';
+    }
+    lis += '><span>' + msg + '</span></li>';
 
     let tem = document.createElement('template');
     tem.innerHTML = lis;

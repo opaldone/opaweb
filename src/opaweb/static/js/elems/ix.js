@@ -46,8 +46,11 @@ class Starter {
     ev.preventDefault();
 
     let btn = ev.currentTarget;
+    const hre = window.location.href;
+    const ar = hre.split('?');
+    const buf = ar[0];
 
-    navigator.clipboard.writeText(window.location.href).then(() => {
+    navigator.clipboard.writeText(buf).then(() => {
       btn.setAttribute('data-hint', window.lang.re('The link has been copied'));
       setTimeout(() => {
         btn.setAttribute('data-hint', window.lang.re('Copy link'));

@@ -6,7 +6,7 @@
   left: 0;
   width: 100%;
   height: calc(100% - 75px);
-  background-color: #373737;
+  background-color: #2e2e2e;
   color: #fff;
   font-size: 16px;
   line-height: 20px;
@@ -22,8 +22,22 @@
   overflow-y: auto;
 }
 
+#loga-list li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#loga-list li span {
+  display: inline-block;
+}
+
 #loga-list li + li {
   margin-top: 11px;
   padding-top: 7px;
-  border-top: 1px solid #575757;
+  border-top: 1px solid #3e3e3e;
+}
+
+#loga-list li.err {
+  color: #f93;
 }
