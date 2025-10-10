@@ -24,17 +24,17 @@ func main() {
 
 	e := common.Env(false)
 
-	csrf_h := csrf.Protect(
+	csrfH := csrf.Protect(
 		[]byte(common.GetKeyCSRF()),
 		csrf.Path("/"),
 	)
 
 	if e.Acme {
-		startAcme(e, csrf_h)
+		startAcme(e, csrfH)
 		return
 	}
 
-	startSelf(e, csrf_h)
+	startSelf(e, csrfH)
 }
 
 func startSelf(e *common.Configuration, cs func(http.Handler) http.Handler) {
@@ -43,7 +43,7 @@ func startSelf(e *common.Configuration, cs func(http.Handler) http.Handler) {
 		time.Now().Format("2006-01-02 15:04:05"),
 		e.Crt, e.Key,
 		e.Address, e.Port,
-		e.Ws.WsUrl,
+		e.Ws.WsURL,
 		e.IceList[0]["urls"],
 	)
 
@@ -66,7 +66,7 @@ func startAcme(e *common.Configuration, cs func(http.Handler) http.Handler) {
 		"acme", e.Appname,
 		time.Now().Format("2006-01-02 15:04:05"),
 		e.Acmehost, e.DirCache, e.Address, e.Port,
-		e.Ws.WsUrl,
+		e.Ws.WsURL,
 		e.IceList[0]["urls"],
 	)
 

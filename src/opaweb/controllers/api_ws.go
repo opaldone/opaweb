@@ -18,16 +18,20 @@ func WSChat(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 func WsMeet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	uqroom := common.CreateUID()
+	uqroom := common.RandUID()
 	http.Redirect(w, r, ro("ws_me_get", uqroom), http.StatusSeeOther)
 }
 
 func WsMeetGet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	qv := r.URL.Query()
+	nikin := qv.Get("n")
+
 	uqroom := ps.ByName("uqroom")
 
-	info := map[string]interface{}{
+	info := map[string]any{
 		"uqroom": uqroom,
 		"camic":  map[string]bool{"mic": true, "cam": true, "tophint": true},
+		"nikin":  nikin,
 	}
 
 	GenerateHTMLEmp(w, r, info, "stru/st_meet", "stru/camic")
@@ -38,7 +42,7 @@ func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	wse := common.GetSetsFromReq(r)
 
-	data := map[string]interface{}{
+	data := map[string]any{
 		"sets":    wse,
 		"camic":   map[string]bool{"mic": wse.Mic, "cam": wse.Cam, "tophint": false},
 		"recserv": wse.Recserv,
@@ -66,23 +70,23 @@ func WsVirt(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	ob, _ := json.Marshal(wse)
 
-	info := map[string]interface{}{
+	info := map[string]any{
 		"ob": string(ob),
 	}
 
 	GenerateHTMLEmp(w, r, info, "stru/virt")
 }
 
-func getFi(uqroom_in, ke_in string) string {
-	fn := fmt.Sprintf("vi_%s_%s.webm", uqroom_in, ke_in)
+func getFi(uqroomIn, keIn string) string {
+	fn := fmt.Sprintf("vi_%s_%s.webm", uqroomIn, keIn)
 
 	return fn
 }
 
-func getPtFi(fn_in string) string {
+func getPtFi(fnIn string) string {
 	env := common.Env(true)
 
-	pt := fmt.Sprintf("%s/%s", env.RecFolder, fn_in)
+	pt := fmt.Sprintf("%s/%s", env.RecFolder, fnIn)
 
 	return pt
 }

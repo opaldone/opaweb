@@ -63,6 +63,10 @@
   width: 100px;
 }
 
+#v-list-hint.hide {
+  min-height: 75px;
+}
+
 #v-list-hint video {
   position: relative;
   opacity: 1;
@@ -71,6 +75,10 @@
 #v-list-hint .vw {
   width: 100px;
   height: 75px;
+}
+
+#v-list-hint.hide .vw {
+  display: none;
 }
 
 #talkers .vw.allert-rec {

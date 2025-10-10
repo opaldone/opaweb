@@ -24,7 +24,7 @@ type Configuration struct {
 }
 
 type wsConfig struct {
-	WsUrl   string `json:"wsurl"`
+	WsURL   string `json:"wsurl"`
 	PerRoom int    `json:"perroom"`
 }
 

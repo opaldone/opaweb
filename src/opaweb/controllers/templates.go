@@ -39,9 +39,9 @@ func getFm() (fm template.FuncMap) {
 			return template.HTML(s)
 		},
 		"ro": ro,
-		"dd": func(v interface{}) template.HTML {
+		"dd": func(v any) template.HTML {
 			return template.HTML(
-				common.ShowJson(v, false),
+				common.ShowJSON(v, false),
 			)
 		},
 		"re": lang.Re,
@@ -50,10 +50,10 @@ func getFm() (fm template.FuncMap) {
 	return
 }
 
-func GenerateHTMLEmp(w http.ResponseWriter, r *http.Request, info interface{}, pages ...string) {
+func GenerateHTMLEmp(w http.ResponseWriter, r *http.Request, info any, pages ...string) {
 	funcMap := getFm()
 
-	data := map[string]interface{}{
+	data := map[string]any{
 		csrf.TemplateTag: csrf.TemplateField(r),
 	}
 
@@ -68,25 +68,25 @@ func GenerateHTMLEmp(w http.ResponseWriter, r *http.Request, info interface{}, p
 		data["needtra"] = 1
 	}
 
-	list_pages := []string{
+	listPages := []string{
 		"lays/layout",
 	}
 
-	list_pages = append(list_pages, pages...)
+	listPages = append(listPages, pages...)
 
-	getSiteTemplates(list_pages, funcMap).ExecuteTemplate(w, "layout", data)
+	getSiteTemplates(listPages, funcMap).ExecuteTemplate(w, "layout", data)
 }
 
-func GetHTMLAjax(data interface{}, pages ...string) string {
+func GetHTMLAjax(data any, pages ...string) string {
 	funcMap := getFm()
 
-	list_pages := []string{
+	listPages := []string{
 		"lays/layout_ajax",
 	}
 
-	list_pages = append(list_pages, pages...)
+	listPages = append(listPages, pages...)
 
-	t := getSiteTemplates(list_pages, funcMap)
+	t := getSiteTemplates(listPages, funcMap)
 
 	var buf bytes.Buffer
 
