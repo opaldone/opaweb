@@ -340,11 +340,12 @@ class TalkerHandler {
       })
       .then(stream => {
         this.localStream = stream;
-
         this.call();
       })
       .catch(e => {
         this.oin.showLog(e, true);
+        this.oin.clear_if_block();
+        this.call();
       });
   }
 
@@ -416,6 +417,13 @@ class TalkerHandler {
 
       this.oin.ws.handler.send(JSON.stringify(jo));
     });
+
+    let jo = {
+      'tp': this.oin.ws.TPS.WHOCO,
+      'content': ''
+    }
+
+    this.oin.ws.handler.send(JSON.stringify(jo));
   }
 
   initTalker(elid) {
@@ -434,66 +442,12 @@ class TalkerHandler {
 
     this.talkers[elid][e.track.kind] = str;
 
-    let jo = {
-      'tp': this.oin.ws.TPS.WHOCO,
-      'content': ''
-    }
+    // let jo = {
+      // 'tp': this.oin.ws.TPS.WHOCO,
+      // 'content': ''
+    // }
 
-    this.oin.ws.handler.send(JSON.stringify(jo));
-  }
-
-  checkTalkers() {
-    for (let tk in this.talkers) {
-      let oc = this.talkers[tk];
-      if (oc == undefined) continue;
-
-      let vid = oc['el_video'];
-      let au = oc['el_audio']
-      let mkv = oc['video'];
-      let mka = oc['audio'];
-
-      if (vid == undefined) continue;
-      if (au == undefined) continue;
-      if (mkv == undefined) continue;
-      if (mka == undefined) continue;
-
-      vid.srcObject = mkv;
-      au.srcObject = mka;
-    }
-  }
-
-  pushTalkers(cont) {
-    let js = JSON.parse(cont);
-
-    if (!js) {
-      return this.oin.showLog("Failed to parse pushTalkers", true);
-    }
-
-    if (!js.list) {
-      return this.oin.showLog("No list pushTalkers", true);
-    }
-
-    let list = js.list;
-
-    for (let elid in list) {
-      this.initTalker(elid);
-      let oc = this.talkers[elid];
-      let lio = list[elid];
-      oc.uquser = lio.uquser;
-      oc.nik = lio.nik;
-      oc.mic = lio.mic;
-      oc.cam = lio.cam;
-      oc.recording = lio.recording;
-      oc.screen_on = lio.screen_on;
-
-      if (oc['el_container']) {
-        continue;
-      }
-
-      this.createTalker(elid, oc);
-    }
-
-    this.checkTalkers();
+    // this.oin.ws.handler.send(JSON.stringify(jo));
   }
 
   getUsetEl(id_in, oc) {
@@ -616,6 +570,66 @@ class TalkerHandler {
     this.setMicCam(oc);
     this.doMeter(oc['audio'], ta_co);
     this.oin.res.resize()
+  }
+
+  checkTalkers() {
+    for (let tk in this.talkers) {
+      let oc = this.talkers[tk];
+      if (oc == undefined) continue;
+
+      let vid = oc['el_video'];
+      let au = oc['el_audio']
+      let mkv = oc['video'];
+      let mka = oc['audio'];
+
+      if (vid == undefined) continue;
+      if (au == undefined) continue;
+      if (mkv == undefined) continue;
+      if (mka == undefined) continue;
+
+      vid.srcObject = mkv;
+      au.srcObject = mka;
+    }
+  }
+
+  pushTalkers(cont) {
+    let js = JSON.parse(cont);
+
+    if (!js) {
+      return this.oin.showLog("Failed to parse pushTalkers", true);
+    }
+
+    if (!js.list) {
+      return this.oin.showLog("No list pushTalkers", true);
+    }
+
+    let list = js.list;
+
+    console.log("list==========");
+    console.log(list);
+
+    for (let elid in list) {
+      console.log('pushTalkers============');
+      console.log('elid =', elid.length);
+
+      this.initTalker(elid);
+      let oc = this.talkers[elid];
+      let lio = list[elid];
+      oc.uquser = lio.uquser;
+      oc.nik = lio.nik;
+      oc.mic = lio.mic;
+      oc.cam = lio.cam;
+      oc.recording = lio.recording;
+      oc.screen_on = lio.screen_on;
+
+      if (oc['el_container']) {
+        continue;
+      }
+
+      this.createTalker(elid, oc);
+    }
+
+    this.checkTalkers();
   }
 
   doMeter(str, vcont) {

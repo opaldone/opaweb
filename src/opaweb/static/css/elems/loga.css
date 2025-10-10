@@ -8,9 +8,8 @@
   height: calc(100% - 75px);
   background-color: #2e2e2e;
   color: #fff;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 20px;
-  padding: 20px;
 }
 
 #loga-cont.show {
@@ -23,21 +22,14 @@
 }
 
 #loga-list li {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#loga-list li span {
-  display: inline-block;
+  padding: 15px;
+  overflow: auto;
 }
 
 #loga-list li + li {
-  margin-top: 11px;
-  padding-top: 7px;
   border-top: 1px solid #3e3e3e;
 }
 
 #loga-list li.err {
-  color: #f93;
+  color: #ffc994;
 }

@@ -118,8 +118,72 @@ class WSchat {
     this.v_list_hint.classList.add('hide');
   }
 
+  getAvSet() {
+    let se = {
+      'sound': this.ch_sound.checked,
+      'video': this.ch_video.checked,
+      'screen_on': this.share_screen.classList.contains('on')
+    };
+
+    this.vidSelfChange(se.video);
+
+    return se;
+  }
+
   wsClear() {
     this.ws.handler = null;
+  }
+
+  wsError(ev) {
+    this.showLog("WebSocket error: " + ev.target.url, true);
+  }
+
+  wsOpen() {
+    this.talk()
+  }
+
+  wsClose() {
+    this.wsClear()
+  }
+
+  wsMessage(e) {
+    if (this.th == null) return;
+
+    let jsi = e.data.split("\n");
+
+    for (let i in jsi) {
+      let msg = JSON.parse(jsi[i]);
+
+      switch (msg.tp) {
+        case this.ws.TPS.OFFER:
+          this.th.setOffer(msg.content);
+          break;
+        case this.ws.TPS.CANDIDATE:
+          this.th.setCandidate(msg.content);
+          break;
+        case this.ws.TPS.TCON:
+          this.th.pushTalkers(msg.content);
+          break;
+        case this.ws.TPS.AVCD:
+          this.th.avcChanged(msg.content);
+          break
+        case this.ws.TPS.SCRECD:
+          this.th.screeChanged(msg.content);
+          break;
+        case this.ws.TPS.BREC:
+          this.th.startedRecordServ(msg.content);
+          break;
+        case this.ws.TPS.AREC:
+          this.th.anotherRecordServ(this.tg_rec_serv, msg.content);
+          break;
+        case this.ws.TPS.EREC:
+          this.th.stoppedRecordServ(this.tg_rec_serv, msg.content);
+          break;
+        case this.ws.TPS.CHAT:
+          this.th.procChatMessage(msg.content);
+          break;
+      }
+    }
   }
 
   connectWs(re) {
@@ -146,12 +210,31 @@ class WSchat {
     this.ws.handler.onmessage = this.wsMessage.bind(this);
   }
 
-  wsError(ev) {
-    this.showLog("WebSocket error: " + ev.target.url, true);
+  rem_button(el, ch) {
+    let par = this.fun.parent(el, '.lbl-tha');
+
+    if (ch) {
+      par.classList.remove('checked');
+    }
+
+    par.remove();
   }
 
-  wsOpen() {
-    this.talk()
+  clear_if_block() {
+    this.ws.cam = false;
+    this.ws.mic = false;
+
+    this.ch_sound.checked = false;
+    this.rem_button(this.ch_sound, true);
+
+    this.ch_video.checked = false;
+    this.rem_button(this.ch_video, true);
+
+    this.rem_button(this.share_screen, false);
+    this.rem_button(this.tg_rec_serv, false);
+    this.rem_button(this.tg_rec, false);
+
+    this.vidSelfChange(false);
   }
 
   talk() {
@@ -161,6 +244,7 @@ class WSchat {
       'talkers_cont': this.talkers_cont,
       'res': this.res,
       'showLog': this.showLog.bind(this),
+      'clear_if_block': this.clear_if_block.bind(this),
       'vid_self': null,
       'scr_on': this.scr_on
     };
@@ -173,22 +257,6 @@ class WSchat {
     this.th.startShow()
 
     this.vidSelfChange(this.ws.cam);
-  }
-
-  wsClose() {
-    this.wsClear()
-  }
-
-  getAvSet() {
-    let se = {
-      'sound': this.ch_sound.checked,
-      'video': this.ch_video.checked,
-      'screen_on': this.share_screen.classList.contains('on')
-    };
-
-    this.vidSelfChange(se.video);
-
-    return se;
   }
 
   avChange(ev) {
@@ -235,45 +303,5 @@ class WSchat {
     let some_button = ev.currentTarget;
 
     this.th.toggleRecordClent(this.saver_client, some_button);
-  }
-
-  wsMessage(e) {
-    if (this.th == null) return;
-
-    let jsi = e.data.split("\n");
-
-    for (let i in jsi) {
-      let msg = JSON.parse(jsi[i]);
-
-      switch (msg.tp) {
-        case this.ws.TPS.OFFER:
-          this.th.setOffer(msg.content);
-          break;
-        case this.ws.TPS.CANDIDATE:
-          this.th.setCandidate(msg.content);
-          break;
-        case this.ws.TPS.TCON:
-          this.th.pushTalkers(msg.content);
-          break;
-        case this.ws.TPS.AVCD:
-          this.th.avcChanged(msg.content);
-          break
-        case this.ws.TPS.SCRECD:
-          this.th.screeChanged(msg.content);
-          break;
-        case this.ws.TPS.BREC:
-          this.th.startedRecordServ(msg.content);
-          break;
-        case this.ws.TPS.AREC:
-          this.th.anotherRecordServ(this.tg_rec_serv, msg.content);
-          break;
-        case this.ws.TPS.EREC:
-          this.th.stoppedRecordServ(this.tg_rec_serv, msg.content);
-          break;
-        case this.ws.TPS.CHAT:
-          this.th.procChatMessage(msg.content);
-          break;
-      }
-    }
   }
 }

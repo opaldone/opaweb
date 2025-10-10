@@ -31,7 +31,7 @@ class Loga {
     if (err) {
       lis += ' class="err"';
     }
-    lis += '><span>' + msg + '</span></li>';
+    lis += '>' + msg + '</li>';
 
     let tem = document.createElement('template');
     tem.innerHTML = lis;
