@@ -12,6 +12,7 @@ class WSchat {
       handler: null,
       mic: false,
       cam: false,
+      invis: false,
       virt: false,
       iceList: null,
       TPS: {
@@ -20,6 +21,7 @@ class WSchat {
         OFFER: "offer",
         ANSWER: "answer",
         WHOCO: "whoco",
+        WHOCOINV: "whocoinv",
         ROOMCON: "roomcon",
         TCON: "tcon",
         AVC: "avc",
@@ -30,7 +32,8 @@ class WSchat {
         EREC: "endrecord",
         AREC: "anotherrecord",
         RREC: "remrec",
-        CHAT: "chat"
+        CHAT: "chat",
+        TALKERST: "talkerstopped"
       }
     };
 
@@ -130,8 +133,79 @@ class WSchat {
     return se;
   }
 
+  rem_button(el, ch) {
+    let par = this.fun.parent(el, '.lbl-tha');
+
+    if (ch) {
+      par.classList.remove('checked');
+    }
+
+    par.remove();
+  }
+
+  clear_if_block() {
+    this.ws.cam = false;
+    this.ws.mic = false;
+
+    this.ch_sound.checked = false;
+    this.rem_button(this.ch_sound, true);
+
+    this.ch_video.checked = false;
+    this.rem_button(this.ch_video, true);
+
+    this.rem_button(this.share_screen, false);
+    this.rem_button(this.tg_rec_serv, false);
+    this.rem_button(this.tg_rec, false);
+
+    this.vidSelfChange(false);
+  }
+
+  who_con() {
+    let jo = {
+      'tp': this.ws.TPS.WHOCO,
+      'content': ''
+    }
+
+    this.ws.handler.send(JSON.stringify(jo));
+  }
+
+  who_con_invis() {
+    let jo = {
+      'tp': this.ws.TPS.WHOCOINV,
+      'content': ''
+    }
+
+    this.ws.handler.send(JSON.stringify(jo));
+  }
+
+  talk() {
+    let ob = {
+      'ws': this.ws,
+      'id_talkers': this.id_talkers,
+      'talkers_cont': this.talkers_cont,
+      'res': this.res,
+      'showLog': this.showLog.bind(this),
+      'clear_if_block': this.clear_if_block.bind(this),
+      'who_con': this.who_con.bind(this),
+      'vid_self': null,
+      'scr_on': this.scr_on
+    };
+
+    if (this.vid_self) {
+      ob.vid_self = this.vid_self;
+    }
+
+    this.th = new TalkerHandler(this.fun, ob, this.is_virt);
+    this.th.startShow()
+
+    this.vidSelfChange(this.ws.cam);
+  }
+
+
   wsClear() {
     this.ws.handler = null;
+    if (!this.th) return;
+    this.th.endSession();
   }
 
   wsError(ev) {
@@ -140,10 +214,11 @@ class WSchat {
 
   wsOpen() {
     this.talk()
+    this.who_con_invis();
   }
 
   wsClose() {
-    this.wsClear()
+    this.wsClear();
   }
 
   wsMessage(e) {
@@ -182,8 +257,19 @@ class WSchat {
         case this.ws.TPS.CHAT:
           this.th.procChatMessage(msg.content);
           break;
+        case this.ws.TPS.TALKERST:
+          this.th.removeMediaTag(msg.content);
+          break;
       }
     }
+  }
+
+  startWs() {
+    this.ws.handler = new WebSocket(this.ws.wsurl);
+    this.ws.handler.onerror = this.wsError.bind(this);
+    this.ws.handler.onopen = this.wsOpen.bind(this);
+    this.ws.handler.onclose = this.wsClose.bind(this);
+    this.ws.handler.onmessage = this.wsMessage.bind(this);
   }
 
   connectWs(re) {
@@ -200,63 +286,6 @@ class WSchat {
     this.ws.iceList = re.iceList;
 
     this.startWs()
-  }
-
-  startWs() {
-    this.ws.handler = new WebSocket(this.ws.wsurl);
-    this.ws.handler.onerror = this.wsError.bind(this);
-    this.ws.handler.onopen = this.wsOpen.bind(this);
-    this.ws.handler.onclose = this.wsClose.bind(this);
-    this.ws.handler.onmessage = this.wsMessage.bind(this);
-  }
-
-  rem_button(el, ch) {
-    let par = this.fun.parent(el, '.lbl-tha');
-
-    if (ch) {
-      par.classList.remove('checked');
-    }
-
-    par.remove();
-  }
-
-  clear_if_block() {
-    this.ws.cam = false;
-    this.ws.mic = false;
-
-    this.ch_sound.checked = false;
-    this.rem_button(this.ch_sound, true);
-
-    this.ch_video.checked = false;
-    this.rem_button(this.ch_video, true);
-
-    this.rem_button(this.share_screen, false);
-    this.rem_button(this.tg_rec_serv, false);
-    this.rem_button(this.tg_rec, false);
-
-    this.vidSelfChange(false);
-  }
-
-  talk() {
-    let ob = {
-      'ws': this.ws,
-      'id_talkers': this.id_talkers,
-      'talkers_cont': this.talkers_cont,
-      'res': this.res,
-      'showLog': this.showLog.bind(this),
-      'clear_if_block': this.clear_if_block.bind(this),
-      'vid_self': null,
-      'scr_on': this.scr_on
-    };
-
-    if (this.vid_self) {
-      ob.vid_self = this.vid_self;
-    }
-
-    this.th = new TalkerHandler(this.fun, ob, this.is_virt);
-    this.th.startShow()
-
-    this.vidSelfChange(this.ws.cam);
   }
 
   avChange(ev) {

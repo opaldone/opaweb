@@ -30,6 +30,10 @@ class TalkerHandler {
     }
   }
 
+  initTalker(elid) {
+    if (this.talkers[elid] == undefined) this.talkers[elid] = {};
+  }
+
   setMicCam(oc) {
     let elc = oc['el_container'];
     let el = oc['el_uset'];
@@ -327,55 +331,6 @@ class TalkerHandler {
     }
   }
 
-  startShow() {
-    if (this.oin.ws.virt) {
-      this.call();
-      return;
-    }
-
-    window.navigator.mediaDevices.enumerateDevices()
-      .then(ds => {
-        this.setMediaSettings(ds)
-        return window.navigator.mediaDevices.getUserMedia(this.media)
-      })
-      .then(stream => {
-        this.localStream = stream;
-        this.call();
-      })
-      .catch(e => {
-        this.oin.showLog(e, true);
-        this.oin.clear_if_block();
-        this.call();
-      });
-  }
-
-  call() {
-    this.pc = new RTCPeerConnection(this.servers)
-
-    this.pc.onicecandidate = e => this.onIceCandidate(e);
-    this.pc.ontrack = this.clientOnTrack.bind(this);
-
-    if (this.localStream != null) {
-      this.localStream.getTracks().forEach(track => {
-        this.pc.addTrack(track, this.localStream)
-      });
-    }
-
-    let jo = {
-      'tp': this.oin.ws.TPS.JOINROOM,
-      'content': JSON.stringify({
-        'sound': this.oin.ws.mic,
-        'video': this.oin.ws.cam
-      })
-    }
-
-    if (this.oin.vid_self) {
-      this.oin.vid_self.srcObject = this.localStream;
-    }
-
-    this.oin.ws.handler.send(JSON.stringify(jo));
-  }
-
   onIceCandidate(e) {
     if (!e.candidate) return
 
@@ -387,6 +342,92 @@ class TalkerHandler {
     }
 
     this.oin.ws.handler.send(JSON.stringify(jo));
+  }
+
+  removeMediaTag(cont) {
+    let js = JSON.parse(cont);
+
+    if (!js) {
+      return this.oin.showLog("Failed to parse removeMediaTag", true);
+    }
+
+    let elid = js.strid;
+
+    if (!elid) return;
+
+    let oc = this.talkers[elid];
+
+    if (!oc) return;
+
+    oc['el_container'].remove();
+    delete this.talkers[elid];
+
+    this.taber.remove_el_user(elid);
+
+    this.oin.res.resize()
+  }
+
+  clientOnTrack(e) {
+    let str = e.streams[0]
+    let elid = str.id
+
+    this.initTalker(elid);
+
+    this.talkers[elid][e.track.kind] = str;
+
+    this.oin.who_con();
+  }
+
+  call(invis) {
+    this.pc = new RTCPeerConnection(this.servers)
+
+    this.pc.onicecandidate = e => this.onIceCandidate(e);
+    this.pc.ontrack = this.clientOnTrack.bind(this);
+
+    if (this.localStream != null) {
+      this.localStream.getTracks().forEach(track => {
+        this.pc.addTrack(track, this.localStream)
+      });
+    }
+
+    this.oin.ws.invis = invis;
+
+    let jo = {
+      'tp': this.oin.ws.TPS.JOINROOM,
+      'content': JSON.stringify({
+        'sound': this.oin.ws.mic,
+        'video': this.oin.ws.cam,
+        'invis': this.oin.ws.invis,
+      })
+    }
+
+    this.oin.ws.handler.send(JSON.stringify(jo));
+
+    if (this.oin.vid_self) {
+      this.oin.vid_self.srcObject = this.localStream;
+    }
+  }
+
+  startShow() {
+    if (this.oin.ws.virt) {
+      this.call(true);
+      return;
+    }
+
+    window.navigator.mediaDevices.enumerateDevices()
+      .then(ds => {
+        this.setMediaSettings(ds)
+        return window.navigator.mediaDevices.getUserMedia(this.media)
+      })
+      .then(stream => {
+        this.localStream = stream;
+        this.call(false);
+      })
+      .catch(e => {
+        this.oin.showLog('startShow: ' + e.message, true);
+        this.oin.clear_if_block();
+        this.call(true);
+      });
   }
 
   setCandidate(content) {
@@ -417,37 +458,6 @@ class TalkerHandler {
 
       this.oin.ws.handler.send(JSON.stringify(jo));
     });
-
-    let jo = {
-      'tp': this.oin.ws.TPS.WHOCO,
-      'content': ''
-    }
-
-    this.oin.ws.handler.send(JSON.stringify(jo));
-  }
-
-  initTalker(elid) {
-    if (this.talkers[elid] == undefined) this.talkers[elid] = {};
-  }
-
-  clientOnTrack(e) {
-    let str = e.streams[0]
-    let elid = str.id
-
-    str.onremovetrack = (ev_rem) => {
-      this.removeMediaTag(ev_rem.target.id);
-    }
-
-    this.initTalker(elid);
-
-    this.talkers[elid][e.track.kind] = str;
-
-    // let jo = {
-      // 'tp': this.oin.ws.TPS.WHOCO,
-      // 'content': ''
-    // }
-
-    // this.oin.ws.handler.send(JSON.stringify(jo));
   }
 
   getUsetEl(id_in, oc) {
@@ -605,13 +615,7 @@ class TalkerHandler {
 
     let list = js.list;
 
-    console.log("list==========");
-    console.log(list);
-
     for (let elid in list) {
-      console.log('pushTalkers============');
-      console.log('elid =', elid.length);
-
       this.initTalker(elid);
       let oc = this.talkers[elid];
       let lio = list[elid];
@@ -663,26 +667,11 @@ class TalkerHandler {
       });
   }
 
-  removeMediaTag(elid) {
-    if (!elid) return;
-
-    let oc = this.talkers[elid];
-
-    if (!oc) return;
-
-    oc['el_container'].remove();
-    delete this.talkers[elid];
-
-    this.taber.remove_el_user(elid);
-
-    this.oin.res.resize()
-  }
-
   endSession() {
-    if (this.pc) {
-      this.pc.close()
-      this.pc = null
-    }
+    if (!this.pc) return;
+
+    this.pc.close()
+    this.pc = null
   }
 
   console_something() {
