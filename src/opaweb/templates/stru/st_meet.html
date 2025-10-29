@@ -32,6 +32,9 @@
           </div>
           <div class="form-btns clearfix">
             <input id="uqroom" type="hidden" value="{{ index $info "uqroom" }}">
+            {{ if gt (len (index $info "st")) 0 }}
+              <input id="start-now" type="hidden" value=1 />
+            {{ end }}
             <button id="start-ws" href="{{ ro ("ws_me_start") }}" class="form-btn flo">{{ re "Start chat" }}</button>
             <a id="ws-back" href="{{ ro ("home") }}" class="link-back">{{ re "Back" }}</a>
           </div>

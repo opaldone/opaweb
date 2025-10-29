@@ -27,7 +27,12 @@ input:-webkit-autofill:valid {
 }
 
 #ws-cont {
+  display: none;
   width: 30%;
+}
+
+.done #ws-cont {
+  display: block;
 }
 
 #ws-cont-btns {
@@ -264,7 +269,6 @@ input:-webkit-autofill:valid {
   bottom: 100%;
   transform: translate(-100%, -30%);
 }
-
 
 .ra-ico {
   display: inline-block;
