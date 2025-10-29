@@ -82,11 +82,8 @@ class Starter {
     }
   }
 
-  start_ws_click(ev) {
-    ev.stopPropagation();
-    ev.preventDefault();
-
-    let this_btn = ev.currentTarget;
+  start_ws_handler() {
+    if (!this.start_ws) return;
 
     let mic_inp = document.getElementById('cb-mic');
     let cam_inp = document.getElementById('cb-cam');
@@ -104,7 +101,7 @@ class Starter {
     };
 
     let cs = document.getElementsByName("gorilla.csrf.Token")[0].value;
-    let url = this_btn.getAttribute('href');
+    let url = this.start_ws.getAttribute('href');
 
     axios.post(url, obj, {
       headers: { "X-CSRF-Token": cs }
@@ -122,6 +119,13 @@ class Starter {
       .catch(err => {
         console.log(err);
       });
+  }
+
+  start_ws_click(ev) {
+    ev.stopPropagation();
+    ev.preventDefault();
+
+    this.start_ws_handler();
 
     return false;
   }
@@ -131,6 +135,14 @@ class Starter {
     this.start_ws = document.getElementById('start-ws');
     this.ws_main = document.getElementById ('ws-main');
 
+    let st = document.getElementById('start-now');
+
+    if (st) {
+      this.start_ws_handler();
+      return
+    }
+
+    this.ws_main.classList.add('done');
     this.nik_name.addEventListener('keyup', this.nik_name_keyup.bind(this));
     this.start_ws.addEventListener('click', this.start_ws_click.bind(this));
 

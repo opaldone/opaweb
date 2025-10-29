@@ -25,13 +25,15 @@ func WsMeet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 func WsMeetGet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	qv := r.URL.Query()
 	nikin := qv.Get("n")
+	st := qv.Get("st")
 
 	uqroom := ps.ByName("uqroom")
 
 	info := map[string]any{
 		"uqroom": uqroom,
-		"camic":  map[string]bool{"mic": true, "cam": true, "tophint": true},
+		"camic":  map[string]bool{"mic": true, "cam": false, "tophint": true},
 		"nikin":  nikin,
+		"st":     st,
 	}
 
 	GenerateHTMLEmp(w, r, info, "stru/st_meet", "stru/camic")
