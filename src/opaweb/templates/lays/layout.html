@@ -1,0 +1,34 @@
+{{ define "layout" }}
+  {{ $lang := index . "lang" }}
+  {{ $stat := index . "stat" }}
+  {{ $needtra := index . "needtra" }}
+  <!DOCTYPE html>
+  <html lang="{{ $lang }}" stat="{{ $stat }}" tra="{{ $needtra }}">
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=9">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="shortcut icon" href="/static/images/aa/fi.svg?v=1" />
+      <link rel="stylesheet" type="text/css" href="/static/css/inc/inc_fonts.css" />
+      <link rel="stylesheet" type="text/css" href="/static/css/inc/reset.css" />
+      <link rel="stylesheet" type="text/css" href="/static/css/inc/style.css" />
+      <title>
+        {{ block "title" . }}
+        {{ end }}
+      </title>
+      {{ block "styles" . }}
+      {{ end }}
+      <script>
+        /* to prevent Firefox FOUC, this must be here */
+        let FF_FOUC_FIX;
+      </script>
+    </head>
+    <body>
+      {{ .csrfField }}
+      {{ block "content" . }}
+      {{ end }}
+      {{ block "scripts" . }}
+      {{ end }}
+    </body>
+  </html>
+{{ end }}

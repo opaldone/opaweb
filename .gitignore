@@ -1,0 +1,11 @@
+bin
+node_modules
+pkg
+src/github.com
+src/golang.org
+src/google.golang.org
+src/opaweb/go.mod
+src/opaweb/go.sum
+l.log
+src/opaweb/config.json
+tags

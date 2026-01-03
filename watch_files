@@ -1,0 +1,47 @@
+#!/bin/bash
+
+TTL="opaweb"
+
+C_FOLDERS=(
+    "$src/static/images;$bin/static/images"
+    "$src/static/external;$bin/static/external"
+)
+
+W_FILES=(
+# json
+    "$src/config.json;$bin/config.json"
+    "$src/static/tra/ru/messages.json;$bin/static/tra/ru/messages.json"
+# html
+    "$src/templates/lays/layout.html;$bin/templates/lays/layout.html"
+    "$src/templates/lays/layout_ajax.html;$bin/templates/lays/layout_ajax.html"
+    "$src/templates/stru/ix.html;$bin/templates/stru/ix.html"
+    "$src/templates/stru/st_meet.html;$bin/templates/stru/st_meet.html"
+    "$src/templates/stru/sta.html;$bin/templates/stru/sta.html"
+    "$src/templates/stru/_reca.html;$bin/templates/stru/_reca.html"
+    "$src/templates/stru/_selfvi.html;$bin/templates/stru/_selfvi.html"
+    "$src/templates/stru/_loga.html;$bin/templates/stru/_loga.html"
+    "$src/templates/stru/_tabtns.html;$bin/templates/stru/_tabtns.html"
+    "$src/templates/stru/camic.html;$bin/templates/stru/camic.html"
+    "$src/templates/stru/virt.html;$bin/templates/stru/virt.html"
+# css
+    "$src/static/css/inc/reset.css;$bin/static/css/inc/reset.css"
+    "$src/static/css/inc/inc_fonts.css;$bin/static/css/inc/inc_fonts.css"
+    "$src/static/css/inc/style.css;$bin/static/css/inc/style.css"
+    "$src/static/css/elems/ix.css;$bin/static/css/elems/ix.css"
+    "$src/static/css/elems/room.css;$bin/static/css/elems/room.css"
+    "$src/static/css/elems/tabs.css;$bin/static/css/elems/tabs.css"
+    "$src/static/css/elems/loga.css;$bin/static/css/elems/loga.css"
+# js
+    "$src/static/js/inc/funcs.js;$bin/static/js/inc/funcs.js"
+    "$src/static/js/inc/lang.js;$bin/static/js/inc/lang.js"
+    "$src/static/js/elems/ix.js;$bin/static/js/elems/ix.js"
+    "$src/static/js/elems/wschat.js;$bin/static/js/elems/wschat.js"
+    "$src/static/js/elems/resie.js;$bin/static/js/elems/resie.js"
+    "$src/static/js/elems/talkerhandler.js;$bin/static/js/elems/talkerhandler.js"
+    "$src/static/js/elems/vmeter.js;$bin/static/js/elems/vmeter.js"
+    "$src/static/js/elems/virt.js;$bin/static/js/elems/virt.js"
+    "$src/static/js/elems/saver.js;$bin/static/js/elems/saver.js"
+    "$src/static/js/elems/saver_client.js;$bin/static/js/elems/saver_client.js"
+    "$src/static/js/elems/taber.js;$bin/static/js/elems/taber.js"
+    "$src/static/js/elems/loga.js;$bin/static/js/elems/loga.js"
+)

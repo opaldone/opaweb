@@ -1,0 +1,22 @@
+{{ define "styles" }}
+  <link rel="stylesheet" type="text/css" href="/static/css/elems/ix.css" />
+  <link rel="stylesheet" type="text/css" href="/static/css/elems/room.css" />
+{{ end }}
+{{ define "content" }}
+  <div id="ws-main">
+    <div id="talkers" class="clearfix"></div>
+  </div>
+{{ end }}
+{{ define "scripts" }}
+  {{ $info := index . "info" }}
+  {{ $ob := (index $info "ob") }}
+  <script>
+    window.VIRT_OB = JSON.parse({{ safe $ob }});
+  </script>
+  <script src="/static/external/js/axios.js"></script>
+  <script src="/static/js/inc/funcs.js"></script>
+  <script src="/static/js/elems/resie.js"></script>
+  <script src="/static/js/elems/talkerhandler.js"></script>
+  <script src="/static/js/elems/wschat.js"></script>
+  <script src="/static/js/elems/virt.js"></script>
+{{ end }}

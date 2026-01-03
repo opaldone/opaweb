@@ -1,0 +1,33 @@
+{{ define "_reca" }}
+  {{ if (index . "recserv") }}
+  <div class="lbl-tha">
+    <button id="tg-rec-serv" class="btn-rb hint-able" data-hint="{{ re "Start record on server" }}">
+      <span class="ra-ico">
+        <svg width="20" height="20" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#575757" class="bi bi-record-btn">
+          <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+          <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+        </svg>
+      </span>
+    </button>
+    <a class="lbl-tha"
+       id="li-re"
+       href=""
+       download=""
+       data-he="{{ ro "vi" "xxx" "yyy" }}"
+       data-re="{{ ro "vi_rem" }}"
+       ></a>
+  </div>
+  {{ end }}
+  <div class="lbl-tha">
+    <button id="tg-rec" class="btn-rb hint-able" data-hint="{{ re "Start record on client" }}">
+      <span class="ra-ico">
+        <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <g>
+          <path fill="none" d="M0 0h24v24H0z"/>
+          <path class="pa-st" d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-5a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" fill="#575757"/>
+          </g>
+        </svg>
+      </span>
+    </button>
+  </div>
+{{ end }}

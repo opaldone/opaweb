@@ -1,0 +1,217 @@
+#set-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  width: 100%;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+#set-panel .lbl-tha + .lbl-tha {
+  margin-left: 0.5%;
+}
+
+#share-screen.on svg path {
+  stroke: #78C072;
+}
+
+#tg-rec.on svg path.pa-st {
+  fill: #3080F8;
+}
+
+#tg-rec-serv.on svg {
+  fill: #3080F8;
+}
+
+#li-re {
+  display: none;
+}
+
+#talkers {
+  position: relative;
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(100% - 75px - 75px);
+}
+
+.vw {
+  position: relative;
+  display: inline-block;
+  background-color: #2f2f2f;
+  line-height: 0;
+  border-radius: 13px;
+  overflow: hidden;
+  box-shadow: 1px 1px 3px #171717;
+}
+
+#self-vicont {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  cursor: pointer;
+}
+
+#v-list-hint {
+  display: inline-block;
+  font-size: 0;
+  line-height: 0;
+  width: 100px;
+}
+
+#v-list-hint.hide {
+  min-height: 75px;
+}
+
+#v-list-hint video {
+  position: relative;
+  opacity: 1;
+}
+
+#v-list-hint .vw {
+  width: 100px;
+  height: 75px;
+}
+
+#v-list-hint.hide .vw {
+  display: none;
+}
+
+#talkers .vw.allert-rec {
+  outline: 3px dashed #ff5511;
+}
+
+#talkers .vw.allert-rec .talker-uset.rec .ico-h.rec {
+  outline: 2px dashed #ff7733;
+}
+
+.vw audio {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.vw .talker-nik {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 2;
+  font-size: 20px;
+  line-height: 22px;
+  top: 0;
+  left: 0;
+  background-color: #000000;
+  color: #fff;
+  width: 100%;
+  height: 100%;
+}
+
+.vw.cam .talker-nik {
+  font-size: 13px;
+  line-height: 15px;
+  width: auto;
+  height: auto;
+  padding: 11px 15px 12px 15px;
+  border-radius: 0 7px 7px 0;
+}
+
+.vw.screen-on .talker-nik {
+  display: none;
+}
+
+.vw video {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-size: cover;
+  opacity: 0;
+}
+
+.vw.cam video,
+.vw.screen-on video {
+  opacity: 1;
+}
+
+.screen-on #talkers .vw:not(.screen-on) {
+  display: none;
+}
+
+#talkers .vw.screen-on {
+  background-color: #272727;
+  box-shadow: none;
+}
+
+#talkers .vw.screen-on video {
+  width: auto;
+  margin: auto;
+}
+
+#talkers .vw.screen-on .talker-uset {
+  display: none;
+}
+
+.vw .talker-uset {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  z-index: 3;
+  bottom: 0;
+  right: 4px;
+  padding-bottom: 4px;
+}
+
+.vw .talker-uset .ra-ico {
+  padding: 7px 8px;
+  background-color: #00000077;
+  border-radius: 7px;
+}
+
+.vw .talker-uset .ra-ico + .ra-ico {
+  margin-left: 4px;
+}
+
+.vw .talker-uset .ico-h {
+  display: none;
+}
+
+.vw .talker-uset.mic .ico-h.mic {
+  display: inline-block;
+}
+
+.vw .talker-uset.mic .ico-c.mic {
+  display: none;
+}
+
+.vw .talker-uset.cam .ico-h.cam {
+  display: inline-block;
+}
+
+.vw .talker-uset.cam .ico-c.cam {
+  display: none;
+}
+
+.vw .talker-uset.rec .ico-h.rec {
+  display: inline-block;
+}
+
+/*
+* MEDIA
+*/
+
+@media (max-width: 640px) {
+  #talkers {
+    height: calc(100% - 65px - 75px);
+  }
+}
