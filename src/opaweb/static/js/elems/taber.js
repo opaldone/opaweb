@@ -18,20 +18,26 @@ class Taber {
 
     this.taids = [];
     document.querySelectorAll('.tab-btn').forEach(el => {
-      let elid = el.getAttribute('id');
-      this.taids.push(elid);
+      let elid = el.getAttribute('data-tid');
+      if (!this.taids.includes(elid)) {
+        this.taids.push(elid);
+      }
       el.addEventListener('click', this.tb_click.bind(this));
     });
   }
 
   _rem_cls(tid) {
     this.tb.classList.remove(tid);
-    document.getElementById(tid).classList.remove('act');
+    document.querySelectorAll('[data-tid=' + tid + ']').forEach(el => {
+      el.classList.remove('act');
+    });
   }
 
   _add_cls(tid) {
     this.tb.classList.add(tid);
-    document.getElementById(tid).classList.add('act');
+    document.querySelectorAll('[data-tid=' + tid + ']').forEach(el => {
+      el.classList.add('act');
+    });
   }
 
   _clear_cls(tid) {
@@ -44,7 +50,7 @@ class Taber {
   tb_click(e) {
     let btn = e.currentTarget;
 
-    let tid = btn.getAttribute('id');
+    let tid = btn.getAttribute('data-tid');
 
     if (this.tb.classList.contains(tid)) {
       this._rem_cls(tid);

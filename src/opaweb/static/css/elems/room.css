@@ -13,15 +13,15 @@
 }
 
 #share-screen.on svg path {
-  stroke: #78C072;
+  stroke: #c7c7c7;
 }
 
 #tg-rec.on svg path.pa-st {
-  fill: #3080F8;
+  fill: #c7c7c7;
 }
 
 #tg-rec-serv.on svg {
-  fill: #3080F8;
+  fill: #c7c7c7;
 }
 
 #li-re {

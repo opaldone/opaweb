@@ -105,29 +105,8 @@ input:-webkit-autofill:valid {
   border-radius: 23px;
 }
 
-.inp-con-ico {
-  position: relative;
-}
-
-.inp-wid-cont {
-  position: relative;
-}
-
-.ws-frm-ico {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  top: 1px;
-  left: 1px;
-  width: 40px;
-  height: calc(100% - 2px);
-  background-color: #373737;
-  border-radius: 7px 0 0 7px;
-}
-
 .inp-wid {
-  padding: 20px 13px 20px 55px;
+  padding: 13px 20px 15px 20px;
   background-color: #272727;
   border: 1px solid #474747;
   font-size: 18px;
@@ -273,6 +252,20 @@ input:-webkit-autofill:valid {
 .ra-ico {
   display: inline-block;
   line-height: 0;
+}
+
+.ra-lbl, .ra-cnt {
+  display: inline-block;
+  color: #fff;
+  margin-left: 13px;
+}
+
+.ra-cnt {
+  font-size: 10px;
+  line-height: 0;
+  padding: 11px 9px 11px 9px;
+  background-color: #070707;
+  border-radius: 50%;
 }
 
 .tp-tha-rb {
