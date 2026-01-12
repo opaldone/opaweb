@@ -5,9 +5,8 @@
   right: -35%;
   top: 75px;
   height: calc(100% - 160px);
-  background-color: #373737;
   transition: right 0.3s ease;
-  border-radius: 13px 0 0 13px;
+  border-radius: 0 0 0 13px;
   box-shadow: -2px 2px 5px #171717;
   overflow: hidden;
 }
@@ -17,8 +16,28 @@
   right: 0;
 }
 
-.tab-btn {
-  position: relative;
+#v-tabs-btns .tab-btn {
+  justify-content: left;
+  padding-left: 13px;
+  float: left;
+  width: calc(50% - 3px);
+  background-color: #373737;
+  border: none;
+  border-radius: 7px 7px 0 0;
+}
+
+#v-tabs-btns .tab-btn + .tab-btn {
+  margin-left: 6px;
+  border-radius: 7px 0 0 0;
+}
+
+#v-tabs-btns .tab-btn.act {
+  background-color: #474747;
+  box-shadow: none;
+}
+
+#v-tabs-btns .tab-btn:focus {
+  outline: none;
 }
 
 .tab-btn.act {
@@ -31,8 +50,8 @@
 .tab-btn.notif:before {
   position: absolute;
   content: '';
-  top: 5px;
-  right: 5px;
+  top: 3px;
+  right: 3px;
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -43,27 +62,9 @@
   position: relative;
   display: none;
   width: 100%;
-  height: 100%;
-  color: #171717;
-}
-
-.v-tab-head {
-  font-size: 18px;
-  line-height: 20px;
-  font-weight: bold;
-  background-color: #474747;
-  color: #fff;
-  padding: 13px 30px 16px 30px;
-}
-
-.v-tab-head span {
-  display: inline-block;
-}
-
-.v-tab-head.fle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  height: calc(100% - 45px);
+  background-color: #373737;
+  border-top: 1px solid #474747;
 }
 
 .tb-users #ta-list-users {
@@ -76,13 +77,13 @@
 
 .ta-ul-list {
   width: 100%;
-  height: calc(100% - 113px);
+  height: calc(100% - 64px);
   overflow: auto;
-  padding: 20px 30px 30px 30px;
+  padding: 20px 13px 20px 13px;
 }
 
 #ta-ul-users {
-  color: #78C072;
+  color: #fff;
   font-size: 18px;
   line-height: 22px;
 }
@@ -130,7 +131,7 @@
   font-weight: normal;
   font-size: 12px;
   line-height: 14px;
-  color: #777;
+  color: #a7a7a7;
   text-align: right;
 }
 
@@ -145,7 +146,7 @@
   align-items: center;
   width: 100%;
   height: 45px;
-  padding: 0 30px 0 30px;
+  padding: 0 13px 0 13px;
 }
 
 #ta-chat-inp {
@@ -154,7 +155,7 @@
   padding: 13px;
   resize: none;
   font: inherit;
-  background-color: #171717;
+  background-color: #070707;
   color: #fff;
   border: 1px solid #474747;
   border-width: 1px 0 1px 1px;
