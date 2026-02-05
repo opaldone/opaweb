@@ -9,23 +9,27 @@ class VolumeMeter extends AudioWorkletProcessor {
     this._volume = 0;
   }
 
-  calculateRMS(inputChannelData) {
-    if (!inputChannelData) return;
+  calculateRMS(chan_in) {
+    if (!chan_in) return;
 
     let sum = 0;
-    for (let i = 0; i < inputChannelData.length; i++) {
-      sum += inputChannelData[i] * inputChannelData[i];
+    for (let i = 0; i < chan_in.length; i++) {
+      sum += chan_in[i] * chan_in[i];
     }
 
-    let rms = Math.sqrt(sum / inputChannelData.length);
+    let rms = Math.sqrt(sum / chan_in.length);
     this._volume = Math.max(rms, this._volume * SMOOTHING_FACTOR);
   }
 
   process(inputs, _) {
-    const inputChannelData = inputs[0][0];
+    const chan = inputs[0] && inputs[0][0];
+
+    if (!chan || chan.length === 0) {
+      return true;
+    }
 
     if (currentTime - this._lastUpdate > FRAME_INTERVAL) {
-      this.calculateRMS(inputChannelData);
+      this.calculateRMS(chan);
       this.port.postMessage(this._volume);
       this._lastUpdate = currentTime;
     }

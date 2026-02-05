@@ -1,53 +1,31 @@
 #v-tabs {
   position: absolute;
-  z-index: 4;
+  z-index: 5;
   width: 35%;
-  right: -35%;
-  top: 75px;
-  height: calc(100% - 160px);
-  transition: right 0.3s ease;
-  border-radius: 0 0 0 13px;
-  box-shadow: -2px 2px 5px #171717;
+  right: 50%;
+  transform: translateX(50%);
+  top: -100%;
+  height: calc(100% - 75px);
+  transition: top 0.2s ease, opacity 0.5s ease;
+  border-radius: 0 0 13px 13px;
   overflow: hidden;
+  opacity: 0;
 }
 
-#v-tabs.tb-chat,
-#v-tabs.tb-users {
-  right: 0;
+#v-tabs.sh {
+  opacity: 1;
+  top: 75px;
 }
 
-#v-tabs-btns .tab-btn {
-  justify-content: left;
-  padding-left: 13px;
-  float: left;
-  width: calc(50% - 3px);
-  background-color: #373737;
-  border: none;
-  border-radius: 7px 7px 0 0;
-}
-
-#v-tabs-btns .tab-btn + .tab-btn {
-  margin-left: 6px;
-  border-radius: 7px 0 0 0;
-}
-
-#v-tabs-btns .tab-btn.act {
-  background-color: #474747;
-  box-shadow: none;
-}
-
-#v-tabs-btns .tab-btn:focus {
-  outline: none;
-}
-
-.tab-btn.act {
+.tab-btn-han.act {
   background-color: #070707;
   box-shadow: 0px 0px 1px inset #777;
   outline: none;
   border: none;
 }
 
-.tab-btn.notif:before {
+.tab-btn-han.notif:before,
+#v-tabs-btns .tab-btn.notif:before {
   position: absolute;
   content: '';
   top: 3px;
@@ -56,6 +34,47 @@
   height: 10px;
   border-radius: 50%;
   background-color: #ff5511;
+}
+
+#v-tabs-btns .tab-btn {
+  position: relative;
+  justify-content: left;
+  padding-left: 13px;
+  float: left;
+  width: 33.33%;
+  background-color: #070707;
+  border: none;
+  border-radius: 13px 13px 0 0;
+}
+
+#v-tabs-btns .tab-btn.act {
+  background-color: #373737;
+  box-shadow: none;
+}
+
+#v-tabs-btns .tab-btn:focus {
+  outline: none;
+}
+
+.ra-lbl, .ra-cnt {
+  color: #fff;
+}
+
+.ra-lbl {
+  display: inline-block;
+}
+
+.ra-cnt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  line-height: 10px;
+  width: 20px;
+  height: 20px;
+  margin-right: 5%;
+  background-color: #070707;
+  border-radius: 50%;
 }
 
 .v-tabs-content {
@@ -67,11 +86,19 @@
   border-top: 1px solid #474747;
 }
 
+#ta-list-users {
+  text-align: center;
+}
+
 .tb-users #ta-list-users {
   display: block;
 }
 
 .tb-chat #ta-list-chat {
+  display: block;
+}
+
+.tb-logs #ta-list-logs {
   display: block;
 }
 
@@ -83,18 +110,22 @@
 }
 
 #ta-ul-users {
+  display: inline-block;
+  width: 55%;
   color: #fff;
-  font-size: 18px;
   line-height: 22px;
+  text-align: left;
 }
 
 #ta-ul-users li + li {
-  margin-top: 5px;
+  margin-top: 7px;
+  padding-top: 5px;
+  border-top: 1px solid #474747;
 }
 
 #ta-ul-chat li {
   width: 100%;
-  padding-right: 20%;
+  padding-right: 47%;
 }
 
 #ta-ul-chat li + li {
@@ -103,35 +134,35 @@
 
 #ta-ul-chat li.me {
   padding-right: 0;
-  padding-left: 20%;
+  padding-left: 47%;
 }
 
 .chat-item-cont {
   position: relative;
   width: 100%;
   background-color: #272727;
-  border-radius: 13px 13px 13px 0;
+  border-radius: 13px;
 }
 
 #ta-ul-chat li.me .chat-item-cont {
-  background-color: #2f2f2f;
-  border-radius: 13px 13px 0 13px;
+  background-color: #070707;
 }
 
 .cha-nik {
-  font-weight: bold;
-  color: #78C072;
-  padding: 10px 10px 0 10px;
+  padding: 7px 10px 9px 10px;
+  color: #fff;
+  background-color: #474747;
+  border-radius: 13px 13px 0 0;
 }
 
 .ch-tm {
   position: absolute;
   bottom: 10px;
-  right: 10px;
+  right: 13px;
   font-weight: normal;
   font-size: 12px;
   line-height: 14px;
-  color: #a7a7a7;
+  color: #78C072;
   text-align: right;
 }
 
@@ -139,6 +170,13 @@
   padding: 10px 45px 12px 10px;
   line-height: 22px;
   color: #fff;
+  background-color: #272727;
+  border-radius: 0 0 13px 13px;
+}
+
+#ta-ul-chat li.me .cha-msg {
+  background: inherit;
+  border-radius: 13px;
 }
 
 #ta-chat-bot-con {
@@ -179,23 +217,123 @@
   background-color: #010911;
 }
 
+#ta-ul-logs {
+  padding: 20px 0 20px 0;
+}
+
+#ta-ul-logs li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  padding: 7px 13px 9px;
+}
+
+#ta-ul-logs li span {
+  float: left;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+#ta-ul-logs li.err {
+  background-color: #773311;
+}
+
+.lg-msg {
+  width: 80%;
+}
+
+.lg-tm {
+  width: 20%;
+  text-align: right;
+  color: #a7a7a7;
+}
+
+#tb-err-cnt {
+  display: none;
+  background-color: #731;
+}
+
+#tb-err-cnt.sh {
+  display: inline-flex;
+}
+
+.talker-uset {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.talker-user-icos {
+  display: flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.talker-user-icos .ra-ico.cam,
+.talker-user-icos .ra-ico.rec {
+  margin-left: 5px;
+}
+
+.talker-uset .ico-h {
+  display: none;
+}
+
+.talker-uset.mic .ico-h.mic {
+  display: inline-block;
+}
+
+.talker-uset.mic .ico-c.mic {
+  display: none;
+}
+
+.talker-uset.cam .ico-h.cam {
+  display: inline-block;
+}
+
+.talker-uset.cam .ico-c.cam {
+  display: none;
+}
+
+.talker-uset.rec .ico-h.rec {
+  display: inline-block;
+}
+
 /*
 * MEDIA
 */
 
+@media (max-width: 1200px) {
+  #v-tabs {
+    width: 45%;
+  }
+}
+
 @media (max-width: 1024px) {
   #v-tabs {
     width: 55%;
-    right: -55%;
   }
 }
 
 @media (max-width: 640px) {
-  #v-tabs {
+  #v-tabs.sh {
     top: 65px;
-    height: calc(100% - 150px);
+  }
+
+  #v-tabs {
+    height: calc(100% - 65px);
     width: 100%;
-    right: -100%;
     border-radius: 0;
+  }
+
+  #v-tabs-btns .tab-btn {
+    font-size: 12px;
+    line-height: 14px;
+  }
+
+  .v-tabs-content {
+    height: calc(100% - 35px);
   }
 }

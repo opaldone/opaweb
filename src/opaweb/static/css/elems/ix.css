@@ -254,20 +254,6 @@ input:-webkit-autofill:valid {
   line-height: 0;
 }
 
-.ra-lbl, .ra-cnt {
-  display: inline-block;
-  color: #fff;
-  margin-left: 13px;
-}
-
-.ra-cnt {
-  font-size: 10px;
-  line-height: 0;
-  padding: 11px 9px 11px 9px;
-  background-color: #070707;
-  border-radius: 50%;
-}
-
 .tp-tha-rb {
   display: none;
 }

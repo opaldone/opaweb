@@ -72,7 +72,7 @@ func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	co := GetHTMLAjax(data,
 		"stru/sta", "stru/camic",
 		"stru/_reca", "stru/_tabtns",
-		"stru/_selfvi", "stru/_loga",
+		"stru/_selfvi", "stru/_chata",
 	)
 
 	ans := common.AjaAns{

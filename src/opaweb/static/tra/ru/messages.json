@@ -10,8 +10,11 @@
   "Microphone": "Микрофон",
   "Camera": "Камера",
   "Share Screen": "Поделиться экраном",
+  "Toggle tiles layout": "Переключение расположения плиток",
   "Start record on server": "Начать запись на сервере",
   "Start record on client": "Начать запись на клиенте",
   "Chat": "Чат",
-  "Participants": "Участники"
+  "Participants": "Участники",
+  "Logs": "Логи",
+  "Tabs": "Вкладки"
 }

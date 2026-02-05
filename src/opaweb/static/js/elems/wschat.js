@@ -30,7 +30,6 @@ class WSchat {
         SCRECD: "screencd",
         BREC: "beginrecord",
         EREC: "endrecord",
-        AREC: "anotherrecord",
         RREC: "remrec",
         CHAT: "chat",
         TALKERST: "talkerstopped"
@@ -39,14 +38,15 @@ class WSchat {
 
     this.scr_on = 'screen-on';
 
-    this.v_list_hint = document.getElementById('v-list-hint');
+    this.vw_self = document.getElementById('vw-self');
     this.vid_self = document.getElementById('vid-self');
 
     this.th = null;
 
     this.id_talkers = 'talkers'
     this.talkers_cont = document.getElementById(this.id_talkers);
-    this.res = new Resie(this.talkers_cont, this.scr_on);
+
+    this.res = new Resie(this.fun, this.talkers_cont, this.scr_on);
 
     window.addEventListener('resize', this.docResize.bind(this));
 
@@ -74,7 +74,7 @@ class WSchat {
       document.addEventListener('keydown', this.dockd.bind(this));
       document.addEventListener('keyup', this.docku.bind(this));
 
-      this.loga = new Loga(this.fun);
+      this.loga = new Loga();
     }
   }
 
@@ -110,15 +110,18 @@ class WSchat {
     this.res.resize();
   }
 
-  vidSelfChange(cam) {
+  avSelfChange(cam, mic) {
     if (!this.vid_self) return;
 
     if (cam) {
-      this.v_list_hint.classList.remove('hide');
-      return;
+      this.vw_self.classList.add('cam');
+    } else {
+      this.vw_self.classList.remove('cam');
     }
 
-    this.v_list_hint.classList.add('hide');
+    if (this.th) {
+      this.th.changeLocalStream(mic);
+    }
   }
 
   getAvSet() {
@@ -128,7 +131,7 @@ class WSchat {
       'screen_on': this.share_screen.classList.contains('on')
     };
 
-    this.vidSelfChange(se.video);
+    this.avSelfChange(se.video, se.sound);
 
     return se;
   }
@@ -157,7 +160,7 @@ class WSchat {
     this.rem_button(this.tg_rec_serv, false);
     this.rem_button(this.tg_rec, false);
 
-    this.vidSelfChange(false);
+    this.avSelfChange(false, false);
   }
 
   who_con() {
@@ -188,6 +191,7 @@ class WSchat {
       'clear_if_block': this.clear_if_block.bind(this),
       'who_con': this.who_con.bind(this),
       'vid_self': null,
+      'vw_self': null,
       'scr_on': this.scr_on
     };
 
@@ -195,12 +199,30 @@ class WSchat {
       ob.vid_self = this.vid_self;
     }
 
-    this.th = new TalkerHandler(this.fun, ob, this.is_virt);
-    this.th.startShow()
+    if (this.vw_self) {
+      ob.vw_self = this.vw_self;
+    }
 
-    this.vidSelfChange(this.ws.cam);
+    this.th = new TalkerHandler(this.fun, ob, this.is_virt);
+    this.th.startShow(this.ws.mic)
+
+    this.avSelfChange(this.ws.cam, this.ws.mic);
+
+    this.res.resize();
   }
 
+  on_rec_serv(hide) {
+    if (!this.tg_rec_serv) return;
+
+    let lbl = this.fun.parent(this.tg_rec_serv, '.lbl-tha');
+
+    if (hide) {
+      lbl.classList.add('hid');
+      return;
+    }
+
+    lbl.classList.remove('hid');
+  }
 
   wsClear() {
     this.ws.handler = null;
@@ -247,12 +269,11 @@ class WSchat {
           break;
         case this.ws.TPS.BREC:
           this.th.startedRecordServ(msg.content);
-          break;
-        case this.ws.TPS.AREC:
-          this.th.anotherRecordServ(this.tg_rec_serv, msg.content);
+          this.on_rec_serv(true);
           break;
         case this.ws.TPS.EREC:
           this.th.stoppedRecordServ(this.tg_rec_serv, msg.content);
+          this.on_rec_serv(false);
           break;
         case this.ws.TPS.CHAT:
           this.th.procChatMessage(msg.content);

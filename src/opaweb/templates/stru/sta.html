@@ -2,12 +2,19 @@
   <div id="set-panel">
     {{ template "camic" (index . "camic") }}
     <div class="lbl-tha">
+      <button class="btn-rb hint-able on" id="tg-tiles" data-hint="{{ re "Toggle tiles layout" }}">
+        <span class="ra-ico">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="#575757" fill="none" stroke-width="2" d="M4 5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5Zm10 0a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V5ZM4 16a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3Zm10-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-6Z"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+    <div class="lbl-tha">
       <button class="btn-rb hint-able" id="share-screen" data-hint="{{ re "Share Screen" }}">
         <span class="ra-ico">
-          <svg width="20" height="20" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15 2.25H3C2.17157 2.25 1.5 2.92157 1.5 3.75V11.25C1.5 12.0784 2.17157 12.75 3 12.75H15C15.8284 12.75 16.5 12.0784 16.5 11.25V3.75C16.5 2.92157 15.8284 2.25 15 2.25Z" stroke="#575757" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M6 15.75H12" stroke="#575757" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M9 12.75V15.75" stroke="#575757" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="#575757" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 20h8m-4 0v-4M4 5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/>
           </svg>
         </span>
       </button>
@@ -15,7 +22,10 @@
     {{ template "_reca" . }}
     {{ template "_tabtns" }}
   </div>
-  <div id="talkers" class="clearfix"></div>
-  {{ template "_selfvi" . }}
-  {{ template "_loga" }}
+  {{ template "_chata" . }}
+  <div id="talkers-container">
+    <div id="talkers" class="fle clearfix">
+      {{ template "_selfvi" . }}
+    </div>
+  </div>
 {{ end }}

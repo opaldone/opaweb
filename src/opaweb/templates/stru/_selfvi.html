@@ -1,77 +1,14 @@
 {{ define "_selfvi" }}
   {{ $sets := (index . "sets") }}
-  <div id="v-tabs">
-    <div id="v-tabs-btns" class="clearfix">
-      <button class="btn-rb tab-btn" data-tid="tb-chat">
-        <span class="ra-ico">
-          <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#78C072"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="feather feather-message-circle"
-              >
-              <path
-                  d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
-                  />
-          </svg>
-        </span>
-        <span class="ra-lbl">
-          {{ re "Chat" }}
-        </span>
-      </button>
-      <button class="btn-rb tab-btn" data-tid="tb-users">
-        <span class="ra-ico">
-          <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#78C072"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="feather feather-users"
-              >
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-          </svg>
-        </span>
-        <span class="ra-lbl">
-          {{ re "Participants" }}
-        </span>
-        <span id="tb-us-cnt" class="ra-cnt">1</span>
-      </button>
-    </div>
-    <div id="ta-list-chat" class="v-tabs-content">
-      <ul id="ta-ul-chat" class="ta-ul-list"></ul>
-      <div id="ta-chat-bot-con">
-        <textarea id="ta-chat-inp" rows="1"></textarea>
-        <button id="ta-chat-send">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7.39999 6.32003L15.89 3.49003C19.7 2.22003 21.77 4.30003 20.51 8.11003L17.68 16.6C15.78 22.31 12.66 22.31 10.76 16.6L9.91999 14.08L7.39999 13.24C1.68999 11.34 1.68999 8.23003 7.39999 6.32003Z" stroke="#78C072" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M10.11 13.6501L13.69 10.0601" stroke="#78C072" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </div>
-    </div>
-    <div id="ta-list-users" class="v-tabs-content">
-      <ul id="ta-ul-users" class="ta-ul-list"></ul>
-    </div>
-  </div>
-  <div id="self-vicont">
-    <div id="v-list-hint" class="hint-able le-hint" data-hint="{{ attr ($sets.Nik) }}">
-      <div class="vw">
-        <video id="vid-self" autoplay muted></video>
-      </div>
+  <div id="vw-self" class="vw">
+    <video id="vid-self" autoplay muted></video>
+    <div class="talker-nik">
+      <span class="talker-nik-f">
+        {{ $sets.Nik }}
+      </span>
+      <span class="talker-nik-s">
+        {{ fl $sets.Nik }}
+      </span>
     </div>
   </div>
 {{ end }}
