@@ -1,0 +1,45 @@
+{{ define "_chata" }}
+  {{ $sets := (index . "sets") }}
+  <div id="v-tabs">
+    <div id="v-tabs-btns" class="clearfix">
+      <button id="tb-users" class="btn-rb tab-btn">
+        <span id="tb-us-cnt" class="ra-cnt">1</span>
+        <span class="ra-lbl">
+          {{ re "Participants" }}
+        </span>
+      </button>
+      <button id="tb-chat" class="btn-rb tab-btn">
+        <span class="ra-lbl">
+          {{ re "Chat" }}
+        </span>
+      </button>
+      <button id="tb-logs" class="btn-rb tab-btn">
+        <span id="tb-err-cnt" class="ra-cnt"></span>
+        <span class="ra-lbl">
+          {{ re "Logs" }}
+        </span>
+      </button>
+    </div>
+    <div id="ta-list-chat" class="v-tabs-content">
+      <ul id="ta-ul-chat" class="ta-ul-list"></ul>
+      <div id="ta-chat-bot-con">
+        <textarea id="ta-chat-inp" rows="1"></textarea>
+        <button id="ta-chat-send">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="#78C072" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 11 14-6-6 14-2-6-6-2Z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="ta-list-users" class="v-tabs-content">
+      <ul id="ta-ul-users" class="ta-ul-list">
+        <li id="self-user" class="talker-uset">
+          <div class="talker-uset-nik">
+            {{ $sets.Nik }}
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div id="ta-list-logs" class="v-tabs-content">
+      <ul id="ta-ul-logs" class="ta-ul-list"></ul>
+    </div>
+  </div>
+{{ end }}

@@ -45,6 +45,7 @@ func getFm() (fm template.FuncMap) {
 			)
 		},
 		"re": lang.Re,
+		"fl": fletters,
 	}
 
 	return
