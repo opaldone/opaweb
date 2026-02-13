@@ -61,7 +61,8 @@ func newSettings(uqroom, nik, wsurl, ke string,
 	res.Virt = virt
 	res.Recserv = len(env.RecFolder) > 0
 	res.WsURL = fmt.Sprintf(wsurl,
-		env.Ws.WsURL,
+		env.Ws.Url,
+		env.Ws.Port,
 		res.UqRoom,
 		res.UqUser,
 		res.PerRoom,
@@ -81,7 +82,7 @@ func GetSetsFromReq(r *http.Request) (wset *WsSettings) {
 
 	wset = newSettings(
 		re.UqRoom, re.Nik,
-		"%s/ws/%s/%s/%d?nik=%s%s", "",
+		"wss://%s:%d/ws/%s/%s/%d?nik=%s%s", "",
 		re.Mic, re.Cam, false,
 	)
 
@@ -94,7 +95,7 @@ func GetSetsForVirt(ps httprouter.Params) (wset *WsSettings) {
 
 	wset = newSettings(
 		uqroom, "virt",
-		"%s/ws/%s/%s/%d?nik=%s&ke=%s", ke,
+		"wss://%s:%d/ws/%s/%s/%d?nik=%s&ke=%s", ke,
 		false, false, true,
 	)
 

@@ -31,6 +31,8 @@ class WSchat {
         BREC: "beginrecord",
         EREC: "endrecord",
         RREC: "remrec",
+        CLBREC: "clbeginrecord",
+        CLEREC: "clendrecord",
         CHAT: "chat",
         TALKERST: "talkerstopped"
       }
@@ -61,7 +63,6 @@ class WSchat {
       this.share_screen = document.getElementById('share-screen');
       this.share_screen.addEventListener('click', this.toggleShareScreen.bind(this));
 
-      this.saver_client = new SaverClient();
       this.tg_rec = document.getElementById('tg-rec');
       this.tg_rec.addEventListener('click', this.toggleRecordClent.bind(this));
 
@@ -182,7 +183,13 @@ class WSchat {
   }
 
   talk() {
+    let sc = new SaverClient({
+      'ws': this.ws,
+      'button': this.tg_rec
+    });
+
     let ob = {
+      'saver_client': sc,
       'ws': this.ws,
       'id_talkers': this.id_talkers,
       'talkers_cont': this.talkers_cont,
@@ -268,12 +275,18 @@ class WSchat {
           this.th.screeChanged(msg.content);
           break;
         case this.ws.TPS.BREC:
-          this.th.startedRecordServ(msg.content);
+          this.th.startedRecord(msg.content, 'rec');
           this.on_rec_serv(true);
           break;
         case this.ws.TPS.EREC:
           this.th.stoppedRecordServ(this.tg_rec_serv, msg.content);
           this.on_rec_serv(false);
+          break;
+        case this.ws.TPS.CLBREC:
+          this.th.startedRecord(msg.content, 'crec');
+          break;
+        case this.ws.TPS.CLEREC:
+          this.th.stoppedRecordClient(msg.content);
           break;
         case this.ws.TPS.CHAT:
           this.th.procChatMessage(msg.content);
@@ -347,11 +360,9 @@ class WSchat {
     this.th.toggleRecordServ(btn);
   }
 
-  toggleRecordClent(ev) {
+  toggleRecordClent() {
     if (!this.th) return;
 
-    let some_button = ev.currentTarget;
-
-    this.th.toggleRecordClent(this.saver_client, some_button);
+    this.th.toggleRecordClent();
   }
 }

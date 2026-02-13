@@ -6,28 +6,12 @@ class Saver {
     this.re = re_in;
   }
 
-  download(file, callback) {
-    let req = new XMLHttpRequest();
-    req.responseType = 'blob';
-    req.open('GET', file);
+  calling_rrec() {
+    let jo = {
+      'tp': this.ws.TPS.RREC
+    };
 
-    req.addEventListener('error', () => {console.error("download error");});
-    req.addEventListener('load', () => {
-      callback(req.response);
-    });
-
-    req.send();
-  }
-
-  save(object) {
-    let fi = 'vi_' + this.ws.uqroom + '_' + this.ke + '.webm';
-    let url = URL.createObjectURL(object);
-
-    this.li.href = url;
-    this.li.download = fi;
-    this.li.click();
-
-    this.rem_file(fi);
+    this.ws.handler.send(JSON.stringify(jo));
   }
 
   rem_file(fi_in) {
@@ -55,11 +39,27 @@ class Saver {
       });
   }
 
-  calling_rrec() {
-    let jo = {
-      'tp': this.ws.TPS.RREC
-    };
+  download(file, callback) {
+    let req = new XMLHttpRequest();
+    req.responseType = 'blob';
+    req.open('GET', file);
 
-    this.ws.handler.send(JSON.stringify(jo));
+    req.addEventListener('error', () => {console.error("download error");});
+    req.addEventListener('load', () => {
+      callback(req.response);
+    });
+
+    req.send();
+  }
+
+  save(object) {
+    let fi = 'vi_' + this.ws.uqroom + '_' + this.ke + '.webm';
+    let url = URL.createObjectURL(object);
+
+    this.li.href = url;
+    this.li.download = fi;
+    this.li.click();
+
+    this.rem_file(fi);
   }
 }

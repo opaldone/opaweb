@@ -147,8 +147,8 @@ class Starter {
     this.start_ws.addEventListener('click', this.start_ws_click.bind(this));
 
     this.docon();
-
     this.nik_name.focus();
+    new IxLister();
   }
 }
 

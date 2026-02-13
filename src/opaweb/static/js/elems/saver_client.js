@@ -1,19 +1,19 @@
 class SaverClient {
-  constructor() {
-    this.uqFileName = '';
-    this.someButton = null;
+  constructor(oin_in) {
+    this.oin = oin_in;
+
     this.recorder = null;
     this.recordingData = [];
   }
 
   actButton() {
-    if (!this.someButton) return;
-    this.someButton.classList.add('on');
+    if (!this.oin.button) return;
+    this.oin.button.classList.add('on');
   }
 
   deaButton() {
-    if (!this.someButton) return;
-    this.someButton.classList.remove('on');
+    if (!this.oin.button) return;
+    this.oin.button.classList.remove('on');
   }
 
   checkCodecsSupported() {
@@ -39,9 +39,23 @@ class SaverClient {
     return dest.stream.getAudioTracks();
   }
 
-  startCapture(uq, some_button_in, talkers_in, localS) {
-    this.uqFileName = uq;
-    this.someButton = some_button_in;
+  notifStarted() {
+    let jo = {
+      'tp': this.oin.ws.TPS.CLBREC,
+    };
+
+    this.oin.ws.handler.send(JSON.stringify(jo));
+  }
+
+  notifEnded() {
+    let jo = {
+      'tp': this.oin.ws.TPS.CLEREC,
+    };
+
+    this.oin.ws.handler.send(JSON.stringify(jo));
+  }
+
+  startCapture(talkers_in, localS) {
     this.actButton();
 
     let auList = [];
@@ -63,7 +77,7 @@ class SaverClient {
 
         this.mixAu(auList, localS).forEach(atr => tracks.push(atr));
         ds.getVideoTracks().forEach((vtr) => {
-          // somebody clicked on "Stop sharing"
+          // when clicked on "Stop sharing"
           vtr.onended = () => {
             this.stopCapture();
           };
@@ -85,11 +99,13 @@ class SaverClient {
 
         this.recorder.onstop = () => {
           ds.getTracks().forEach(tr => tr.stop());
+          this.notifEnded()
           this.deaButton();
           this.saveFile();
         };
 
         this.recorder.start();
+        this.notifStarted();
       })
       .catch(e => {
         console.error(e);
@@ -108,12 +124,21 @@ class SaverClient {
     const a = document.createElement('a');
     a.style.display = 'none';
     a.href = url;
-    a.download = 'chat_' + this.uqFileName + '.webm';
+    a.download = 'chat_' + this.oin.ws.uqroom + '.webm';
     document.body.appendChild(a);
     a.click();
     setTimeout(() => {
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
     }, 100);
+  }
+
+  toggleRecord(talkers_in, localS) {
+    if (this.oin.button.classList.contains('on')) {
+      this.stopCapture();
+      return;
+    }
+
+    this.startCapture(talkers_in, localS);
   }
 }

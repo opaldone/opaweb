@@ -6,9 +6,7 @@
   transform: translateX(50%);
   top: -100%;
   height: calc(100% - 75px);
-  transition: top 0.2s ease, opacity 0.5s ease;
-  border-radius: 0 0 13px 13px;
-  overflow: hidden;
+  transition: top 0.2s ease, opacity 0.1s ease;
   opacity: 0;
 }
 
@@ -42,9 +40,14 @@
   padding-left: 13px;
   float: left;
   width: 33.33%;
-  background-color: #070707;
-  border: none;
+  background-color: #272727;
+  border: 1px solid #474747;
+  border-width: 1px 0 0 1px;
   border-radius: 13px 13px 0 0;
+}
+
+#v-tabs-btns .tab-btn:last-child {
+  border-width: 1px 1px 0 1px;
 }
 
 #v-tabs-btns .tab-btn.act {
@@ -56,11 +59,9 @@
   outline: none;
 }
 
-.ra-lbl, .ra-cnt {
-  color: #fff;
-}
-
 .ra-lbl {
+  color: #78C072;
+  font-weight: bold;
   display: inline-block;
 }
 
@@ -70,9 +71,11 @@
   justify-content: center;
   font-size: 10px;
   line-height: 10px;
+  font-weight: normal;
+  color: #fff;
   width: 20px;
   height: 20px;
-  margin-right: 5%;
+  margin-right: 7px;
   background-color: #070707;
   border-radius: 50%;
 }
@@ -83,7 +86,8 @@
   width: 100%;
   height: calc(100% - 45px);
   background-color: #373737;
-  border-top: 1px solid #474747;
+  border: 1px solid #474747;
+  border-radius: 0 0 13px 13px;
 }
 
 #ta-list-users {
@@ -266,6 +270,11 @@
   padding-right: 20px;
 }
 
+#ws-st-list .talker-uset {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .talker-user-icos {
   display: flex;
   align-items: center;
@@ -273,7 +282,8 @@
 }
 
 .talker-user-icos .ra-ico.cam,
-.talker-user-icos .ra-ico.rec {
+.talker-user-icos .ra-ico.rec,
+.talker-user-icos .ra-ico.crec {
   margin-left: 5px;
 }
 
@@ -298,6 +308,10 @@
 }
 
 .talker-uset.rec .ico-h.rec {
+  display: inline-block;
+}
+
+.talker-uset.crec .ico-h.crec {
   display: inline-block;
 }
 

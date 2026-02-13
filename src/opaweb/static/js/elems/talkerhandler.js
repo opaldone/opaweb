@@ -80,7 +80,7 @@ class TalkerHandler {
         });
       })
       .catch(e => {
-        this.oin.showLog(e, true)
+        console.error(e);
       });
   }
 
@@ -190,11 +190,11 @@ class TalkerHandler {
     this.oin.ws.handler.send(JSON.stringify(jo));
   }
 
-  startedRecordServ(cont) {
+  startedRecord(cont, clstag) {
     let js = JSON.parse(cont);
 
     if (!js) {
-      this.oin.showLog("Failed to parse startedRecordServ", true);
+      this.oin.showLog("Failed to parse startedRecord", true);
       return;
     }
 
@@ -202,48 +202,7 @@ class TalkerHandler {
     if (!oc) return;
 
     let el = oc['el_uset'];
-    el.classList.add('rec');
-  }
-
-  stoppedRecordServ(some_button, cont) {
-    if (!some_button) return;
-
-    let js = JSON.parse(cont);
-
-    if (!js) {
-      return this.oin.showLog("Failed to parse stoppedRecordServ", true);
-    }
-
-    this.setDownloadLinkServ(some_button, js);
-
-    let oc = this.talkers[js.strid];
-
-    if (!oc) {
-      return;
-    }
-
-    let el = oc['el_uset'];
-    el.classList.remove('rec');
-
-    if (oc.recording) oc.recording = false;
-  }
-
-  procChatMessage(cont) {
-    let js = JSON.parse(cont);
-
-    if (!js) {
-      return this.oin.showLog("Failed to parse procChatMessage", true);
-    }
-
-    if (js.uquser == this.oin.ws.uquser) {
-      this.taber.create_el_chat('', js.chat_message);
-      return;
-    }
-
-    let oc = this.talkers[js.strid];
-    if (!oc) return;
-
-    this.taber.create_el_chat(oc.nik, js.chat_message);
+    el.classList.add(clstag);
   }
 
   setDownloadLinkServ(some_button, js) {
@@ -271,6 +230,65 @@ class TalkerHandler {
     });
   }
 
+  stoppedRecordServ(some_button, cont) {
+    if (!some_button) return;
+
+    let js = JSON.parse(cont);
+
+    if (!js) {
+      return this.oin.showLog("Failed to parse stoppedRecordServ", true);
+    }
+
+    this.setDownloadLinkServ(some_button, js);
+
+    let oc = this.talkers[js.strid];
+
+    if (!oc) {
+      return;
+    }
+
+    let el = oc['el_uset'];
+    el.classList.remove('rec');
+
+    if (oc.recording) oc.recording = false;
+  }
+
+  stoppedRecordClient(cont) {
+    let js = JSON.parse(cont);
+
+    if (!js) {
+      return this.oin.showLog("Failed to parse stoppedRecordServ", true);
+    }
+
+    let oc = this.talkers[js.strid];
+
+    if (!oc) {
+      return;
+    }
+
+    let el = oc['el_uset'];
+    el.classList.remove('crec');
+  }
+
+
+  procChatMessage(cont) {
+    let js = JSON.parse(cont);
+
+    if (!js) {
+      return this.oin.showLog("Failed to parse procChatMessage", true);
+    }
+
+    if (js.uquser == this.oin.ws.uquser) {
+      this.taber.create_el_chat('', js.chat_message);
+      return;
+    }
+
+    let oc = this.talkers[js.strid];
+    if (!oc) return;
+
+    this.taber.create_el_chat(oc.nik, js.chat_message);
+  }
+
   toggleRecordServ(some_button) {
     if (!this.pc) return;
 
@@ -286,14 +304,8 @@ class TalkerHandler {
     this.beginRecServ(some_button);
   }
 
-  toggleRecordClent(sv, some_button_in) {
-    if (some_button_in.classList.contains('on')) {
-      sv.stopCapture();
-      return;
-    }
-
-    sv.startCapture(this.oin.ws.uqroom, some_button_in, this.talkers, this.localStream);
-    return;
+  toggleRecordClent() {
+    this.oin.saver_client.toggleRecord(this.talkers, this.localStream);
   }
 
   setMediaSettings(ds) {
@@ -570,6 +582,7 @@ class TalkerHandler {
       oc.mic = lio.mic;
       oc.cam = lio.cam;
       oc.recording = lio.recording;
+      oc.crecording = lio.crecording;
       oc.screen_on = lio.screen_on;
 
       if (oc['el_container']) {
