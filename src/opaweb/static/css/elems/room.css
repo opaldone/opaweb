@@ -40,11 +40,13 @@
 }
 
 #talkers-container {
+  position: fixed;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: calc(100% - 75px);
+  top: 75px;
 }
 
 #talkers {
@@ -116,6 +118,18 @@
   width: 100%;
   height: 100%;
   border: 1px solid #474747;
+}
+
+.gr .vw.one .talker-nik {
+  border-width: 1px;
+}
+
+.gr .vw:not(.one):first-child .talker-nik {
+  border-width: 1px 1px 1px 0;
+}
+
+.gr .vw:not(.one) .talker-nik {
+  border-width: 0 1px 1px 0;
 }
 
 .vw .talker-nik span {

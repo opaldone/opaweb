@@ -37,15 +37,16 @@ func main() {
 	startSelf(e, csrfH)
 }
 
-func startSelf(e *common.Configuration, cs func(http.Handler) http.Handler) {
-	fmt.Printf("\n[%s] %s\ntime\t\t%s\ncrt\t\t%s\nkey\t\t%s\naddress\t\t%s:%d\nwsurl\t\t%s\nturn\t\t%s\n",
-		"self", e.Appname,
+func shows(e *common.Configuration, ttl string) {
+	fmt.Printf("\n%s [%s]\n"+
+		"started at: %s\n",
+		e.Appname, ttl,
 		time.Now().Format("2006-01-02 15:04:05"),
-		e.Crt, e.Key,
-		e.Address, e.Port,
-		e.Ws.WsURL,
-		e.IceList[0]["urls"],
 	)
+}
+
+func startSelf(e *common.Configuration, cs func(http.Handler) http.Handler) {
+	shows(e, "self")
 
 	mux := controllers.GetRouters()
 
@@ -62,13 +63,7 @@ func startSelf(e *common.Configuration, cs func(http.Handler) http.Handler) {
 }
 
 func startAcme(e *common.Configuration, cs func(http.Handler) http.Handler) {
-	fmt.Printf("\n[%s] %s\ntime\t\t%s\nacmehost\t%s\ndirCache\t%s\naddress\t\t%s:%d\nwsurl\t\t%s\nturn\t\t%s\n",
-		"acme", e.Appname,
-		time.Now().Format("2006-01-02 15:04:05"),
-		e.Acmehost, e.DirCache, e.Address, e.Port,
-		e.Ws.WsURL,
-		e.IceList[0]["urls"],
-	)
+	shows(e, "acme")
 
 	certManager := &autocert.Manager{
 		Prompt:     autocert.AcceptTOS,

@@ -44,6 +44,10 @@ func WsMeetGet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	uqroom := ps.ByName("uqroom")
 
+	env := common.Env(true)
+
+	urlist := fmt.Sprintf("https://%s:%d/lir/%s", env.Ws.Url, env.Ws.Port, uqroom)
+
 	info := map[string]any{
 		"uqroom": uqroom,
 		"camic": map[string]bool{
@@ -51,8 +55,9 @@ func WsMeetGet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			"cam":     get_cam,
 			"tophint": true,
 		},
-		"nikin": nikin,
-		"st":    st,
+		"nikin":  nikin,
+		"st":     st,
+		"urlist": urlist,
 	}
 
 	GenerateHTMLEmp(w, r, info, "stru/st_meet", "stru/camic")

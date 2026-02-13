@@ -43,4 +43,6 @@ W_FILES=(
     "$src/static/js/elems/saver_client.js;$bin/static/js/elems/saver_client.js"
     "$src/static/js/elems/taber.js;$bin/static/js/elems/taber.js"
     "$src/static/js/elems/loga.js;$bin/static/js/elems/loga.js"
+    "$src/static/js/elems/wintools.js;$bin/static/js/elems/wintools.js"
+    "$src/static/js/elems/ix_lister.js;$bin/static/js/elems/ix_lister.js"
 )

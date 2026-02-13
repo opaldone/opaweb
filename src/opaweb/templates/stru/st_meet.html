@@ -6,25 +6,39 @@
 {{ end }}
 {{ define "content" }}
   {{ $info := (index . "info") }}
+  {{ $urlist := (index $info "urlist") }}
   <div id="ws-main">
     <div id="ws-cont-screen">
       <div id="ws-cont">
-        <div class="ws-header">
-          {{ re "Chat settings" }}
-        </div>
-        <div class="form-cbs-cont clearfix">
-          {{ template "camic" (index $info "camic")}}
-        </div>
-        <div id="ws-form-cont">
-          <input class="inp-wid" type="text" id="nik-name" value="{{ index $info "nikin" }}" placeholder="{{ re "Enter name" }}" />
-          <div class="form-btns clearfix">
-            <input id="uqroom" type="hidden" value="{{ index $info "uqroom" }}">
-            {{ if gt (len (index $info "st")) 0 }}
-              <input id="start-now" type="hidden" value=1 />
-            {{ end }}
-            <button id="start-ws" href="{{ ro ("ws_me_start") }}" class="form-btn flo">{{ re "Start chat" }}</button>
-            <a id="ws-back" href="{{ ro ("home") }}" class="link-back">{{ re "Back" }}</a>
+        <div id="ws-st-form">
+          <div class="ws-header">
+            {{ re "Chat settings" }}
           </div>
+          <div class="form-cbs-cont clearfix">
+            {{ template "camic" (index $info "camic")}}
+          </div>
+          <div id="ws-form-cont">
+            <input class="inp-wid" type="text" id="nik-name" value="{{ index $info "nikin" }}" placeholder="{{ re "Enter name" }}" />
+            <div class="form-btns clearfix">
+              <input id="uqroom" type="hidden" value="{{ index $info "uqroom" }}">
+              {{ if gt (len (index $info "st")) 0 }}
+                <input id="start-now" type="hidden" value=1 />
+              {{ end }}
+              <button id="start-ws" href="{{ ro ("ws_me_start") }}" class="form-btn flo">{{ re "Start chat" }}</button>
+              <a id="ws-back" href="{{ ro ("home") }}" class="link-back">{{ re "Back" }}</a>
+            </div>
+          </div>
+        </div>
+        <div id="ws-st-cone">
+          <div id="ws-st-he">
+            <span id="ws-st-he-lbl">
+              {{ re "Participants" }}
+            </span>
+            <span id="ws-st-he-cnt">
+              0
+            </span>
+          </div>
+          <ul id="ws-st-list" data-hre="{{ $urlist }}"></ul>
         </div>
       </div>
     </div>
@@ -34,6 +48,7 @@
   <script src="/static/external/js/axios.js"></script>
   <script src="/static/js/inc/funcs.js"></script>
   <script src="/static/js/inc/lang.js"></script>
+  <script src="/static/js/elems/wintools.js"></script>
   <script src="/static/js/elems/saver.js"></script>
   <script src="/static/js/elems/saver_client.js"></script>
   <script src="/static/js/elems/resie.js"></script>
@@ -41,5 +56,6 @@
   <script src="/static/js/elems/loga.js"></script>
   <script src="/static/js/elems/talkerhandler.js"></script>
   <script src="/static/js/elems/wschat.js"></script>
+  <script src="/static/js/elems/ix_lister.js"></script>
   <script src="/static/js/elems/ix.js"></script>
 {{ end }}
