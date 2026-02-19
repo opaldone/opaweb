@@ -26,3 +26,9 @@ window.icos = () => {
 
   return mc_h;
 }
+
+window.is_mobile = () => {
+  const userAg = navigator.userAgent || window.opera;
+  const mobileReg = /android|iphone|kindle|ipad|mobi|series([46])0|symbian|treo|windows ce|xda|xiino/i;
+  return mobileReg.test(userAg);
+}

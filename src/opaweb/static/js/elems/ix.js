@@ -7,6 +7,8 @@ class Starter {
     this.nik_name = null;
     this.start_ws = null;
     this.ws_main = null;
+
+    this.is_mobile = false;
   }
 
   nik_name_keyup(ev) {
@@ -19,6 +21,26 @@ class Starter {
     ev.preventDefault();
   }
 
+  multi_check(pa, ch, rot) {
+    const is_rot = pa.classList.contains(rot);
+
+    if (ch.checked && !is_rot) {
+      pa.classList.add(rot);
+      return;
+    }
+
+    pa.classList.remove(rot);
+
+    if (ch.checked) {
+      pa.classList.remove('checked');
+      ch.checked = false;
+      return;
+    }
+
+    pa.classList.add('checked');
+    ch.checked = true;
+  }
+
   btn_rb_click(ev) {
     ev.stopPropagation();
     ev.preventDefault();
@@ -26,16 +48,22 @@ class Starter {
     let th = ev.currentTarget;
     let pa = this.fun.parent(th, '.lbl-tha');
     let ch = pa.querySelector('.tp-tha-rb');
+    let rot = th.getAttribute('data-rot');
 
-    if (ch.checked) {
-      pa.classList.remove('checked');
-      ch.checked = false;
+    if (rot && this.is_mobile) {
+      this.multi_check(pa, ch, rot);
       this.fun.trigger(ch, 'change');
       return false;
     }
 
-    pa.classList.add('checked');
-    ch.checked = true;
+    if (ch.checked) {
+      pa.classList.remove('checked');
+      ch.checked = false;
+    } else {
+      pa.classList.add('checked');
+      ch.checked = true;
+    }
+
     this.fun.trigger(ch, 'change');
 
     return false;
@@ -70,6 +98,12 @@ class Starter {
     return ret;
   }
 
+  remove_desk_elements() {
+    document.querySelectorAll('.on-desk').forEach(el => {
+      el.remove();
+    });
+  }
+
   docon() {
     document.querySelectorAll('.camic-button').forEach(btn_rb => {
       if (this.fun.once(btn_rb, 'btn_rb_click')) return;
@@ -79,6 +113,10 @@ class Starter {
     let cp_link = document.getElementById('cp-link');
     if (!this.fun.once(cp_link, 'cp_link_click')) {
       cp_link.addEventListener('click', this.cp_link_click.bind(this));
+    }
+
+    if (this.is_mobile) {
+      this.remove_desk_elements();
     }
   }
 
@@ -110,7 +148,6 @@ class Starter {
         this.ws_main.innerHTML = re.data.cont;
 
         this.docon();
-
         document.title = re.data.sets.nik;
 
         let ws = new WSchat(this.fun, false);
@@ -131,6 +168,8 @@ class Starter {
   }
 
   handler() {
+    this.is_mobile = window.is_mobile();
+
     this.nik_name = document.getElementById('nik-name');
     this.start_ws = document.getElementById('start-ws');
     this.ws_main = document.getElementById ('ws-main');

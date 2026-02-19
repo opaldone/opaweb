@@ -351,8 +351,6 @@ class TalkerHandler {
 
     if (!oc) return;
 
-    this.oin.res.clear_one_el(oc['el_container']);
-
     oc['el_container'].remove();
     delete this.talkers[elid];
 
@@ -400,6 +398,46 @@ class TalkerHandler {
     if (this.oin.vid_self) {
       this.oin.vid_self.srcObject = this.localStream;
     }
+  }
+
+  rotateCamera(se) {
+    if (!this.pc) return;
+    if (!this.localStream) return;
+    if (se.screen_on) return;
+    if (!se.video) return
+    if (se.cam_rot_type.length == 0) return;
+
+    this.localStream.getTracks().forEach(tra => tra.stop() );
+
+    let new_media = {
+      'video': {
+        'facingMode': se.cam_rot_type
+      },
+      'audio': this.media.audio
+    };
+
+    window.navigator.mediaDevices.getUserMedia(new_media)
+      .then(stream => {
+        this.localStream = stream;
+        if (this.oin.vid_self) {
+          this.oin.vid_self.srcObject = this.localStream;
+        }
+        this.localStream.getTracks().forEach(tr => {
+          if (tr.kind == 'video') {
+            this.pc.getSenders().forEach((sender) => {
+              if (!sender) return;
+              if (!sender.track) return;
+
+              if (sender.track.kind == 'video') {
+                sender.replaceTrack(tr);
+              }
+            });
+          }
+        });
+      })
+      .catch(e => {
+        this.oin.showLog('rotateCamera' + e.message, true);
+      });
   }
 
   startShow(self_mic) {
@@ -635,7 +673,7 @@ class TalkerHandler {
           if (!vcont.data.set_one_tm) {
             vcont.data.set_one_tm = setTimeout(() => {
               this.oin.res.change_one(vcont)
-            }, 5000);
+            }, 1000);
           }
         };
 
