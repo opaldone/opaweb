@@ -141,10 +141,14 @@ class WSchat {
   }
 
   getAvSet() {
+    let shs = false;
+    if (this.share_screen) {
+      shs = this.share_screen.classList.contains('on');
+    }
     let se = {
       'sound': this.ch_sound.checked,
       'video': this.ch_video.checked,
-      'screen_on': this.share_screen.classList.contains('on'),
+      'screen_on': shs,
       'cam_rot_type': this.getAvRotateSet()
     };
 
