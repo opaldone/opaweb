@@ -7,7 +7,6 @@ class Resie {
     this.fun = fun_in;
     this._dish = dish_in;
     this.scr_on = scr_on_in;
-    this._one = null;
     this.show_one = true;
 
     this.tg_tiles = document.getElementById('tg-tiles');
@@ -91,55 +90,49 @@ class Resie {
     }
   }
 
-  clear_one_el(el) {
-    if (this._one != el) return;
-
-    this._one = null;
-  }
-
   change_one(el) {
-    if (this._one == el) return;
+    if (el.id == 'vw-self') return;
 
-    if (this._one) {
-      this._one.classList.remove('one');
+    const one = this.get_one();
+
+    if (one == el) return;
+
+    if (one) {
+      one.classList.remove('one');
     }
-
     el.classList.add('one');
-    this._one = el;
+
     this.resize()
   }
 
-  set_one(chi, m_chi) {
-    if (this._one) return;
-
+  get_one(chi, m_chi) {
     let one = this._dish.querySelector('.one');
 
-    if (one) {
-      this._one = one;
-      return;
-    }
+    if (one) return one;
 
     for (let s = 0; s < m_chi; s++) {
       let el = chi[s];
       if (el.id == 'vw-self') continue;
       el.classList.add('one');
-      this._one = el;
+      one = el;
       break;
     }
+
+    return one;
   }
 
   posi(chi, m_chi) {
     this.clear_styles(chi);
 
-    this.set_one(chi, m_chi);
-
     this._dish.classList.remove('fle');
     this._dish.classList.add('gr');
 
-    let one_wi = this._one.getBoundingClientRect().width;
+    const one = this.get_one(chi, m_chi);
+
+    let one_wi = one.getBoundingClientRect().width;
     let ano_wi = one_wi / 3;
 
-    this._one.style.height = (one_wi * this._ratio) + 'px';
+    one.style.height = (one_wi * this._ratio) + 'px';
     this._dish.style.width = (one_wi + ano_wi) + 'px';
   }
 

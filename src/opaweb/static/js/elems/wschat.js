@@ -61,10 +61,14 @@ class WSchat {
       this.ch_video.addEventListener('change', this.avChange.bind(this));
 
       this.share_screen = document.getElementById('share-screen');
-      this.share_screen.addEventListener('click', this.toggleShareScreen.bind(this));
+      if (this.share_screen) {
+        this.share_screen.addEventListener('click', this.toggleShareScreen.bind(this));
+      }
 
       this.tg_rec = document.getElementById('tg-rec');
-      this.tg_rec.addEventListener('click', this.toggleRecordClent.bind(this));
+      if (this.tg_rec) {
+        this.tg_rec.addEventListener('click', this.toggleRecordClent.bind(this));
+      }
 
       this.tg_rec_serv = document.getElementById('tg-rec-serv');
       if (this.tg_rec_serv) {
@@ -125,11 +129,23 @@ class WSchat {
     }
   }
 
+  getAvRotateSet() {
+    const cam_lbl = this.fun.parent(this.ch_video, '.lbl-tha');
+    const cam_btn = cam_lbl.querySelector('.btn-rb');
+    const data_rot  = cam_btn.getAttribute('data-rot');
+
+    if (!data_rot) return '';
+    if (cam_lbl.classList.contains('cam-rot')) return 'environment';
+
+    return 'user';
+  }
+
   getAvSet() {
     let se = {
       'sound': this.ch_sound.checked,
       'video': this.ch_video.checked,
-      'screen_on': this.share_screen.classList.contains('on')
+      'screen_on': this.share_screen.classList.contains('on'),
+      'cam_rot_type': this.getAvRotateSet()
     };
 
     this.avSelfChange(se.video, se.sound);
@@ -332,6 +348,10 @@ class WSchat {
 
     if (se.screen_on && !se.video) {
       se.video = true;
+    }
+
+    if (this.th) {
+      this.th.rotateCamera(se);
     }
 
     let jo = {

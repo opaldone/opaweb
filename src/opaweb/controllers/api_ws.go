@@ -69,8 +69,12 @@ func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	wse := common.GetSetsFromReq(r)
 
 	data := map[string]any{
-		"sets":    wse,
-		"camic":   map[string]bool{"mic": wse.Mic, "cam": wse.Cam, "tophint": false},
+		"sets": wse,
+		"camic": map[string]bool{
+			"mic":     wse.Mic,
+			"cam":     wse.Cam,
+			"tophint": false,
+		},
 		"recserv": wse.Recserv,
 	}
 
