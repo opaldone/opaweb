@@ -358,14 +358,4 @@ input:-webkit-autofill:valid {
   #ws-cont {
     width: 100%;
   }
-
-  .btn-rb {
-    width: 35px;
-    height: 35px;
-  }
-
-  .ra-ico svg {
-    width: 15px;
-    height: 15px;
-  }
 }

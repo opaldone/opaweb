@@ -108,14 +108,14 @@
 
 .ta-ul-list {
   width: 100%;
-  height: calc(100% - 64px);
+  height: calc(100% - 65px);
   overflow: auto;
   padding: 20px 13px 20px 13px;
 }
 
 #ta-ul-users {
   display: inline-block;
-  width: 55%;
+  width: 65%;
   color: #fff;
   line-height: 22px;
   text-align: left;
@@ -329,25 +329,22 @@
   #v-tabs {
     width: 55%;
   }
+
+  #ta-ul-users {
+    width: 85%;
+  }
 }
 
 @media (max-width: 640px) {
-  #v-tabs.sh {
-    top: 65px;
-  }
-
   #v-tabs {
-    height: calc(100% - 65px);
     width: 100%;
-    border-radius: 0;
+    transform: none;
+    left: 0;
+    right: 0;
   }
 
   #v-tabs-btns .tab-btn {
     font-size: 12px;
     line-height: 14px;
-  }
-
-  .v-tabs-content {
-    height: calc(100% - 35px);
   }
 }
