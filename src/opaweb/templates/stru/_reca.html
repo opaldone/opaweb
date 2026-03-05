@@ -1,18 +1,21 @@
 {{ define "_reca" }}
   {{ if (index . "recserv") }}
-    <div class="lbl-tha">
-      <button id="tg-rec-serv" class="btn-rb hint-able" data-hint="{{ re "Start record on the server" }}">
+    <div class="lbl-tha with-count">
+      <button
+        id="tg-rec-serv"
+        class="btn-rb hint-able"
+        data-hint="{{ re "Start record on the server" }}"
+        data-recstart="{{ ro "vi_start" }}"
+        data-recstop="{{ ro "vi_stop" }}"
+        data-recupt="{{ ro "vi_uptime" }}"
+      >
         <span class="ra-ico">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="#575757" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.5V12l3.5 2m5.5-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
         </span>
       </button>
-      <a class="lbl-tha"
-         id="li-re"
-         href=""
-         download=""
-         data-he="{{ ro "vi" "xxx" "yyy" }}"
-         data-re="{{ ro "vi_rem" }}"
-         ></a>
+      <div id="rec-serv-timer" class="lbl-count">
+        00:01:23
+      </div>
     </div>
   {{ end }}
   <div class="lbl-tha on-desk">

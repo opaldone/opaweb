@@ -1,8 +1,7 @@
 class TalkerHandler {
-  constructor(fun_in, oin_in, is_virt_in) {
+  constructor(fun_in, oin_in) {
     this.fun = fun_in;
     this.oin = oin_in;
-    this.is_virt = is_virt_in;
 
     this.CC = {
       'video': '-vid',
@@ -23,7 +22,7 @@ class TalkerHandler {
       iceServers: this.oin.ws.iceList
     };
 
-    if (!this.is_virt) {
+    if (!this.oin.ws.virt) {
       this.taber = new Taber(this.fun, {
         'ws': this.oin.ws
       });
@@ -38,16 +37,15 @@ class TalkerHandler {
     let elc = oc['el_container'];
     let el = oc['el_uset'];
 
+    elc.classList.remove('cam');
+    if (oc.cam) elc.classList.add('cam');
+
+    if (!el) return;
+
     el.classList.remove('mic');
     el.classList.remove('cam');
-    elc.classList.remove('cam');
-
     if (oc.mic) el.classList.add('mic');
-
-    if (oc.cam) {
-      elc.classList.add('cam');
-      el.classList.add('cam');
-    }
+    if (oc.cam) el.classList.add('cam');
   }
 
   shareScreen(some_button, fnSe) {
@@ -172,24 +170,6 @@ class TalkerHandler {
     this.shareScreen(some_button, fnSe)
   }
 
-  beginRecServ(some_button) {
-    let jo = {
-      'tp': this.oin.ws.TPS.BREC,
-    };
-
-    this.oin.ws.handler.send(JSON.stringify(jo));
-
-    some_button.classList.add('on');
-  }
-
-  stopRecServ() {
-    let jo = {
-      'tp': this.oin.ws.TPS.EREC,
-    };
-
-    this.oin.ws.handler.send(JSON.stringify(jo));
-  }
-
   startedRecord(cont, clstag) {
     let js = JSON.parse(cont);
 
@@ -205,59 +185,19 @@ class TalkerHandler {
     el.classList.add(clstag);
   }
 
-  setDownloadLinkServ(some_button, js) {
-    if (!js.uquser) return;
-
-    if (js.uquser != this.oin.ws.uquser) return;
-
-    if (!js.vili) return;
-
-    if (some_button.classList.contains('on')) {
-      some_button.classList.remove('on');
+  stoppedRecord(cont, clstag) {
+    if (clstag == 'rec' && this.oin.saver_server) {
+      this.oin.saver_server.deaButton();
     }
 
-    let lire = document.getElementById('li-re');
-
-    if (!lire) return ;
-
-    let he = lire.getAttribute('data-he');
-    let re = lire.getAttribute('data-re');
-    he = he.replace('xxx', this.oin.ws.uqroom).replace('yyy', js.vili);
-
-    let sv = new Saver(this.oin.ws, lire, js.vili, re);
-    sv.download(he, (file) => {
-      sv.save(file);
-    });
-  }
-
-  stoppedRecordServ(some_button, cont) {
-    if (!some_button) return;
+    if (clstag == 'crec' && this.oin.saver_client) {
+      this.oin.saver_client.deaButton();
+    }
 
     let js = JSON.parse(cont);
 
     if (!js) {
-      return this.oin.showLog("Failed to parse stoppedRecordServ", true);
-    }
-
-    this.setDownloadLinkServ(some_button, js);
-
-    let oc = this.talkers[js.strid];
-
-    if (!oc) {
-      return;
-    }
-
-    let el = oc['el_uset'];
-    el.classList.remove('rec');
-
-    if (oc.recording) oc.recording = false;
-  }
-
-  stoppedRecordClient(cont) {
-    let js = JSON.parse(cont);
-
-    if (!js) {
-      return this.oin.showLog("Failed to parse stoppedRecordServ", true);
+      return this.oin.showLog("Failed to parse stoppedRecord", true);
     }
 
     let oc = this.talkers[js.strid];
@@ -267,11 +207,26 @@ class TalkerHandler {
     }
 
     let el = oc['el_uset'];
-    el.classList.remove('crec');
+    el.classList.remove(clstag);
   }
 
+  toggleRecordServ() {
+    if (!this.pc) return;
+    if (!this.oin.saver_server) return;
+
+    this.oin.saver_server.toggleRecord();
+  }
+
+  toggleRecordClent() {
+    if (!this.pc) return;
+    if (!this.oin.saver_client) return;
+
+    this.oin.saver_client.toggleRecord(this.talkers, this.localStream);
+  }
 
   procChatMessage(cont) {
+    if (!this.taber) return;
+
     let js = JSON.parse(cont);
 
     if (!js) {
@@ -287,25 +242,6 @@ class TalkerHandler {
     if (!oc) return;
 
     this.taber.create_el_chat(oc.nik, js.chat_message);
-  }
-
-  toggleRecordServ(some_button) {
-    if (!this.pc) return;
-
-    if (some_button.classList.contains('on')) {
-      this.stopRecServ();
-      return;
-    }
-
-    const some_rec = document.querySelector('.talker-uset.rec');
-
-    if (some_rec) return;
-
-    this.beginRecServ(some_button);
-  }
-
-  toggleRecordClent() {
-    this.oin.saver_client.toggleRecord(this.talkers, this.localStream);
   }
 
   setMediaSettings(ds) {
@@ -354,7 +290,9 @@ class TalkerHandler {
     oc['el_container'].remove();
     delete this.talkers[elid];
 
-    this.taber.remove_el_user(elid);
+    if (this.taber) {
+      this.taber.remove_el_user(elid);
+    }
 
     this.oin.res.resize()
   }
@@ -390,6 +328,7 @@ class TalkerHandler {
         'sound': this.oin.ws.mic,
         'video': this.oin.ws.cam,
         'invis': this.oin.ws.invis,
+        'virt': this.oin.ws.virt
       })
     }
 
@@ -436,7 +375,7 @@ class TalkerHandler {
         });
       })
       .catch(e => {
-        this.oin.showLog('rotateCamera' + e.message, true);
+        this.oin.showLog('rotateCamera: ' + e.message, true);
       });
   }
 
@@ -631,6 +570,9 @@ class TalkerHandler {
     }
 
     this.checkTalkers();
+
+    const some_rec = document.querySelector('.talker-uset.rec');
+    if (some_rec) this.oin.on_rec_serv(true);
   }
 
   doMeter(str, vcont) {
@@ -680,7 +622,7 @@ class TalkerHandler {
         mic.connect(meter).connect(ctx.destination);
       })
       .catch(e => {
-        this.oin.showLog(e, true);
+        this.oin.showLog('doMeter' + e.message, true);
       });
   }
 

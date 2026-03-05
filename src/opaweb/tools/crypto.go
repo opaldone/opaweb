@@ -1,5 +1,5 @@
-// Package common
-package common
+// Package tools
+package tools
 
 import (
 	"crypto/rand"

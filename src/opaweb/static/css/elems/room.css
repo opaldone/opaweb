@@ -19,6 +19,26 @@
   display: none;
 }
 
+.lbl-tha.with-count {
+  position: relative;
+}
+
+.lbl-count {
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 12px;
+  left: 0;
+  top: calc(100% + 3px);
+  font-size: 12px;
+  line-height: 12px;
+  color: #fff;
+}
+
+.lbl-tha.tm .lbl-count {
+  display: block;
+}
+
 #share-screen.on svg path {
   stroke: #c7c7c7;
 }
@@ -33,10 +53,6 @@
 
 #tg-tiles.on svg path {
   stroke: #c7c7c7;
-}
-
-#li-re {
-  display: none;
 }
 
 #talkers-container {

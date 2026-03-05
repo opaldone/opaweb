@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"opaweb/applog"
-	"opaweb/common"
+	"opaweb/tools"
 )
 
 const TRFOLDER = "tra"
@@ -15,8 +15,8 @@ const TRFOLDER = "tra"
 var lame map[string]string
 
 func readJSON(filename string) (ret *[]byte) {
-	lang := common.Env(false).Lang
-	lap := fmt.Sprintf("%s/%s/%s/%s.json", common.Env(false).Static, TRFOLDER, lang, filename)
+	lang := tools.Env(false).Lang
+	lap := fmt.Sprintf("%s/%s/%s/%s.json", tools.Env(false).Static, TRFOLDER, lang, filename)
 
 	_, err := os.Stat(lap)
 	if err != nil {
