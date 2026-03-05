@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-// Danger put a error message
+// Danger prints an error message
 func Danger(step string, args ...any) {
 	fmt.Fprintf(os.Stderr, "[%s] ", step)
 	fmt.Fprintln(os.Stderr, args...)

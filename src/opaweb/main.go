@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"time"
 
-	"opaweb/common"
+	_ "net/http/pprof"
+
 	"opaweb/controllers"
+	"opaweb/tools"
 
 	"github.com/gorilla/csrf"
 	"golang.org/x/crypto/acme/autocert"
@@ -22,10 +24,10 @@ var ct = map[string]int64{
 func main() {
 	runInit()
 
-	e := common.Env(false)
+	e := tools.Env(false)
 
 	csrfH := csrf.Protect(
-		[]byte(common.GetKeyCSRF()),
+		[]byte(tools.GetKeyCSRF()),
 		csrf.Path("/"),
 	)
 
@@ -37,7 +39,7 @@ func main() {
 	startSelf(e, csrfH)
 }
 
-func shows(e *common.Configuration, ttl string) {
+func shows(e *tools.Configuration, ttl string) {
 	fmt.Printf("\n%s [%s]\n"+
 		"started at: %s\n",
 		e.Appname, ttl,
@@ -45,8 +47,18 @@ func shows(e *common.Configuration, ttl string) {
 	)
 }
 
-func startSelf(e *common.Configuration, cs func(http.Handler) http.Handler) {
+func startPprof() {
+	// http://localhost:9090/debug/pprof/goroutine?debug=1
+
+	go func() {
+		http.ListenAndServe(":9090", nil)
+	}()
+}
+
+func startSelf(e *tools.Configuration, cs func(http.Handler) http.Handler) {
 	shows(e, "self")
+
+	startPprof()
 
 	mux := controllers.GetRouters()
 
@@ -62,7 +74,7 @@ func startSelf(e *common.Configuration, cs func(http.Handler) http.Handler) {
 	log.Fatalln(server.ListenAndServeTLS(e.Crt, e.Key))
 }
 
-func startAcme(e *common.Configuration, cs func(http.Handler) http.Handler) {
+func startAcme(e *tools.Configuration, cs func(http.Handler) http.Handler) {
 	shows(e, "acme")
 
 	certManager := &autocert.Manager{

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"opaweb/common"
+	"opaweb/tools"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -22,20 +22,21 @@ var list routes
 
 func init() {
 	list = routes{
-		"home":        route{"GET", "/", WSChat},
+		"home":        route{"GET", "/", WsChat},
 		"ws_me":       route{"GET", "/meet", WsMeet},
 		"ws_me_get":   route{"GET", "/meet/:uqroom", WsMeetGet},
 		"ws_me_start": route{"POST", "/meet-st", WsMeetStart},
-		"virt":        route{"GET", "/virt/:uqroom/:ke", WsVirt},
-		"vi":          route{"GET", "/vi/:uqroom/:ke", WsVi},
-		"vi_rem":      route{"POST", "/vi-rem", WsViRem},
+		"vi_start":    route{"POST", "/vi-start", ViStart},
+		"vi_stop":     route{"POST", "/vi-stop", ViStop},
+		"vi_uptime":   route{"POST", "/vi-uptime", ViUptime},
+		"virt":        route{"GET", "/virt/:uqroom", Virt},
 	}
 }
 
 // GetRouters returns routers
 func GetRouters() (router *httprouter.Router) {
 	router = httprouter.New()
-	router.ServeFiles("/static/*filepath", http.Dir(common.Env(false).Static))
+	router.ServeFiles("/static/*filepath", http.Dir(tools.Env(false).Static))
 
 	for _, r := range list {
 		router.Handle(r.method, r.pattern, r.handle)

@@ -15,6 +15,7 @@ class WSchat {
       invis: false,
       virt: false,
       iceList: null,
+      tmrec: null,
       TPS: {
         JOINROOM: "joinroom",
         CANDIDATE: "candidate",
@@ -30,7 +31,6 @@ class WSchat {
         SCRECD: "screencd",
         BREC: "beginrecord",
         EREC: "endrecord",
-        RREC: "remrec",
         CLBREC: "clbeginrecord",
         CLEREC: "clendrecord",
         CHAT: "chat",
@@ -48,7 +48,7 @@ class WSchat {
     this.id_talkers = 'talkers'
     this.talkers_cont = document.getElementById(this.id_talkers);
 
-    this.res = new Resie(this.fun, this.talkers_cont, this.scr_on);
+    this.res = new Resie(this.fun, this.talkers_cont, this.scr_on, this.is_virt);
 
     window.addEventListener('resize', this.docResize.bind(this));
 
@@ -167,6 +167,11 @@ class WSchat {
     par.remove();
   }
 
+  clear_timer_rec() {
+    clearTimeout(this.ws.tmrec);
+    this.ws.tmrec = null;
+  }
+
   clear_if_block() {
     this.ws.cam = false;
     this.ws.mic = false;
@@ -203,13 +208,26 @@ class WSchat {
   }
 
   talk() {
-    let sc = new SaverClient({
-      'ws': this.ws,
-      'button': this.tg_rec
-    });
+    let saver_c = null;
+    let saver_s = null;
+
+    if (!this.is_virt) {
+      saver_c = new SaverClient({
+        'ws': this.ws,
+        'button': this.tg_rec
+      });
+
+      saver_s = new SaverServer(this.fun, {
+        'ws': this.ws,
+        'button': this.tg_rec_serv,
+        'showLog': this.showLog.bind(this),
+        'clear_timer_rec': this.clear_timer_rec.bind(this)
+      })
+    }
 
     let ob = {
-      'saver_client': sc,
+      'saver_client': saver_c,
+      'saver_server': saver_s,
       'ws': this.ws,
       'id_talkers': this.id_talkers,
       'talkers_cont': this.talkers_cont,
@@ -217,6 +235,7 @@ class WSchat {
       'showLog': this.showLog.bind(this),
       'clear_if_block': this.clear_if_block.bind(this),
       'who_con': this.who_con.bind(this),
+      'on_rec_serv': this.on_rec_serv.bind(this),
       'vid_self': null,
       'vw_self': null,
       'scr_on': this.scr_on
@@ -230,7 +249,7 @@ class WSchat {
       ob.vw_self = this.vw_self;
     }
 
-    this.th = new TalkerHandler(this.fun, ob, this.is_virt);
+    this.th = new TalkerHandler(this.fun, ob);
     this.th.startShow(this.ws.mic)
 
     this.avSelfChange(this.ws.cam, this.ws.mic);
@@ -299,14 +318,14 @@ class WSchat {
           this.on_rec_serv(true);
           break;
         case this.ws.TPS.EREC:
-          this.th.stoppedRecordServ(this.tg_rec_serv, msg.content);
+          this.th.stoppedRecord(msg.content, 'rec');
           this.on_rec_serv(false);
           break;
         case this.ws.TPS.CLBREC:
           this.th.startedRecord(msg.content, 'crec');
           break;
         case this.ws.TPS.CLEREC:
-          this.th.stoppedRecordClient(msg.content);
+          this.th.stoppedRecord(msg.content, 'crec');
           break;
         case this.ws.TPS.CHAT:
           this.th.procChatMessage(msg.content);
@@ -376,12 +395,10 @@ class WSchat {
     this.th.toggleScreen(btn, this.getAvSet.bind(this));
   }
 
-  toggleRecordServ(ev) {
+  toggleRecordServ() {
     if (!this.th) return;
 
-    let btn = ev.currentTarget;
-
-    this.th.toggleRecordServ(btn);
+    this.th.toggleRecordServ();
   }
 
   toggleRecordClent() {

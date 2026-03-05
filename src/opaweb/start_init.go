@@ -1,12 +1,12 @@
 package main
 
 import (
-	"opaweb/common"
 	"opaweb/lang"
+	"opaweb/tools"
 )
 
 func runInit() {
-	common.LoadConfig()
-	common.SetCsrf()
+	tools.LoadConfig()
+	tools.SetCsrf()
 	lang.LoadMessages()
 }

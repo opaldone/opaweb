@@ -3,23 +3,20 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
-	"os"
 	"strconv"
 
-	"opaweb/applog"
-	"opaweb/common"
+	"opaweb/tools"
 
 	"github.com/julienschmidt/httprouter"
 )
 
-func WSChat(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func WsChat(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	GenerateHTMLEmp(w, r, nil, "stru/ix")
 }
 
 func WsMeet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	uqroom := common.RandUID()
+	uqroom := tools.RandUID()
 	http.Redirect(w, r, ro("ws_me_get", uqroom), http.StatusSeeOther)
 }
 
@@ -30,29 +27,29 @@ func WsMeetGet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ca := qv.Get("ca")
 	mi := qv.Get("mi")
 
-	get_cam := false
+	getCam := false
 	if len(ca) > 0 {
 		va, _ := strconv.Atoi(ca)
-		get_cam = va > 0
+		getCam = va > 0
 	}
 
-	get_mi := true
+	getMi := true
 	if len(mi) > 0 {
 		va, _ := strconv.Atoi(mi)
-		get_mi = va > 0
+		getMi = va > 0
 	}
 
 	uqroom := ps.ByName("uqroom")
 
-	env := common.Env(true)
+	env := tools.Env(true)
 
-	urlist := fmt.Sprintf("https://%s:%d/lir/%s", env.Ws.Url, env.Ws.Port, uqroom)
+	urlist := fmt.Sprintf("https://%s:%d/lir/%s", env.Ws.URL, env.Ws.Port, uqroom)
 
 	info := map[string]any{
 		"uqroom": uqroom,
 		"camic": map[string]bool{
-			"mic":     get_mi,
-			"cam":     get_cam,
+			"mic":     getMi,
+			"cam":     getCam,
 			"tophint": true,
 		},
 		"nikin":  nikin,
@@ -66,7 +63,7 @@ func WsMeetGet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Content-Type", "application/json")
 
-	wse := common.GetSetsFromReq(r)
+	wse := tools.GetSetsFromReq(r)
 
 	data := map[string]any{
 		"sets": wse,
@@ -84,103 +81,13 @@ func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		"stru/_selfvi", "stru/_chata",
 	)
 
-	ans := common.AjaAns{
+	ans := tools.AjaAns{
 		Res:  true,
 		Sets: wse,
 		Cont: co,
 	}
 
 	output, _ := json.Marshal(ans)
-
-	w.Write(output)
-}
-
-func WsVirt(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	wse := common.GetSetsForVirt(ps)
-
-	ob, _ := json.Marshal(wse)
-
-	info := map[string]any{
-		"ob": string(ob),
-	}
-
-	GenerateHTMLEmp(w, r, info, "stru/virt")
-}
-
-func getFi(uqroomIn, keIn string) string {
-	fn := fmt.Sprintf("vi_%s_%s.webm", uqroomIn, keIn)
-
-	return fn
-}
-
-func getPtFi(fnIn string) string {
-	env := common.Env(true)
-
-	pt := fmt.Sprintf("%s/%s", env.RecFolder, fnIn)
-
-	return pt
-}
-
-func WsVi(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	uqroom := ps.ByName("uqroom")
-	ke := ps.ByName("ke")
-
-	fn := getFi(uqroom, ke)
-	pt := getPtFi(fn)
-
-	f, err := os.Open(pt)
-	if err != nil {
-		applog.Danger("Vi opening file", err)
-		return
-	}
-
-	defer func() {
-		err := f.Close()
-		if err != nil {
-			applog.Danger("Vi closing file", err)
-		}
-	}()
-
-	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", fn))
-	w.Header().Set("Content-Type", "application/octet-stream")
-	w.WriteHeader(http.StatusOK)
-
-	_, err = io.Copy(w, f)
-	if err != nil {
-		applog.Danger("Vi copying file", err)
-	}
-}
-
-func WsViRem(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	w.Header().Set("Content-Type", "application/json")
-
-	re := common.GetWsReq(r)
-
-	fn := getFi(re.UqRoom, re.Ke)
-
-	ans := common.AjaAns{
-		Res: false,
-	}
-
-	output, _ := json.Marshal(ans)
-
-	if fn != re.Fi {
-		applog.Danger("Rem file", "Filenames not the same")
-
-		w.Write(output)
-
-		return
-	}
-
-	pt := getPtFi(fn)
-
-	err := os.Remove(pt)
-	if err != nil {
-		applog.Danger("Removing file", err)
-	}
-
-	ans.Res = true
-	output, _ = json.Marshal(ans)
 
 	w.Write(output)
 }

@@ -3,11 +3,12 @@ class Resie {
   _ratio = this.ratio();
   _posi_cnt = 4;
 
-  constructor(fun_in, dish_in, scr_on_in) {
+  constructor(fun_in, dish_in, scr_on_in, is_virt_in) {
     this.fun = fun_in;
     this._dish = dish_in;
     this.scr_on = scr_on_in;
     this.show_one = true;
+    this.is_virt = is_virt_in;
 
     this.tg_tiles = document.getElementById('tg-tiles');
     if (this.tg_tiles) {
@@ -156,7 +157,12 @@ class Resie {
 
     this.hid_show_tg_tiles(m_chi);
 
-    if (m_chi > 1 && m_chi <= this._posi_cnt && this.show_one) {
+    if (
+      // !this.is_virt &&
+      this.show_one &&
+      m_chi > 1 &&
+      m_chi <= this._posi_cnt
+    ) {
       this.posi(chi, m_chi);
       return;
     }

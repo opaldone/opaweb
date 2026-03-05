@@ -39,10 +39,13 @@ W_FILES=(
     "$src/static/js/elems/talkerhandler.js;$bin/static/js/elems/talkerhandler.js"
     "$src/static/js/elems/vmeter.js;$bin/static/js/elems/vmeter.js"
     "$src/static/js/elems/virt.js;$bin/static/js/elems/virt.js"
-    "$src/static/js/elems/saver.js;$bin/static/js/elems/saver.js"
     "$src/static/js/elems/saver_client.js;$bin/static/js/elems/saver_client.js"
+    "$src/static/js/elems/saver_server.js;$bin/static/js/elems/saver_server.js"
     "$src/static/js/elems/taber.js;$bin/static/js/elems/taber.js"
     "$src/static/js/elems/loga.js;$bin/static/js/elems/loga.js"
     "$src/static/js/elems/wintools.js;$bin/static/js/elems/wintools.js"
     "$src/static/js/elems/ix_lister.js;$bin/static/js/elems/ix_lister.js"
+# bash scripts
+    "$src/envir/rec/aru/s_s;$bin/envir/rec/aru/s_s"
+    "$src/envir/rec/aru/k_s;$bin/envir/rec/aru/k_s"
 )

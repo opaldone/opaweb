@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"opaweb/applog"
-	"opaweb/common"
 	"opaweb/lang"
+	"opaweb/tools"
 
 	"github.com/gorilla/csrf"
 )
@@ -41,7 +41,7 @@ func getFm() (fm template.FuncMap) {
 		"ro": ro,
 		"dd": func(v any) template.HTML {
 			return template.HTML(
-				common.ShowJSON(v, false),
+				tools.ShowJSON(v, false),
 			)
 		},
 		"re": lang.Re,
@@ -62,8 +62,8 @@ func GenerateHTMLEmp(w http.ResponseWriter, r *http.Request, info any, pages ...
 		data["info"] = info
 	}
 
-	data["lang"] = common.Env(false).Lang
-	data["stat"] = common.Env(false).Static
+	data["lang"] = tools.Env(false).Lang
+	data["stat"] = tools.Env(false).Static
 	data["needtra"] = 0
 	if lang.NeedTra() {
 		data["needtra"] = 1
