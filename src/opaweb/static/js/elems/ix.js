@@ -104,6 +104,55 @@ class Starter {
     });
   }
 
+  del_vid_click(ev) {
+    ev.stopPropagation();
+    ev.preventDefault();
+
+    let self = this;
+
+    let del_btn = ev.currentTarget;
+    let uqroom = del_btn.getAttribute('data-roo');
+    let filename = del_btn.getAttribute('data-fn');
+    let url = del_btn.getAttribute('data-hre');
+
+    if (!uqroom) return false;
+    if (!filename) return false;
+    if (!url) return false;
+
+    if (!confirm('Do You really want to delete the video?')) {
+      return false;
+    }
+
+    let cs = document.getElementsByName("gorilla.csrf.Token")[0].value;
+
+    let obj = {
+      'uqroom': uqroom,
+      'fi': filename
+    };
+
+    axios.post(url, obj, {
+      headers: { "X-CSRF-Token": cs }
+    })
+      .then((re) => {
+        if (!re.data.res) return false;
+        let parli = self.fun.parent(del_btn, '.list-vid-li');
+        if (!parli) return false;
+        let contul = self.fun.parent(parli, '#list-vid');
+        if (!contul) return false;
+        let cont = self.fun.parent(contul, '.ws-st-cone');
+        if (!cont) return false;
+        parli.remove();
+        if (contul.children.length == 0) {
+          cont.remove();
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    return false;
+  }
+
   docon() {
     document.querySelectorAll('.camic-button').forEach(btn_rb => {
       if (this.fun.once(btn_rb, 'btn_rb_click')) return;
@@ -114,6 +163,11 @@ class Starter {
     if (!this.fun.once(cp_link, 'cp_link_click')) {
       cp_link.addEventListener('click', this.cp_link_click.bind(this));
     }
+
+    document.querySelectorAll('.delvid').forEach(del_btn => {
+      if (this.fun.once(del_btn, 'del_btn_click')) return;
+      del_btn.addEventListener('click', this.del_vid_click.bind(this));
+    });
 
     if (this.is_mobile) {
       this.remove_desk_elements();

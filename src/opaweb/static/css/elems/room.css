@@ -65,6 +65,11 @@
   top: 75px;
 }
 
+#talkers-container.virt {
+  height: 100%;
+  top: auto;
+}
+
 #talkers {
   position: relative;
   width: 100%;

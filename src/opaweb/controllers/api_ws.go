@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"opaweb/serv"
 	"opaweb/tools"
 
 	"github.com/julienschmidt/httprouter"
@@ -45,6 +46,8 @@ func WsMeetGet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	urlist := fmt.Sprintf("https://%s:%d/lir/%s", env.Ws.URL, env.Ws.Port, uqroom)
 
+	vidlist := serv.GetVidsFromRoom(uqroom)
+
 	info := map[string]any{
 		"uqroom": uqroom,
 		"camic": map[string]bool{
@@ -52,12 +55,13 @@ func WsMeetGet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			"cam":     getCam,
 			"tophint": true,
 		},
-		"nikin":  nikin,
-		"st":     st,
-		"urlist": urlist,
+		"nikin":   nikin,
+		"st":      st,
+		"urlist":  urlist,
+		"vidlist": vidlist,
 	}
 
-	GenerateHTMLEmp(w, r, info, "stru/st_meet", "stru/camic")
+	GenerateHTMLEmp(w, r, info, "stru/st_meet", "stru/camic", "stru/_vidlist")
 }
 
 func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
