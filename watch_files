@@ -23,6 +23,7 @@ W_FILES=(
     "$src/templates/stru/_tabtns.html;$bin/templates/stru/_tabtns.html"
     "$src/templates/stru/camic.html;$bin/templates/stru/camic.html"
     "$src/templates/stru/virt.html;$bin/templates/stru/virt.html"
+    "$src/templates/stru/_vidlist.html;$bin/templates/stru/_vidlist.html"
 # css
     "$src/static/css/inc/reset.css;$bin/static/css/inc/reset.css"
     "$src/static/css/inc/inc_fonts.css;$bin/static/css/inc/inc_fonts.css"

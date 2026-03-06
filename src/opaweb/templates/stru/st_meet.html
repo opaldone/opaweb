@@ -15,7 +15,7 @@
             {{ re "Chat settings" }}
           </div>
           <div class="form-cbs-cont clearfix">
-            {{ template "camic" (index $info "camic")}}
+            {{ template "camic" (index $info "camic") }}
           </div>
           <div id="ws-form-cont">
             <input class="inp-wid" type="text" id="nik-name" value="{{ index $info "nikin" }}" placeholder="{{ re "Enter name" }}" />
@@ -29,17 +29,20 @@
             </div>
           </div>
         </div>
-        <div id="ws-st-cone">
-          <div id="ws-st-he">
-            <span id="ws-st-he-lbl">
+        <div class="ws-st-cone">
+          <div class="ws-st-he">
+            <span class="ws-st-he-lbl">
               {{ re "Participants" }}
             </span>
             <span id="ws-st-he-cnt">
               0
             </span>
           </div>
-          <ul id="ws-st-list" data-hre="{{ $urlist }}"></ul>
+          <ul id="ws-st-list" class="ws-st-data-list" data-hre="{{ $urlist }}"></ul>
         </div>
+        {{ if (index $info "vidlist") }}
+          {{ template "_vidlist" $info }}
+        {{ end }}
       </div>
     </div>
   </div>

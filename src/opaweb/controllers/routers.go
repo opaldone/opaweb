@@ -29,6 +29,7 @@ func init() {
 		"vi_start":    route{"POST", "/vi-start", ViStart},
 		"vi_stop":     route{"POST", "/vi-stop", ViStop},
 		"vi_uptime":   route{"POST", "/vi-uptime", ViUptime},
+		"vi_del_vid":  route{"POST", "/vi-delete", ViDelete},
 		"virt":        route{"GET", "/virt/:uqroom", Virt},
 	}
 }
@@ -37,6 +38,7 @@ func init() {
 func GetRouters() (router *httprouter.Router) {
 	router = httprouter.New()
 	router.ServeFiles("/static/*filepath", http.Dir(tools.Env(false).Static))
+	router.ServeFiles("/revis/*filepath", http.Dir("envir/rec/rooms"))
 
 	for _, r := range list {
 		router.Handle(r.method, r.pattern, r.handle)

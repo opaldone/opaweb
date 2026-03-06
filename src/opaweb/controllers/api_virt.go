@@ -25,6 +25,22 @@ func ViUptime(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	serv.UpdateRoomTiming(re.UqRoom)
 }
 
+func ViDelete(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	w.Header().Set("Content-Type", "application/json")
+
+	re := tools.GetWsReq(r)
+
+	isdeleted := serv.DeleteVideo(re.UqRoom, re.Fi)
+
+	ans := tools.AjaAns{
+		Res: isdeleted,
+	}
+
+	output, _ := json.Marshal(ans)
+
+	w.Write(output)
+}
+
 func Virt(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	wse := tools.GetSetsForVirt(ps)
 

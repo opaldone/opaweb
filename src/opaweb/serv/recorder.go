@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"sort"
 	"strconv"
 	"sync"
 	"syscall"
@@ -34,6 +35,14 @@ type OsaType struct {
 	Pxv  int `json:"pxv,omitempty"`
 	Pff  int `json:"pff,omitempty"`
 	Pgoo int `json:"pgoo,omitempty"`
+}
+
+type RevisFile struct {
+	Dt       string
+	Tm       string
+	Sz       string
+	Filename string
+	Link     string
 }
 
 var (
@@ -293,4 +302,61 @@ func StartRec(roomid string) {
 
 	go monitorProc(roomid)
 	go monitorLeave(roomid)
+}
+
+func GetVidsFromRoom(roomid string) *[]RevisFile {
+	vidFolder := fmt.Sprintf("%s/%s", getRoomFolder(roomid), fVid)
+
+	files, err := os.ReadDir(vidFolder)
+	if err != nil {
+		return nil
+	}
+
+	if len(files) == 0 {
+		return nil
+	}
+
+	sort.Slice(files, func(i, j int) bool {
+		fi, _ := files[i].Info()
+		fj, _ := files[j].Info()
+		return fi.ModTime().After(fj.ModTime())
+	})
+
+	list := []RevisFile{}
+
+	for _, f := range files {
+		filename := f.Name()
+		info, _ := f.Info()
+		mt := info.ModTime()
+		dt := mt.Format("2006-01-02")
+		tm := mt.Format("15:04")
+		link := fmt.Sprintf("/revis/%s/vid/%s", roomid, filename)
+		sz := fmt.Sprintf("%.1f MB\n",
+			float64(info.Size())/(1024.0*1024.0),
+		)
+
+		item := RevisFile{
+			Dt:       dt,
+			Tm:       tm,
+			Sz:       sz,
+			Filename: filename,
+			Link:     link,
+		}
+		list = append(list, item)
+	}
+
+	return &list
+}
+
+func DeleteVideo(roomid string, filename string) bool {
+	roomFolder := getRoomFolder(roomid)
+	pa := fmt.Sprintf("%s/%s/%s", roomFolder, fVid, filename)
+
+	if !fexists(pa) {
+		return false
+	}
+
+	err := os.Remove(pa)
+
+	return err == nil
 }
