@@ -333,8 +333,17 @@ input:-webkit-autofill:valid {
   margin-top: 3px;
 }
 
-#list-vid.ws-st-data-list li:hover {
+#list-vid.ws-st-data-list li:not(.cen):hover {
   background-color: #373737;
+}
+
+#list-vid video {
+  display: none;
+}
+
+#list-vid .cen {
+  color: #979797;
+  text-align: center;
 }
 
 .ws-st-data-list li a.li-st-link {
@@ -373,7 +382,6 @@ input:-webkit-autofill:valid {
   margin-left: 6px;
 }
 
-
 .ws-st-data-list li a span {
   display: inline-block;
 }
@@ -387,12 +395,12 @@ input:-webkit-autofill:valid {
   margin-left: -3px;
 }
 
-.li-st-dt {
-  color: #fff;
-}
-
 .li-st-tm, .li-st-sz {
   color: #979797;
+}
+
+.li-st-ico {
+  line-height: 0;
 }
 
 #ws-st-list {
