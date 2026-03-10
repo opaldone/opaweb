@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"slices"
 	"sort"
 	"strconv"
 	"sync"
@@ -43,6 +44,11 @@ type RevisFile struct {
 	Sz       string
 	Filename string
 	Link     string
+}
+
+type KeysRevisFile struct {
+	Keys []string
+	Mapa map[string][]RevisFile
 }
 
 var (
@@ -304,7 +310,7 @@ func StartRec(roomid string) {
 	go monitorLeave(roomid)
 }
 
-func GetVidsFromRoom(roomid string) *[]RevisFile {
+func GetVidsFromRoom(roomid string) *KeysRevisFile {
 	vidFolder := fmt.Sprintf("%s/%s", getRoomFolder(roomid), fVid)
 
 	files, err := os.ReadDir(vidFolder)
@@ -322,7 +328,8 @@ func GetVidsFromRoom(roomid string) *[]RevisFile {
 		return fi.ModTime().After(fj.ModTime())
 	})
 
-	list := []RevisFile{}
+	keys := []string{}
+	mapa := make(map[string][]RevisFile)
 
 	for _, f := range files {
 		filename := f.Name()
@@ -331,9 +338,13 @@ func GetVidsFromRoom(roomid string) *[]RevisFile {
 		dt := mt.Format("2006-01-02")
 		tm := mt.Format("15:04")
 		link := fmt.Sprintf("/revis/%s/vid/%s", roomid, filename)
-		sz := fmt.Sprintf("%.1f MB\n",
+		sz := fmt.Sprintf("%.1f MB",
 			float64(info.Size())/(1024.0*1024.0),
 		)
+
+		if !slices.Contains(keys, dt) {
+			keys = append(keys, dt)
+		}
 
 		item := RevisFile{
 			Dt:       dt,
@@ -342,10 +353,20 @@ func GetVidsFromRoom(roomid string) *[]RevisFile {
 			Filename: filename,
 			Link:     link,
 		}
-		list = append(list, item)
+
+		_, ok := mapa[dt]
+		if !ok {
+			mapa[dt] = []RevisFile{}
+		}
+		mapa[dt] = append(mapa[dt], item)
 	}
 
-	return &list
+	ret := KeysRevisFile{
+		Keys: keys,
+		Mapa: mapa,
+	}
+
+	return &ret
 }
 
 func DeleteVideo(roomid string, filename string) bool {
