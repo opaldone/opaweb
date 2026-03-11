@@ -96,16 +96,14 @@ class TalkerHandler {
     this.oin.ws.handler.send(JSON.stringify(jo));
 
     this.localStream.getTracks().forEach(tr => {
-      if (tr.kind == 'video') {
-        this.pc.getSenders().forEach((sender) => {
-          if (!sender) return;
-          if (!sender.track) return;
+      if (tr.kind != 'video') return;
+      this.pc.getSenders().forEach((sender) => {
+        if (!sender) return;
+        if (!sender.track) return;
+        if (sender.track.kind != 'video') return;
 
-          if (sender.track.kind == 'video') {
-            sender.replaceTrack(tr);
-          }
-        });
-      }
+        sender.replaceTrack(tr);
+      });
     });
   }
 
@@ -346,32 +344,32 @@ class TalkerHandler {
     if (!se.video) return
     if (se.cam_rot_type.length == 0) return;
 
-    this.localStream.getTracks().forEach(tra => tra.stop() );
+    let old_tr = this.localStream.getVideoTracks()[0];
+
+    if (!old_tr) return;
+
+    old_tr.stop();
 
     let new_media = {
       'video': {
         'facingMode': se.cam_rot_type
       },
-      'audio': this.media.audio
+      'audio': false
     };
 
     window.navigator.mediaDevices.getUserMedia(new_media)
-      .then(stream => {
-        this.localStream = stream;
-        if (this.oin.vid_self) {
-          this.oin.vid_self.srcObject = this.localStream;
-        }
-        this.localStream.getTracks().forEach(tr => {
-          if (tr.kind == 'video') {
-            this.pc.getSenders().forEach((sender) => {
-              if (!sender) return;
-              if (!sender.track) return;
+      .then(st => {
+        let new_tr = st.getVideoTracks()[0];
 
-              if (sender.track.kind == 'video') {
-                sender.replaceTrack(tr);
-              }
-            });
-          }
+        this.localStream.removeTrack(old_tr);
+        this.localStream.addTrack(new_tr);
+
+        this.pc.getSenders().forEach((sender) => {
+          if (!sender) return;
+          if (!sender.track) return;
+          if (sender.track.kind != 'video') return;
+
+          sender.replaceTrack(new_tr);
         });
       })
       .catch(e => {

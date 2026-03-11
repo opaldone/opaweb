@@ -2,6 +2,7 @@ class WSchat {
   constructor(fun_in, is_virt_in) {
     this.is_virt = is_virt_in;
     this.fun = fun_in;
+    this.is_mobile = window.is_mobile();
 
     this.ws = {
       uqroom: null,
@@ -56,9 +57,9 @@ class WSchat {
 
     if (!this.is_virt) {
       this.ch_sound = document.getElementById('cb-mic');
-      this.ch_sound.addEventListener('change', this.avChange.bind(this));
+      this.ch_sound.addEventListener('change', this.avChangeMic.bind(this));
       this.ch_video = document.getElementById('cb-cam');
-      this.ch_video.addEventListener('change', this.avChange.bind(this));
+      this.ch_video.addEventListener('change', this.avChangeCam.bind(this));
 
       this.share_screen = document.getElementById('share-screen');
       if (this.share_screen) {
@@ -130,6 +131,8 @@ class WSchat {
   }
 
   getAvRotateSet() {
+    if (!this.is_mobile) return '';
+
     const cam_lbl = this.fun.parent(this.ch_video, '.lbl-tha');
     const cam_btn = cam_lbl.querySelector('.btn-rb');
     const data_rot  = cam_btn.getAttribute('data-rot');
@@ -361,20 +364,13 @@ class WSchat {
     this.startWs()
   }
 
-  avChange(ev) {
-    ev.stopPropagation();
-    ev.preventDefault();
-
-    if (!this.ws.handler) return false;
+  avChange() {
+    if (!this.ws.handler) return null;
 
     let se = this.getAvSet();
 
     if (se.screen_on && !se.video) {
       se.video = true;
-    }
-
-    if (this.th) {
-      this.th.rotateCamera(se);
     }
 
     let jo = {
@@ -383,6 +379,28 @@ class WSchat {
     };
 
     this.ws.handler.send(JSON.stringify(jo));
+
+    return se;
+  }
+
+  avChangeMic(ev) {
+    ev.stopPropagation();
+    ev.preventDefault();
+
+    this.avChange();
+
+    return  false
+  }
+
+  avChangeCam(ev) {
+    ev.stopPropagation();
+    ev.preventDefault();
+
+    let se = this.avChange();
+
+    if (se && this.th) {
+      this.th.rotateCamera(se);
+    }
 
     return false;
   }

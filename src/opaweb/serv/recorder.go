@@ -28,7 +28,7 @@ const (
 	fPrcs            = "prcs"
 	fVid             = "vid"
 	fLogs            = "logs"
-	monitorProcSteps = 3
+	monitorProcSteps = 10
 	monitorLeaveSec  = 20
 )
 

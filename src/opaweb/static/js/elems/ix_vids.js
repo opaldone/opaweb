@@ -72,11 +72,20 @@ class IxVids {
         if (!re.data.res) return false;
         let parli = self.fun.parent(del_btn, '.list-vid-li');
         if (!parli) return false;
+        let lidt = parli.getAttribute('data-lidt');
         let contul = self.fun.parent(parli, '#list-vid');
         if (!contul) return false;
         let cont = self.fun.parent(contul, '.ws-st-cone');
         if (!cont) return false;
+
         parli.remove();
+
+        let colis = contul.querySelectorAll('[data-lidt="' + lidt + '"]').length;
+        if (colis == 0) {
+          let li_lidt = document.getElementById('lidtvi-' + lidt);
+          if (li_lidt) li_lidt.remove();
+        }
+
         if (contul.children.length == 0) {
           cont.remove();
         }
