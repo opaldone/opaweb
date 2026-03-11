@@ -11,11 +11,11 @@
     </div>
     <ul id="list-vid" class="ws-st-data-list">
       {{ range $keys}}
-        <li class="cen">
+        <li id="lidtvi-{{ . }}" class="cen">
           {{ . }}
         </li>
         {{ range (index $mapa .) }}
-          <li class="list-vid-li clearfix">
+          <li class="list-vid-li clearfix" data-lidt="{{ .Dt }}">
             <video class="vid-dur" src="{{ .Link }}" controls muted crossorigin="anonymous"></video>
             <a class="li-st-link" href="{{ .Link }}" target="_blank" title="Play video">
               <span class="li-st-ico">

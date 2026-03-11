@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+export PULSE_SERVER=unix:/run/user/$(id -u)/pulse/native
+
 declare room_in=$1
 declare room_foler=$2
 declare js_file=$3
@@ -47,7 +49,7 @@ Xvfb \
 
 declare pxv=$!
 
-# sleep 1
+sleep 1
 
 DISPLAY=:$SERVERNUM \
 	google-chrome \
@@ -62,11 +64,12 @@ DISPLAY=:$SERVERNUM \
 
 declare pgoo=$!
 
-# sleep 3
+sleep 3
 
 ffmpeg \
     -y \
     -v $loglev \
+    -nostdin \
     -f x11grab \
     -draw_mouse 0 \
     -s $scr_res \
