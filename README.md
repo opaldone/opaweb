@@ -5,7 +5,7 @@
   <br />
 </h1>
 <h4 align="center">
-A web server for video and audio conferencing that acts as a client for <a href="https://github.com/opaldone/opachat">opachat</a>. It supports chat session recording on both the server and client sides.
+A web server for video and audio conferencing that acts as a client for <a href="https://github.com/opaldone/opachat">opachat</a>. It supports chat session recording on both the server and client sides
 </h4>
 <p align="center">
 <img src="https://img.shields.io/badge/opaldone-opaweb-gray.svg?longCache=true&colorB=brightgreen" alt="Opaweb" />
@@ -15,13 +15,18 @@ A web server for video and audio conferencing that acts as a client for <a href=
 </p>
 <br />
 
-### Built with these excellent Go libraries
-![@gorilla](https://avatars.githubusercontent.com/u/489566?s=15&v=4) https://github.com/gorilla/csrf \
-![@gorilla](https://avatars.githubusercontent.com/u/489566?s=15&v=4) https://github.com/gorilla/websocket \
-![@julienschmidt](https://avatars.githubusercontent.com/u/944947?s=15&v=4) https://github.com/julienschmidt/httprouter \
-![@letsencrypt](https://avatars.githubusercontent.com/u/9289019?s=15&v=4) https://pkg.go.dev/golang.org/x/crypto/acme/autocert
+<h3>
+Built with these excellent libraries
+<img src="https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Blue.svg" height="45px" vertical-align="middle" />
+</h3>
 
-___It doesn't depend on any JavaScript or CSS frameworks; it uses only vanilla JavaScript and pure CSS.___
+* [gorilla-csrf](https://github.com/gorilla/csrf)
+* [gorilla-websocket](https://github.com/gorilla/websocket)
+* [julienschmidt-httprouter](https://github.com/julienschmidt/httprouter)
+* [acme-autocert](https://pkg.go.dev/golang.org/x/crypto/acme/autocert)
+
+_It doesn't depend on any JavaScript or CSS frameworks; it uses only vanilla JavaScript and pure CSS._
+<h1></h1>
 
 ### How to install and compile
 ##### Clonning
@@ -32,7 +37,7 @@ git clone https://github.com/opaldone/opaweb.git
 ```bash
 cd opaweb
 ```
-##### Set your GOPATH to the 'opaweb' directory to keep your global GOPATH clean
+##### Set your GOPATH to the "opaweb" directory to keep your global GOPATH clean
 ```bash
 export GOPATH=$(pwd)
 ```
@@ -63,6 +68,7 @@ cd ../..
 ./u
 ```
 > The "u" script reads sub file "watch_files" \
+> E_FOLDERS - the array of creating empty folders \
 > C_FOLDERS - the array of folders to simple copy \
 > W_FILES - the array of files whose changes are tracked
 ```bash
