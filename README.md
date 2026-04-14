@@ -7,14 +7,7 @@
 <h4 align="center">
 A web server for video and audio conferencing that acts as a client for <a href="https://github.com/opaldone/opachat">opachat</a>. It supports chat session recording on both the server and client sides
 </h4>
-<p align="center">
-<img src="https://img.shields.io/badge/opaldone-opaweb-gray.svg?longCache=true&colorB=brightgreen" alt="Opaweb" />
-<a href="https://sourcegraph.com/github.com/opaldone/opaweb?badge">
-  <img src="https://sourcegraph.com/github.com/opaldone/opaweb/-/badge.svg" alt="Sourcegraph Widget" />
-</a>
-</p>
 <br />
-
 <h3>
 Built with these excellent libraries
 <img src="https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Blue.svg" height="45px" vertical-align="middle" />
