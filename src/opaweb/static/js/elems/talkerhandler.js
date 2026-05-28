@@ -640,10 +640,21 @@ class TalkerHandler {
   }
 
   endSession() {
-    if (!this.pc) return;
+    if (this.pc) {
+      this.pc.close()
+      this.pc = null
+    }
 
-    this.pc.close()
-    this.pc = null
+    if (this.localStream) {
+      this.localStream.getTracks().forEach(tra => tra.stop());
+    }
+
+    if (this.sharedStream) {
+      this.sharedStream.getTracks().forEach(tra => tra.stop());
+    }
+
+    this.localStream = null;
+    this.sharedStream = null;
   }
 
   console_something() {

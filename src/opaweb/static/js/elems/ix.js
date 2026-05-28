@@ -155,6 +155,7 @@ class Starter {
         document.title = re.data.sets.nik;
 
         let ws = new WSchat(this.fun, false);
+        re.data.sets.startURL = url;
         ws.connectWs(re.data.sets);
       })
       .catch(err => {

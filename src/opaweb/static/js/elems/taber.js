@@ -14,8 +14,13 @@ class Taber {
     this.ul_chat = document.getElementById('ta-ul-chat');
     this.ul_users = document.getElementById('ta-ul-users');
 
-    this.inp_chat.addEventListener('keypress', this.inp_chat_press.bind(this));
-    this.btn_chat.addEventListener('click', this.btn_chat_click.bind(this));
+    if (!this.fun.once(this.inp_chat, 'inp_chat_press')) {
+      this.inp_chat.addEventListener('keypress', this.inp_chat_press.bind(this));
+    }
+
+    if (!this.fun.once(this.btn_chat, 'btn_chat_click')) {
+      this.btn_chat.addEventListener('click', this.btn_chat_click.bind(this));
+    }
 
     this.taids = [];
     document.querySelectorAll('.tab-btn').forEach(el => {
@@ -23,10 +28,14 @@ class Taber {
       if (!this.taids.includes(elid)) {
         this.taids.push(elid);
       }
-      el.addEventListener('click', this.tb_click.bind(this));
+      if (!this.fun.once(el, 'tb_click')) {
+        el.addEventListener('click', this.tb_click.bind(this));
+      }
     });
 
-    this.tb_btn_chat.addEventListener('click', this.tb_btn_chat_click.bind(this))
+    if (!this.fun.once(this.tb_btn_chat, 'tb_btn_chat_click')) {
+      this.tb_btn_chat.addEventListener('click', this.tb_btn_chat_click.bind(this))
+    }
   }
 
   _rem_cls(tid) {

@@ -5,6 +5,7 @@ class WSchat {
     this.is_mobile = window.is_mobile();
 
     this.ws = {
+      startURL: '',
       uqroom: null,
       uquser: null,
       nik: null,
@@ -41,7 +42,8 @@ class WSchat {
 
     this.scr_on = 'screen-on';
 
-    this.vw_self = document.getElementById('vw-self');
+    this.vw_self_id = 'vw-self';
+    this.vw_self = document.getElementById(this.vw_self_id);
     this.vid_self = document.getElementById('vid-self');
 
     this.th = null;
@@ -56,6 +58,9 @@ class WSchat {
     this.loga = null;
 
     if (!this.is_virt) {
+      window.addEventListener('offline', this.windowOffline.bind(this));
+      window.addEventListener('online', this.windowOnline.bind(this));
+
       this.ch_sound = document.getElementById('cb-mic');
       this.ch_sound.addEventListener('change', this.avChangeMic.bind(this));
       this.ch_video = document.getElementById('cb-cam');
@@ -130,24 +135,38 @@ class WSchat {
     }
   }
 
+  getDataRot(el) {
+    const lbl = this.fun.parent(el, '.lbl-tha');
+    const cam_btn = lbl.querySelector('.btn-rb');
+    const data_rot  = cam_btn.getAttribute('data-rot');
+
+    return {
+      'lbl': lbl,
+      'data_rot': data_rot
+    };
+  }
+
   getAvRotateSet() {
     if (!this.is_mobile) return '';
 
-    const cam_lbl = this.fun.parent(this.ch_video, '.lbl-tha');
-    const cam_btn = cam_lbl.querySelector('.btn-rb');
-    const data_rot  = cam_btn.getAttribute('data-rot');
+    const dri = this.getDataRot(this.ch_video);
 
-    if (!data_rot) return '';
-    if (cam_lbl.classList.contains('cam-rot')) return 'environment';
+    if (!dri.data_rot) return '';
+
+    if (dri.lbl.classList.contains(dri.data_rot)) {
+      return 'environment';
+    }
 
     return 'user';
   }
 
   getAvSet() {
     let shs = false;
+
     if (this.share_screen) {
       shs = this.share_screen.classList.contains('on');
     }
+
     let se = {
       'sound': this.ch_sound.checked,
       'video': this.ch_video.checked,
@@ -273,14 +292,34 @@ class WSchat {
     lbl.classList.remove('hid');
   }
 
+  clearTalkers() {
+    const dri = this.getDataRot(this.ch_video);
+
+    if (dri.lbl.classList.contains(dri.data_rot)) {
+      dri.lbl.classList.remove(dri.data_rot);
+    }
+
+    this.talkers_cont.querySelectorAll('.vw').forEach(vw => {
+      if (vw.getAttribute('id') === this.vw_self_id) return;
+      vw.remove();
+    });
+
+    this.res.resize();
+  }
+
   wsClear() {
     this.ws.handler = null;
-    if (!this.th) return;
-    this.th.endSession();
+
+    if (this.th) {
+      this.th.endSession();
+    }
+
+    this.th = null;
   }
 
   wsError(ev) {
-    this.showLog("WebSocket error: " + ev.target.url, true);
+    this.showLog('WebSocket error: ' + ev.target.url, true);
+    this.clearTalkers();
   }
 
   wsOpen() {
@@ -342,15 +381,16 @@ class WSchat {
 
   startWs() {
     this.ws.handler = new WebSocket(this.ws.wsurl);
-    this.ws.handler.onerror = this.wsError.bind(this);
     this.ws.handler.onopen = this.wsOpen.bind(this);
     this.ws.handler.onclose = this.wsClose.bind(this);
     this.ws.handler.onmessage = this.wsMessage.bind(this);
+    this.ws.handler.onerror = this.wsError.bind(this);
   }
 
   connectWs(re) {
     this.wsClear();
 
+    this.ws.startURL = re.startURL;
     this.ws.uqroom = re.uqroom;
     this.ws.uquser = re.uquser;
     this.ws.nik = re.nik;
@@ -362,6 +402,46 @@ class WSchat {
     this.ws.iceList = re.iceList;
 
     this.startWs()
+  }
+
+  windowOnline() {
+    let self = this;
+
+    self.showLog('Network is online', false);
+
+    let se = self.getAvSet();
+
+    let obj = {
+      'uqroom': self.ws.uqroom,
+      'nik': self.ws.nik,
+      'mic': se.sound,
+      'cam': se.video
+    };
+
+    let cs = document.getElementsByName("gorilla.csrf.Token")[0].value;
+    let url = self.ws.startURL;
+
+    axios.post(url, obj, {
+      headers: { "X-CSRF-Token": cs }
+    })
+      .then((re) => {
+        re.data.sets.startURL = self.ws.startURL;
+        self.connectWs(re.data.sets);
+      })
+      .catch(err => {
+        self.oin.showLog('windowOnline: ' + err.message, true);
+      });
+  }
+
+  windowOffline() {
+    if (!this.ws) return;
+    if (!this.ws.handler) return;
+
+    this.showLog('Network is offline', true);
+    this.ws.handler.close();
+    this.wsClear();
+
+    this.clearTalkers();
   }
 
   avChange() {
@@ -389,7 +469,7 @@ class WSchat {
 
     this.avChange();
 
-    return  false
+    return false
   }
 
   avChangeCam(ev) {
