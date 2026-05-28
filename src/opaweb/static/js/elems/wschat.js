@@ -429,7 +429,7 @@ class WSchat {
         self.connectWs(re.data.sets);
       })
       .catch(err => {
-        self.oin.showLog('windowOnline: ' + err.message, true);
+        self.showLog('windowOnline: ' + err.message, true);
       });
   }
 
