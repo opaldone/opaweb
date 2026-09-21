@@ -13,9 +13,13 @@
   "Toggle tiles layout": "Переключение расположения плиток",
   "Start record on server": "Начать запись на сервере",
   "Start record on client": "Начать запись на клиенте",
+  "Stop record on client": "Остановить запись на клиенте",
   "Chat": "Чат",
   "Participants": "Участники",
   "Logs": "Логи",
   "Tabs": "Вкладки",
-  "Meeting recordings": "Записи встреч"
+  "Meeting recordings": "Записи встреч",
+  "Settings": "Настройки",
+  "Sound": "Звук",
+  "Video": "Видео"
 }

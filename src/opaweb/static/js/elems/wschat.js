@@ -2,7 +2,6 @@ class WSchat {
   constructor(fun_in, is_virt_in) {
     this.is_virt = is_virt_in;
     this.fun = fun_in;
-    this.is_mobile = window.is_mobile();
 
     this.ws = {
       startURL: '',
@@ -62,9 +61,9 @@ class WSchat {
       window.addEventListener('online', this.windowOnline.bind(this));
 
       this.ch_sound = document.getElementById('cb-mic');
-      this.ch_sound.addEventListener('change', this.avChangeMic.bind(this));
+      this.ch_sound.addEventListener('change', this.avEventChange.bind(this));
       this.ch_video = document.getElementById('cb-cam');
-      this.ch_video.addEventListener('change', this.avChangeCam.bind(this));
+      this.ch_video.addEventListener('change', this.avEventChange.bind(this));
 
       this.share_screen = document.getElementById('share-screen');
       if (this.share_screen) {
@@ -73,7 +72,7 @@ class WSchat {
 
       this.tg_rec = document.getElementById('tg-rec');
       if (this.tg_rec) {
-        this.tg_rec.addEventListener('click', this.toggleRecordClent.bind(this));
+        this.tg_rec.addEventListener('click', this.toggleRecordClient.bind(this));
       }
 
       this.tg_rec_serv = document.getElementById('tg-rec-serv');
@@ -135,31 +134,6 @@ class WSchat {
     }
   }
 
-  getDataRot(el) {
-    const lbl = this.fun.parent(el, '.lbl-tha');
-    const cam_btn = lbl.querySelector('.btn-rb');
-    const data_rot  = cam_btn.getAttribute('data-rot');
-
-    return {
-      'lbl': lbl,
-      'data_rot': data_rot
-    };
-  }
-
-  getAvRotateSet() {
-    if (!this.is_mobile) return '';
-
-    const dri = this.getDataRot(this.ch_video);
-
-    if (!dri.data_rot) return '';
-
-    if (dri.lbl.classList.contains(dri.data_rot)) {
-      return 'environment';
-    }
-
-    return 'user';
-  }
-
   getAvSet() {
     let shs = false;
 
@@ -170,8 +144,7 @@ class WSchat {
     let se = {
       'sound': this.ch_sound.checked,
       'video': this.ch_video.checked,
-      'screen_on': shs,
-      'cam_rot_type': this.getAvRotateSet()
+      'screen_on': shs
     };
 
     this.avSelfChange(se.video, se.sound);
@@ -180,6 +153,8 @@ class WSchat {
   }
 
   rem_button(el, ch) {
+    if (!el) return;
+
     let par = this.fun.parent(el, '.lbl-tha');
 
     if (ch) {
@@ -293,12 +268,6 @@ class WSchat {
   }
 
   clearTalkers() {
-    const dri = this.getDataRot(this.ch_video);
-
-    if (dri.lbl.classList.contains(dri.data_rot)) {
-      dri.lbl.classList.remove(dri.data_rot);
-    }
-
     this.talkers_cont.querySelectorAll('.vw').forEach(vw => {
       if (vw.getAttribute('id') === this.vw_self_id) return;
       vw.remove();
@@ -463,26 +432,13 @@ class WSchat {
     return se;
   }
 
-  avChangeMic(ev) {
+  avEventChange(ev) {
     ev.stopPropagation();
     ev.preventDefault();
 
     this.avChange();
 
     return false
-  }
-
-  avChangeCam(ev) {
-    ev.stopPropagation();
-    ev.preventDefault();
-
-    let se = this.avChange();
-
-    if (se && this.th) {
-      this.th.rotateCamera(se);
-    }
-
-    return false;
   }
 
   toggleShareScreen(ev) {
@@ -499,9 +455,9 @@ class WSchat {
     this.th.toggleRecordServ();
   }
 
-  toggleRecordClent() {
+  toggleRecordClient() {
     if (!this.th) return;
 
-    this.th.toggleRecordClent();
+    this.th.toggleRecordClient();
   }
 }
