@@ -22,26 +22,6 @@ class Starter {
     ev.preventDefault();
   }
 
-  multi_check(pa, ch, rot) {
-    const is_rot = pa.classList.contains(rot);
-
-    if (ch.checked && !is_rot) {
-      pa.classList.add(rot);
-      return;
-    }
-
-    pa.classList.remove(rot);
-
-    if (ch.checked) {
-      pa.classList.remove('checked');
-      ch.checked = false;
-      return;
-    }
-
-    pa.classList.add('checked');
-    ch.checked = true;
-  }
-
   btn_rb_click(ev) {
     ev.stopPropagation();
     ev.preventDefault();
@@ -49,13 +29,6 @@ class Starter {
     let th = ev.currentTarget;
     let pa = this.fun.parent(th, '.lbl-tha');
     let ch = pa.querySelector('.tp-tha-rb');
-    let rot = th.getAttribute('data-rot');
-
-    if (rot && this.is_mobile) {
-      this.multi_check(pa, ch, rot);
-      this.fun.trigger(ch, 'change');
-      return false;
-    }
 
     if (ch.checked) {
       pa.classList.remove('checked');

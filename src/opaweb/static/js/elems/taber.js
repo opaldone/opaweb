@@ -1,5 +1,5 @@
 class Taber {
-  constructor (fun_in, oin) {
+  constructor(fun_in, oin) {
     this.fun = fun_in;
     this.oin = oin;
 
@@ -13,6 +13,8 @@ class Taber {
 
     this.ul_chat = document.getElementById('ta-ul-chat');
     this.ul_users = document.getElementById('ta-ul-users');
+    this.ul_set_sound = document.getElementById('set-list-au');
+    this.ul_set_video = document.getElementById('set-list-vi');
 
     if (!this.fun.once(this.inp_chat, 'inp_chat_press')) {
       this.inp_chat.addEventListener('keypress', this.inp_chat_press.bind(this));
@@ -243,5 +245,54 @@ class Taber {
     li.remove();
 
     this.set_count_users();
+  }
+
+  list_settings(str) {
+    const tra = str.getAudioTracks()[0];
+    let did_au = '';
+    let did_vi = '';
+    if (tra) {
+      did_au = tra.getSettings().deviceId;
+    }
+    const trv = str.getVideoTracks()[0];
+    if (trv) {
+      did_vi = trv.getSettings().deviceId;
+    }
+
+    let lis = `
+        <li id="#LID#" class="item-set#CLS#" data-tp="#TP#">
+          <div class="set-circ"></div>
+          <div class="set-label">#LBL#</div>
+        </li>`;
+
+    window.navigator.mediaDevices.enumerateDevices()
+      .then(list => {
+        list.forEach(de => {
+          let cls = '';
+          let tag = lis;
+          if (de.deviceId == did_au || de.deviceId == did_vi) {
+            cls = ' sel';
+          }
+
+          tag = tag
+            .replace(/#LID#/, de.deviceId)
+            .replace(/#CLS#/, cls)
+            .replace(/#TP#/, de.kind)
+            .replace(/#LBL#/, de.label);
+
+          let tem = document.createElement('template');
+          tem.innerHTML = tag;
+          let li_set = tem.content.querySelector('li');
+
+          if (de.kind === 'audioinput') {
+            this.ul_set_sound.append(li_set);
+          }
+          if (de.kind === 'videoinput') {
+            this.ul_set_video.append(li_set);
+          }
+        });
+
+        this.oin.talker.addClickSettings();
+      });
   }
 }

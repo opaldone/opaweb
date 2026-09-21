@@ -2,15 +2,20 @@
   {{ $sets := (index . "sets") }}
   <div id="v-tabs">
     <div id="v-tabs-btns" class="clearfix">
+      <button id="tb-chat" class="btn-rb tab-btn">
+        <span class="ra-lbl">
+          {{ re "Chat" }}
+        </span>
+      </button>
       <button id="tb-users" class="btn-rb tab-btn">
         <span id="tb-us-cnt" class="ra-cnt">1</span>
         <span class="ra-lbl">
           {{ re "Participants" }}
         </span>
       </button>
-      <button id="tb-chat" class="btn-rb tab-btn">
+      <button id="tb-settings" class="btn-rb tab-btn">
         <span class="ra-lbl">
-          {{ re "Chat" }}
+          {{ re "Settings" }}
         </span>
       </button>
       <button id="tb-logs" class="btn-rb tab-btn">
@@ -37,6 +42,20 @@
           </div>
         </li>
       </ul>
+    </div>
+    <div id="ta-settings" class="v-tabs-content">
+      <div id="ta-settings-container">
+        <div class="set-header">
+          {{ re "Sound" }}
+        </div>
+        <ul id="set-list-au" class="ta-set-list">
+        </ul>
+        <div class="set-header">
+          {{ re "Video" }}
+        </div>
+        <ul id="set-list-vi" class="ta-set-list">
+        </ul>
+      </div>
     </div>
     <div id="ta-list-logs" class="v-tabs-content">
       <ul id="ta-ul-logs" class="ta-ul-list"></ul>
