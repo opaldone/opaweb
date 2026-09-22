@@ -54,20 +54,29 @@ class IxVids {
     if (!filename) return false;
     if (!url) return false;
 
-    if (!confirm('Do You really want to delete the video?')) {
-      return false;
-    }
-
-    let cs = document.getElementsByName('gorilla.csrf.Token')[0].value;
-
-    let obj = {
-      'uqroom': uqroom,
-      'fi': filename
-    };
-
-    axios.post(url, obj, {
-      headers: { "X-CSRF-Token": cs }
+    let dlg = new Dlg({
+      'fun': self.fun
+    });
+    dlg.show({
+      'header': window.lang.re('Confirmation'),
+      'msg': window.lang.re('Do You really want to delete the video?'),
+      'buttons': [
+        {'cap': window.lang.re('Cancel'), 'ret': 0},
+        {'cap': window.lang.re('Delete'), 'ret': 1}
+      ]
     })
+      .then(res => {
+        if (res <= 0) return;
+
+        let cs = document.getElementsByName('gorilla.csrf.Token')[0].value;
+        let obj = {
+          'uqroom': uqroom,
+          'fi': filename
+        };
+        return axios.post(url, obj, {
+          headers: { "X-CSRF-Token": cs }
+        });
+      })
       .then((re) => {
         if (!re.data.res) return false;
         let parli = self.fun.parent(del_btn, '.list-vid-li');

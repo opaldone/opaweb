@@ -22,5 +22,13 @@
   "Meeting recordings": "Записи встреч",
   "Settings": "Настройки",
   "Sound": "Звук",
-  "Video": "Видео"
+  "Video": "Видео",
+  "Confirmation": "Подтверждение",
+  "Do You really want to delete the video?": "Вы действительно хотите удалить видео?",
+  "Cancel": "Отмена",
+  "Delete": "Удалить",
+  "Info": "Информация",
+  "The session is already being recorded.": "Запись сессии уже ведется",
+  "Do You really want to start the server recording?": "Вы действительно хотите начать запись на сервере?",
+  "Start": "Начать"
 }

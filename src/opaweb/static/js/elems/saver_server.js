@@ -128,12 +128,33 @@ class SaverServer {
       return;
     }
 
-    if (document.querySelector('.talker-uset.rec')) return;
+    let dlg = new Dlg({
+      'fun': this.fun
+    });
 
-    if (!confirm('Do You really want to start server recording?')) {
+    if (document.querySelector('.talker-uset.rec')) {
+      dlg.show({
+        'header': window.lang.re('Info'),
+        'msg': window.lang.re('The session is already being recorded.'),
+        'buttons': [
+          {'cap': 'Ok', 'ret': 1}
+        ]
+      });
       return;
     }
 
-    this.startRec();
+    dlg.show({
+      'header': window.lang.re('Confirmation'),
+      'msg': window.lang.re('Do You really want to start the server recording?'),
+      'buttons': [
+        {'cap': window.lang.re('Cancel'), 'ret': 0},
+        {'cap': window.lang.re('Start'), 'ret': 1}
+      ]
+    })
+      .then(res => {
+        if (res <= 0) return;
+
+        this.startRec();
+      });
   }
 }

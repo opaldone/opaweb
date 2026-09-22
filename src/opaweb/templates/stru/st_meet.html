@@ -1,8 +1,12 @@
 {{ define "title" }}{{ re "Chat settings" }}{{ end }}
 {{ define "styles" }}
+  <link rel="stylesheet" type="text/css" href="/static/css/elems/dlg.css" />
   <link rel="stylesheet" type="text/css" href="/static/css/elems/ix.css" />
   <link rel="stylesheet" type="text/css" href="/static/css/elems/room.css" />
   <link rel="stylesheet" type="text/css" href="/static/css/elems/tabs.css" />
+{{ end }}
+{{ define "dlg" }}
+  {{ template "dlg" }}
 {{ end }}
 {{ define "content" }}
   {{ $info := (index . "info") }}
@@ -50,6 +54,7 @@
 {{ define "scripts" }}
   <script src="/static/external/js/axios.js"></script>
   <script src="/static/js/inc/funcs.js"></script>
+  <script src="/static/js/elems/dlg.js"></script>
   <script src="/static/js/inc/lang.js"></script>
   <script src="/static/js/elems/wintools.js"></script>
   <script src="/static/js/elems/saver_client.js"></script>

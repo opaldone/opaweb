@@ -179,7 +179,7 @@ input:-webkit-autofill:valid {
 .btn-rb:focus,
 .tab-btn:focus,
 #ta-chat-send:focus {
-  outline: 1px solid #575757;
+  outline: 2px dashed #575757;
 }
 
 .form-cbs-cont {

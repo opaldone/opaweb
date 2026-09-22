@@ -61,7 +61,7 @@ func WsMeetGet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		"vidlist": vidlist,
 	}
 
-	GenerateHTMLEmp(w, r, info, "stru/st_meet", "stru/camic", "stru/_vidlist")
+	GenerateHTMLEmp(w, r, info, "stru/st_meet", "stru/camic", "stru/_vidlist", "stru/dlg")
 }
 
 func WsMeetStart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
