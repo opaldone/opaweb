@@ -25,6 +25,8 @@
     </head>
     <body>
       {{ .csrfField }}
+      {{ block "dlg" . }}
+      {{ end }}
       {{ block "content" . }}
       {{ end }}
       {{ block "scripts" . }}

@@ -24,6 +24,7 @@ W_FILES=(
     "$src/templates/stru/camic.html;$bin/templates/stru/camic.html"
     "$src/templates/stru/virt.html;$bin/templates/stru/virt.html"
     "$src/templates/stru/_vidlist.html;$bin/templates/stru/_vidlist.html"
+    "$src/templates/stru/dlg.html;$bin/templates/stru/dlg.html"
 # css
     "$src/static/css/inc/reset.css;$bin/static/css/inc/reset.css"
     "$src/static/css/inc/inc_fonts.css;$bin/static/css/inc/inc_fonts.css"
@@ -31,6 +32,7 @@ W_FILES=(
     "$src/static/css/elems/ix.css;$bin/static/css/elems/ix.css"
     "$src/static/css/elems/room.css;$bin/static/css/elems/room.css"
     "$src/static/css/elems/tabs.css;$bin/static/css/elems/tabs.css"
+    "$src/static/css/elems/dlg.css;$bin/static/css/elems/dlg.css"
 # js
     "$src/static/js/inc/funcs.js;$bin/static/js/inc/funcs.js"
     "$src/static/js/inc/lang.js;$bin/static/js/inc/lang.js"
@@ -47,6 +49,7 @@ W_FILES=(
     "$src/static/js/elems/wintools.js;$bin/static/js/elems/wintools.js"
     "$src/static/js/elems/ix_lister.js;$bin/static/js/elems/ix_lister.js"
     "$src/static/js/elems/ix_vids.js;$bin/static/js/elems/ix_vids.js"
+    "$src/static/js/elems/dlg.js;$bin/static/js/elems/dlg.js"
 # bash scripts
     "$src/envir/rec/aru/s_s;$bin/envir/rec/aru/s_s"
     "$src/envir/rec/aru/k_s;$bin/envir/rec/aru/k_s"

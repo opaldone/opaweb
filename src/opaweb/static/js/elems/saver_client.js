@@ -6,13 +6,22 @@ class SaverClient {
     this.recordingData = [];
   }
 
+  toggleHint() {
+    const thint = this.oin.button.getAttribute('data-thint');
+    const hint = this.oin.button.getAttribute('data-hint');
+    this.oin.button.setAttribute('data-hint', thint);
+    this.oin.button.setAttribute('data-thint', hint);
+  }
+
   actButton() {
     if (!this.oin.button) return;
+    this.toggleHint();
     this.oin.button.classList.add('on');
   }
 
   deaButton() {
     if (!this.oin.button) return;
+    this.toggleHint();
     this.oin.button.classList.remove('on');
   }
 
@@ -55,15 +64,7 @@ class SaverClient {
     this.oin.ws.handler.send(JSON.stringify(jo));
   }
 
-  toggleHint() {
-    const thint = this.oin.button.getAttribute('data-thint');
-    const hint = this.oin.button.getAttribute('data-hint');
-    this.oin.button.setAttribute('data-hint', thint);
-    this.oin.button.setAttribute('data-thint', hint);
-  }
-
   startCapture(talkers_in, localS) {
-    this.toggleHint();
     this.actButton();
 
     let auList = [];
@@ -123,7 +124,6 @@ class SaverClient {
   }
 
   stopCapture() {
-    this.toggleHint();
     this.recorder.stop();
   }
 
@@ -145,10 +145,6 @@ class SaverClient {
   toggleRecord(talkers_in, localS) {
     if (this.oin.button.classList.contains('on')) {
       this.stopCapture();
-      return;
-    }
-
-    if (!confirm('Do You really want to start client recording?')) {
       return;
     }
 

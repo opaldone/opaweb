@@ -281,6 +281,10 @@
   overflow: hidden;
 }
 
+#ta-chat-inp:focus {
+  outline: 2px dashed #575757;
+}
+
 #ta-chat-send {
   display: flex;
   align-items: center;
