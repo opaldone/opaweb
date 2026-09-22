@@ -148,6 +148,10 @@ class SaverClient {
       return;
     }
 
+    if (!confirm('Do You really want to start client recording?')) {
+      return;
+    }
+
     this.startCapture(talkers_in, localS);
   }
 }

@@ -16,7 +16,6 @@ class WSchat {
       invis: false,
       virt: false,
       iceList: null,
-      tmrec: null,
       TPS: {
         JOINROOM: "joinroom",
         CANDIDATE: "candidate",
@@ -164,11 +163,6 @@ class WSchat {
     par.remove();
   }
 
-  clear_timer_rec() {
-    clearTimeout(this.ws.tmrec);
-    this.ws.tmrec = null;
-  }
-
   clear_if_block() {
     this.ws.cam = false;
     this.ws.mic = false;
@@ -217,8 +211,7 @@ class WSchat {
       saver_s = new SaverServer(this.fun, {
         'ws': this.ws,
         'button': this.tg_rec_serv,
-        'showLog': this.showLog.bind(this),
-        'clear_timer_rec': this.clear_timer_rec.bind(this)
+        'showLog': this.showLog.bind(this)
       })
     }
 
