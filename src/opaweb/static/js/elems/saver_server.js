@@ -2,15 +2,26 @@ class SaverServer {
   constructor(fun_in, oin_in) {
     this.fun = fun_in;
     this.oin = oin_in;
+    this.tmrec = null;
     this.secs = 0;
-    this.TIMER_SEC = 5;
+    this.TIMER_SEC = 3;
     this.retm = document.getElementById('rec-serv-timer');
   }
 
   getLbl() {
-    const lbl = this.fun.parent(this.oin.button, '.lbl-tha');
+    return this.fun.parent(this.oin.button, '.lbl-tha');
+  }
 
-    return lbl;
+  toggleHint() {
+    const thint = this.oin.button.getAttribute('data-thint');
+    const hint = this.oin.button.getAttribute('data-hint');
+    this.oin.button.setAttribute('data-hint', thint);
+    this.oin.button.setAttribute('data-thint', hint);
+  }
+
+  clear_timer_rec() {
+    clearTimeout(this.tmrec);
+    this.tmrec = null;
   }
 
   updateSecs() {
@@ -18,6 +29,23 @@ class SaverServer {
     const va = dt.toISOString().substring(11, 19);
     this.retm.textContent = va;
     this.secs += this.TIMER_SEC;
+  }
+
+  updateRecTimer(url, cs, obj) {
+    self = this;
+
+    self.tmrec = setTimeout(() => {
+      axios.post(url, obj, {
+        headers: { 'X-CSRF-Token': cs }
+      })
+      .then(() => {
+        self.updateSecs()
+        self.updateRecTimer(url, cs, obj);
+      })
+      .catch(err => {
+        self.oin.showLog('updateRecTimer: ' + err.message, true);
+      })
+    }, (self.TIMER_SEC * 1000));
   }
 
   actButton() {
@@ -35,7 +63,7 @@ class SaverServer {
   deaButton() {
     if (!this.oin.button) return;
 
-    this.oin.clear_timer_rec();
+    this.clear_timer_rec();
 
     const lbl = this.getLbl();
     lbl.classList.remove('tm');
@@ -43,25 +71,9 @@ class SaverServer {
     this.oin.button.classList.remove('on');
   }
 
-  updateRecTimer(url, cs, obj) {
-    self = this;
-
-    self.oin.ws.tmrec = setTimeout(() => {
-      axios.post(url, obj, {
-        headers: { 'X-CSRF-Token': cs }
-      })
-      .then(() => {
-        self.updateSecs()
-        self.updateRecTimer(url, cs, obj);
-      })
-      .catch(err => {
-        self.oin.showLog('updateRecTimer: ' + err.message, true);
-      })
-    }, (self.TIMER_SEC * 1000));
-  }
-
   startRec() {
     let self = this;
+    self.toggleHint();
 
     let obj = {
       'uqroom': self.oin.ws.uqroom
@@ -91,6 +103,7 @@ class SaverServer {
 
   stopRec() {
     let self = this;
+    self.toggleHint();
 
     let obj = {
       'uqroom': self.oin.ws.uqroom
@@ -116,6 +129,10 @@ class SaverServer {
     }
 
     if (document.querySelector('.talker-uset.rec')) return;
+
+    if (!confirm('Do You really want to start server recording?')) {
+      return;
+    }
 
     this.startRec();
   }

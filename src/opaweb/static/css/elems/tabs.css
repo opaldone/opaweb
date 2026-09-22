@@ -39,10 +39,14 @@
   float: left;
   width: 25%;
   background-color: #171717;
-  border-color: #070707;
+  border-color: #474747;
   border-style: solid;
   border-width: 0;
   border-radius: 13px 13px 0 0;
+}
+
+#v-tabs-btns .tab-btn + .tab-btn {
+  border-width: 1px 0 0 1px;
 }
 
 #v-tabs-btns .tab-btn:not(.act):hover {
@@ -50,17 +54,15 @@
 }
 
 #v-tabs-btns .tab-btn:first-child {
-  border-width: 0 0 0 1px;
+  border-width: 1px 0 0 1px;
 }
 
 #v-tabs-btns .tab-btn:last-child {
-  border-width: 0 1px 0 0;
+  border-width: 1px 1px 0 1px;
 }
 
 #v-tabs-btns .tab-btn.act {
   background-color: #373737;
-  box-shadow: none;
-  border-color: #474747;
 }
 
 #v-tabs-btns .tab-btn:focus {
@@ -139,7 +141,10 @@
 }
 
 .ta-set-list {
+  background-color: #171717;
   color: #e7e7e7;
+  border-radius: 13px;
+  overflow: hidden;
 }
 
 .set-header {
@@ -151,7 +156,7 @@
 .ta-set-list li {
   display: flex;
   align-items: center;
-  padding: 7px 0 7px 0;
+  padding: 7px 10px 7px 10px;
   cursor: pointer;
 }
 
@@ -177,6 +182,7 @@
 
 .ta-set-list li:hover {
   color: #fff;
+  background-color: #272727;
 }
 
 .ta-set-list li:hover .set-circ {

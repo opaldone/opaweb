@@ -28,6 +28,7 @@ const (
 	fPrcs            = "prcs"
 	fVid             = "vid"
 	fLogs            = "logs"
+	monitorTimerSec  = 3
 	monitorProcSteps = 10
 	monitorLeaveSec  = 20
 )
@@ -56,7 +57,7 @@ var (
 	mtx         sync.RWMutex
 )
 
-func deleteRoom(roomid string) {
+func deleteTimeRoom(roomid string) {
 	mtx.Lock()
 	defer mtx.Unlock()
 
@@ -154,7 +155,7 @@ func callbash(bashin string, args ...string) {
 }
 
 func monitorProc(roomid string) {
-	ticker := time.NewTicker(3 * time.Second)
+	ticker := time.NewTicker(monitorTimerSec * time.Second)
 	defer ticker.Stop()
 
 	osain := getOsa(roomid)
@@ -193,8 +194,8 @@ func monitorProc(roomid string) {
 	}
 }
 
-func monitorLeave(roomid string) {
-	ticker := time.NewTicker(3 * time.Second)
+func monitorLeaveOrStop(roomid string) {
+	ticker := time.NewTicker(monitorTimerSec * time.Second)
 	defer ticker.Stop()
 
 	for range ticker.C {
@@ -211,6 +212,7 @@ func monitorLeave(roomid string) {
 		dur := now.Sub(old).Round(time.Second).Abs().Seconds()
 
 		if dur >= monitorLeaveSec {
+			deleteTimeRoom(roomid)
 			StopRec(roomid)
 			return
 		}
@@ -236,7 +238,6 @@ func sendStopMessage(roomid string) {
 
 func StopRec(roomid string) {
 	sendStopMessage(roomid)
-	deleteRoom(roomid)
 
 	osa := getOsa(roomid)
 
@@ -307,7 +308,7 @@ func StartRec(roomid string) {
 	)
 
 	go monitorProc(roomid)
-	go monitorLeave(roomid)
+	go monitorLeaveOrStop(roomid)
 }
 
 func GetVidsFromRoom(roomid string) *KeysRevisFile {
