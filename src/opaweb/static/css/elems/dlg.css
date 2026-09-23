@@ -21,6 +21,7 @@ body.show-dlg-screen {
 #dlg-container {
   position: relative;
   width: 35%;
+  max-width: 500px;
   top: 20%;
   left: 50%;
   transform: translateX(-50%);
