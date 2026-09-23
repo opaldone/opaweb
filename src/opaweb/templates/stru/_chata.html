@@ -8,7 +8,6 @@
         </span>
       </button>
       <button id="tb-users" class="btn-rb tab-btn">
-        <span id="tb-us-cnt" class="ra-cnt">1</span>
         <span class="ra-lbl">
           {{ re "Participants" }}
         </span>
@@ -19,7 +18,6 @@
         </span>
       </button>
       <button id="tb-logs" class="btn-rb tab-btn">
-        <span id="tb-err-cnt" class="ra-cnt"></span>
         <span class="ra-lbl">
           {{ re "Logs" }}
         </span>
@@ -34,17 +32,23 @@
         </button>
       </div>
     </div>
-    <div id="ta-list-users" class="v-tabs-content">
-      <ul id="ta-ul-users" class="ta-ul-list">
-        <li id="self-user" class="talker-uset">
-          <div class="talker-uset-nik">
-            {{ $sets.Nik }}
-          </div>
-        </li>
-      </ul>
+    <div id="ta-list-users" class="v-tabs-content mid">
+      <div class="middle-container">
+        <div class="set-header">
+          <span class="set-header-ttl">{{ re "Number of participants" }}:</span>
+          <span id="tb-us-cnt" class="set-header-val"></span>
+        </div>
+        <ul id="ta-ul-users" class="ta-set-list">
+          <li id="self-user" class="talker-uset">
+            <div class="talker-uset-nik">
+              {{ $sets.Nik }}
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div id="ta-settings" class="v-tabs-content">
-      <div id="ta-settings-container">
+    <div id="ta-settings" class="v-tabs-content mid">
+      <div class="middle-container">
         <div class="set-header">
           {{ re "Sound" }}
         </div>
@@ -57,8 +61,14 @@
         </ul>
       </div>
     </div>
-    <div id="ta-list-logs" class="v-tabs-content">
-      <ul id="ta-ul-logs" class="ta-ul-list"></ul>
+    <div id="ta-list-logs" class="v-tabs-content mid">
+      <div class="middle-container">
+        <div class="set-header">
+          <span class="set-header-ttl">{{ re "Number of errors" }}:</span>
+          <span id="tb-err-cnt" class="set-header-val">0</span>
+        </div>
+        <ul id="ta-ul-logs" class="ta-set-list"></ul>
+      </div>
     </div>
   </div>
 {{ end }}

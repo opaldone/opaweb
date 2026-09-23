@@ -77,21 +77,6 @@
   font-weight: 500;
 }
 
-.ra-cnt {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  line-height: 10px;
-  font-weight: normal;
-  color: #fff;
-  width: 20px;
-  height: 20px;
-  margin-right: 3px;
-  background-color: #272727;
-  border-radius: 50%;
-}
-
 .v-tabs-content {
   position: relative;
   display: none;
@@ -103,8 +88,16 @@
   border-radius: 0 0 13px 13px;
 }
 
-#ta-list-users {
+.mid {
   text-align: center;
+}
+
+.middle-container {
+  display: inline-block;
+  width: 65%;
+  color: #fff;
+  line-height: 22px;
+  text-align: left;
 }
 
 .tb-users #ta-list-users {
@@ -127,12 +120,6 @@
   display: block;
 }
 
-#ta-settings-container {
-  display: inline-block;
-  width: 65%;
-  text-align: left;
-}
-
 .ta-ul-list {
   width: 100%;
   height: calc(100% - 65px);
@@ -144,12 +131,29 @@
   background-color: #171717;
   color: #e7e7e7;
   border-radius: 13px;
-  overflow: hidden;
+  max-height: 250px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .set-header {
   padding: 30px 0 10px 0;
   font-weight: bold;
+  color: #78C072;
+}
+
+.set-header span {
+  display: inline-block;
+}
+
+.set-header-ttl {
+  font-weight: normal;
+  color: #a7a7a7;
+}
+
+.set-header-val {
+  margin-left: 7px;
+  font-weight: 500;
   color: #78C072;
 }
 
@@ -187,20 +191,6 @@
 
 .ta-set-list li:hover .set-circ {
   border-color: #d7d7d7;
-}
-
-#ta-ul-users {
-  display: inline-block;
-  width: 65%;
-  color: #fff;
-  line-height: 22px;
-  text-align: left;
-}
-
-#ta-ul-users li + li {
-  margin-top: 7px;
-  padding-top: 5px;
-  border-top: 1px solid #474747;
 }
 
 #ta-ul-chat li {
@@ -301,16 +291,9 @@
   background-color: #010911;
 }
 
-#ta-ul-logs {
-  padding: 20px 0 20px 0;
-}
-
 #ta-ul-logs li {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
   color: #fff;
-  padding: 7px 13px 9px;
 }
 
 #ta-ul-logs li span {
@@ -320,7 +303,7 @@
 }
 
 #ta-ul-logs li.err {
-  background-color: #773311;
+  color: #f51;
 }
 
 .lg-msg {
@@ -333,21 +316,8 @@
   color: #a7a7a7;
 }
 
-#tb-err-cnt {
-  display: none;
-  background-color: #731;
-}
-
-#tb-err-cnt.sh {
-  display: inline-flex;
-}
-
 .talker-uset {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding-left: 20px;
-  padding-right: 20px;
 }
 
 #ws-st-list .talker-uset {
@@ -410,7 +380,7 @@
     width: 55%;
   }
 
-  #ta-ul-users, #ta-settings-container {
+  .middle-container {
     width: 85%;
   }
 }

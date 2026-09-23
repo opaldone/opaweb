@@ -1,7 +1,6 @@
 class IxLister {
   constructor() {
     this.list = null;
-    this.cnt_el = null;
     this.tm_ix = null;
     this.users = {};
 
@@ -14,25 +13,8 @@ class IxLister {
   }
 
   new_el(litID, va) {
-    let cls = 'talker-uset';
-    if (va.mic) {
-      cls = cls + ' mic';
-    }
-    if (va.cam) {
-      cls = cls + ' cam';
-    }
-    if (va.recording) {
-      cls = cls + ' rec';
-    }
-    if (va.crecording) {
-      cls = cls + ' crec';
-    }
-    let lis = `
-        <li id="#LID#" class="${cls}">
+    let lis = `<li id="#LID#" class="ws-st-li">
           <div class="talker-uset-nik">#NIK#</div>
-          <div class="talker-user-icos">
-          ${window.icos()}
-          </div>
         </li>`;
 
     lis = lis
@@ -48,38 +30,12 @@ class IxLister {
 
   make_el(litID, va) {
     const el = document.getElementById(litID);
-
-    if (!el) {
-      return this.new_el(litID, va);
-    }
-
-    el.classList.remove('mic');
-    el.classList.remove('cam');
-    el.classList.remove('rec');
-    el.classList.remove('crec');
-
-    if (va.mic) {
-      el.classList.add('mic');
-    }
-
-    if (va.cam) {
-      el.classList.add('cam');
-    }
-
-    if (va.recording) {
-      el.classList.add('rec');
-    }
-
-    if (va.crecording) {
-      el.classList.add('crec');
-    }
-
-    return null;
+    if (el) return null;
+    return this.new_el(litID, va);
   }
 
   sync_cnt() {
     const cnt = this.list.children.length;
-    this.cnt_el.innerHTML = cnt;
 
     if (cnt > 0) {
       this.list.classList.add('sh');
@@ -90,7 +46,7 @@ class IxLister {
   }
 
   del_items() {
-    this.list.querySelectorAll('.talker-uset').forEach(el => {
+    this.list.querySelectorAll('.ws-st-li').forEach(el => {
       const lid = el.id;
 
       if (this.users[lid]) return;
@@ -118,7 +74,6 @@ class IxLister {
 
   axi() {
     this.list = document.getElementById('ws-st-list');
-    this.cnt_el = document.getElementById('ws-st-he-cnt');
 
     if (!this.list) {
       this.cl_tm();
@@ -148,11 +103,7 @@ class IxLister {
           const va = js.list[k];
 
           this.users[litID] = {
-            'nik': va.nik,
-            'mic': va.mic,
-            'cam': va.cam,
-            'recording': va.recording,
-            'crecording': va.crecording
+            'nik': va.nik
           };
         });
 

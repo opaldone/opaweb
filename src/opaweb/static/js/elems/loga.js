@@ -6,15 +6,12 @@ class Loga {
 
   ref_log_cnt() {
     this.lg_errors.innerHTML = '';
-    this.lg_errors.classList.remove('sh')
 
     let errs = this.lg.querySelectorAll('.err');
+    console.log(errs);
     let cc = errs.length;
 
-    if (cc == 0) return;
-
     this.lg_errors.textContent = cc;
-    this.lg_errors.classList.add('sh');
   }
 
   fm_tm(co) {
