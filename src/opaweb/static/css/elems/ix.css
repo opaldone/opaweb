@@ -34,6 +34,7 @@ input:-webkit-autofill:valid {
 #ws-cont {
   display: none;
   width: 30%;
+  max-width: 600px;
 }
 
 .done #ws-cont {
@@ -120,7 +121,7 @@ input:-webkit-autofill:valid {
 }
 
 .form-btns {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .form-btn {
@@ -281,6 +282,14 @@ input:-webkit-autofill:valid {
   border: 1px solid #3f3f3f;
 }
 
+#ws-part-container {
+  display: none;
+}
+
+#ws-part-container.sh {
+  display: block;
+}
+
 .ws-st-he {
   display: flex;
   align-items: center;
@@ -313,7 +322,7 @@ input:-webkit-autofill:valid {
 }
 
 #list-vid .cen {
-  color: #979797;
+  color: #78C072;
   text-align: center;
 }
 
@@ -361,25 +370,12 @@ input:-webkit-autofill:valid {
   margin-left: 7px;
 }
 
-.li-st-ico {
-  line-height: 0;
-  margin-left: -3px;
+.li-st-tm {
+  color: #78C072;
 }
 
-.li-st-tm, .li-st-sz {
+.li-st-sz {
   color: #979797;
-}
-
-.li-st-ico {
-  line-height: 0;
-}
-
-#ws-st-list {
-  display: none;
-}
-
-#ws-st-list.sh {
-  display: block;
 }
 
 /*

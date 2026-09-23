@@ -2,6 +2,7 @@
   position: absolute;
   z-index: 5;
   width: 45%;
+  max-width: 800px;
   right: 50%;
   transform: translateX(50%);
   top: -100%;
@@ -164,6 +165,10 @@
   cursor: pointer;
 }
 
+.ta-set-list li + li {
+  border-top: 1px solid #272727;
+}
+
 .set-circ {
   position: relative;
   width: 16px;
@@ -318,11 +323,6 @@
 
 .talker-uset {
   justify-content: space-between;
-}
-
-#ws-st-list .talker-uset {
-  padding-left: 0;
-  padding-right: 0;
 }
 
 .talker-user-icos {

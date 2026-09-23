@@ -40,15 +40,15 @@
 }
 
 #share-screen.on svg path {
-  stroke: #c7c7c7;
+  fill: #c7c7c7;
 }
 
 #tg-rec.on svg path {
-  stroke: #c7c7c7;
+  fill: #c7c7c7;
 }
 
 #tg-rec-serv.on svg path {
-  stroke: #c7c7c7;
+  fill: #c7c7c7;
 }
 
 #tg-tiles.on svg path {

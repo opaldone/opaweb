@@ -1,6 +1,7 @@
 class IxLister {
   constructor() {
     this.list = null;
+    this.ws_part_cont = null;
     this.tm_ix = null;
     this.users = {};
 
@@ -38,11 +39,11 @@ class IxLister {
     const cnt = this.list.children.length;
 
     if (cnt > 0) {
-      this.list.classList.add('sh');
+      this.ws_part_cont.classList.add('sh');
       return;
     }
 
-    this.list.classList.remove('sh');
+    this.ws_part_cont.classList.remove('sh');
   }
 
   del_items() {
@@ -74,8 +75,9 @@ class IxLister {
 
   axi() {
     this.list = document.getElementById('ws-st-list');
+    this.ws_part_cont = document.getElementById('ws-part-container');
 
-    if (!this.list) {
+    if (!this.list || !this.ws_part_cont) {
       this.cl_tm();
       return false;
     }
