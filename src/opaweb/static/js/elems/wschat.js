@@ -201,6 +201,7 @@ class WSchat {
   talk() {
     let saver_c = null;
     let saver_s = null;
+    let sharer_s = null;
 
     if (!this.is_virt) {
       saver_c = new SaverClient({
@@ -213,11 +214,18 @@ class WSchat {
         'button': this.tg_rec_serv,
         'showLog': this.showLog.bind(this)
       })
+
+      sharer_s = new Sharer({
+        'ws': this.ws,
+        'button': this.share_screen,
+        'fnSe': this.getAvSet.bind(this)
+      });
     }
 
     let ob = {
       'saver_client': saver_c,
       'saver_server': saver_s,
+      'sharer': sharer_s,
       'ws': this.ws,
       'id_talkers': this.id_talkers,
       'talkers_cont': this.talkers_cont,
@@ -434,12 +442,10 @@ class WSchat {
     return false
   }
 
-  toggleShareScreen(ev) {
+  toggleShareScreen() {
     if (!this.th) return;
 
-    let btn = ev.currentTarget;
-
-    this.th.toggleScreen(btn, this.getAvSet.bind(this));
+    this.th.toggleShareScreen();
   }
 
   toggleRecordServ() {

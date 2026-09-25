@@ -13,7 +13,6 @@ class TalkerHandler {
     this.talkers = {};
     this.pc = null;
     this.localStream = null;
-    this.sharedStream = null;
     this.media = {
       audio: false,
       video: false
@@ -47,65 +46,6 @@ class TalkerHandler {
     el.classList.remove('cam');
     if (oc.mic) el.classList.add('mic');
     if (oc.cam) el.classList.add('cam');
-  }
-
-  shareScreen(some_button, fnSe) {
-    window.navigator.mediaDevices.getDisplayMedia({'audio': false, 'video': true})
-      .then(st => {
-        some_button.classList.add('on');
-
-        let se = fnSe();
-
-        let jo = {
-          'tp': this.oin.ws.TPS.SCRE,
-          'content': JSON.stringify(se)
-        };
-        this.oin.ws.handler.send(JSON.stringify(jo));
-
-        this.sharedStream = st;
-        let vtr = this.sharedStream.getVideoTracks()[0];
-
-        vtr.onended = () => {
-          this.videoBack(some_button, fnSe);
-        };
-
-        this.pc.getSenders().forEach((sender) => {
-          if (!sender) return;
-          if (!sender.track) return;
-
-          if (sender.track.kind == 'video') {
-            sender.replaceTrack(vtr);
-          }
-        });
-      })
-      .catch(e => {
-        console.error(e);
-      });
-  }
-
-  videoBack(some_button, fnSe) {
-    this.sharedStream.getTracks().forEach(tra => tra.stop());
-    this.sharedStream = null;
-    some_button.classList.remove('on');
-
-    let se = fnSe();
-
-    let jo = {
-      'tp': this.oin.ws.TPS.SCRE,
-      'content': JSON.stringify(se)
-    };
-    this.oin.ws.handler.send(JSON.stringify(jo));
-
-    this.localStream.getTracks().forEach(tr => {
-      if (tr.kind != 'video') return;
-      this.pc.getSenders().forEach((sender) => {
-        if (!sender) return;
-        if (!sender.track) return;
-        if (sender.track.kind != 'video') return;
-
-        sender.replaceTrack(tr);
-      });
-    });
   }
 
   avcChanged(cont) {
@@ -158,17 +98,6 @@ class TalkerHandler {
     this.oin.res.resize();
   }
 
-  toggleScreen(some_button, fnSe) {
-    if (!this.pc) return;
-
-    if (this.sharedStream) {
-      this.videoBack(some_button, fnSe)
-      return;
-    }
-
-    this.shareScreen(some_button, fnSe)
-  }
-
   startedRecord(cont, clstag) {
     let js = JSON.parse(cont);
 
@@ -207,6 +136,13 @@ class TalkerHandler {
 
     let el = oc['el_uset'];
     el.classList.remove(clstag);
+  }
+
+  toggleShareScreen() {
+    if (!this.pc) return;
+    if (!this.oin.sharer) return;
+
+    this.oin.sharer.toggleShare(this.pc);
   }
 
   toggleRecordServ() {
@@ -708,13 +644,11 @@ class TalkerHandler {
     if (this.localStream) {
       this.localStream.getTracks().forEach(tra => tra.stop());
     }
-
-    if (this.sharedStream) {
-      this.sharedStream.getTracks().forEach(tra => tra.stop());
-    }
-
     this.localStream = null;
-    this.sharedStream = null;
+
+    if (this.oin.sharer) {
+      this.oin.sharer.endSessionShare();
+    }
   }
 
   console_something() {

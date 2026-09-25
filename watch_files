@@ -44,6 +44,7 @@ W_FILES=(
     "$src/static/js/elems/virt.js;$bin/static/js/elems/virt.js"
     "$src/static/js/elems/saver_client.js;$bin/static/js/elems/saver_client.js"
     "$src/static/js/elems/saver_server.js;$bin/static/js/elems/saver_server.js"
+    "$src/static/js/elems/sharer.js;$bin/static/js/elems/sharer.js"
     "$src/static/js/elems/taber.js;$bin/static/js/elems/taber.js"
     "$src/static/js/elems/loga.js;$bin/static/js/elems/loga.js"
     "$src/static/js/elems/wintools.js;$bin/static/js/elems/wintools.js"
