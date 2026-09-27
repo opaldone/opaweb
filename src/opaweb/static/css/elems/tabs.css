@@ -27,10 +27,10 @@
 #v-tabs-btns .tab-btn.notif:before {
   position: absolute;
   content: '';
-  top: 3px;
-  right: 3px;
-  width: 10px;
-  height: 10px;
+  top: 5px;
+  right: 5px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background-color: #ff5511;
 }

@@ -46,6 +46,8 @@ W_FILES=(
     "$src/static/js/elems/saver_server.js;$bin/static/js/elems/saver_server.js"
     "$src/static/js/elems/sharer.js;$bin/static/js/elems/sharer.js"
     "$src/static/js/elems/taber.js;$bin/static/js/elems/taber.js"
+    "$src/static/js/elems/tab_chat.js;$bin/static/js/elems/tab_chat.js"
+    "$src/static/js/elems/tab_users.js;$bin/static/js/elems/tab_users.js"
     "$src/static/js/elems/loga.js;$bin/static/js/elems/loga.js"
     "$src/static/js/elems/wintools.js;$bin/static/js/elems/wintools.js"
     "$src/static/js/elems/ix_lister.js;$bin/static/js/elems/ix_lister.js"
