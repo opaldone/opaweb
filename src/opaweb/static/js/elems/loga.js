@@ -8,7 +8,6 @@ class Loga {
     this.lg_errors.innerHTML = '';
 
     let errs = this.lg.querySelectorAll('.err');
-    console.log(errs);
     let cc = errs.length;
 
     this.lg_errors.textContent = cc;

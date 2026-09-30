@@ -1,0 +1,18 @@
+{{ define "_ta_users" }}
+  {{ $sets := (index . "sets") }}
+  <div id="ta-list-users" class="v-tabs-content mid">
+    <div class="middle-container">
+      <div class="set-header">
+        <span class="set-header-ttl">{{ re "Number of participants" }}:</span>
+        <span id="tb-us-cnt" class="set-header-val"></span>
+      </div>
+      <ul id="ta-ul-users" class="ta-set-list">
+        <li id="self-user" class="talker-uset">
+          <div class="talker-uset-nik">
+            {{ $sets.Nik }}
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+{{ end }}

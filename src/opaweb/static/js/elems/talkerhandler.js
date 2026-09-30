@@ -13,7 +13,6 @@ class TalkerHandler {
     this.talkers = {};
     this.pc = null;
     this.localStream = null;
-    this.sharedStream = null;
     this.media = {
       audio: false,
       video: false
@@ -47,65 +46,6 @@ class TalkerHandler {
     el.classList.remove('cam');
     if (oc.mic) el.classList.add('mic');
     if (oc.cam) el.classList.add('cam');
-  }
-
-  shareScreen(some_button, fnSe) {
-    window.navigator.mediaDevices.getDisplayMedia({'audio': false, 'video': true})
-      .then(st => {
-        some_button.classList.add('on');
-
-        let se = fnSe();
-
-        let jo = {
-          'tp': this.oin.ws.TPS.SCRE,
-          'content': JSON.stringify(se)
-        };
-        this.oin.ws.handler.send(JSON.stringify(jo));
-
-        this.sharedStream = st;
-        let vtr = this.sharedStream.getVideoTracks()[0];
-
-        vtr.onended = () => {
-          this.videoBack(some_button, fnSe);
-        };
-
-        this.pc.getSenders().forEach((sender) => {
-          if (!sender) return;
-          if (!sender.track) return;
-
-          if (sender.track.kind == 'video') {
-            sender.replaceTrack(vtr);
-          }
-        });
-      })
-      .catch(e => {
-        console.error(e);
-      });
-  }
-
-  videoBack(some_button, fnSe) {
-    this.sharedStream.getTracks().forEach(tra => tra.stop());
-    this.sharedStream = null;
-    some_button.classList.remove('on');
-
-    let se = fnSe();
-
-    let jo = {
-      'tp': this.oin.ws.TPS.SCRE,
-      'content': JSON.stringify(se)
-    };
-    this.oin.ws.handler.send(JSON.stringify(jo));
-
-    this.localStream.getTracks().forEach(tr => {
-      if (tr.kind != 'video') return;
-      this.pc.getSenders().forEach((sender) => {
-        if (!sender) return;
-        if (!sender.track) return;
-        if (sender.track.kind != 'video') return;
-
-        sender.replaceTrack(tr);
-      });
-    });
   }
 
   avcChanged(cont) {
@@ -158,17 +98,6 @@ class TalkerHandler {
     this.oin.res.resize();
   }
 
-  toggleScreen(some_button, fnSe) {
-    if (!this.pc) return;
-
-    if (this.sharedStream) {
-      this.videoBack(some_button, fnSe)
-      return;
-    }
-
-    this.shareScreen(some_button, fnSe)
-  }
-
   startedRecord(cont, clstag) {
     let js = JSON.parse(cont);
 
@@ -207,6 +136,13 @@ class TalkerHandler {
 
     let el = oc['el_uset'];
     el.classList.remove(clstag);
+  }
+
+  toggleShareScreen() {
+    if (!this.pc) return;
+    if (!this.oin.sharer) return;
+
+    this.oin.sharer.toggleShare(this.pc, this.localStream);
   }
 
   toggleRecordServ() {
@@ -346,95 +282,6 @@ class TalkerHandler {
     }
   }
 
-  setting_change(did, tp) {
-    const vid = tp === 'videoinput';
-
-    let old_tr = null;
-    if (vid) {
-      old_tr = this.localStream.getVideoTracks()[0];
-    } else {
-      old_tr = this.localStream.getAudioTracks()[0];
-    }
-
-    if (!old_tr) return;
-
-    old_tr.stop();
-
-    let new_media = {
-      audio: {
-        deviceId: {
-          exact: did
-        },
-        echoCancellation: true,
-        noiseSuppression: true,
-        autoGainControl: true
-      }
-    };
-
-    if (vid) {
-      new_media = {
-        video: {
-          deviceId: {
-            exact: did
-          }
-        }
-      };
-    }
-
-    window.navigator.mediaDevices.getUserMedia(new_media)
-      .then(st => {
-        let new_tr = null;
-        if (vid) {
-          new_tr = st.getVideoTracks()[0];
-        } else {
-          new_tr = st.getAudioTracks()[0];
-        }
-
-        this.localStream.removeTrack(old_tr);
-        this.localStream.addTrack(new_tr);
-
-        this.pc.getSenders().forEach((sender) => {
-          if (!sender) return;
-          if (!sender.track) return;
-          if (vid && sender.track.kind != 'video') return;
-          if (!vid && sender.track.kind != 'audio') return;
-
-          sender.replaceTrack(new_tr);
-        });
-      })
-      .catch(e => {
-        console.log(e);
-        this.oin.showLog('setting_change: ' + e.message, true);
-      });
-  }
-
-  setting_click(e) {
-    if (!this.pc) return;
-    if (!this.localStream) return;
-
-    const el = e.currentTarget;
-    const did = el.getAttribute('id');
-    const tp = el.getAttribute('data-tp');
-    const sel = document.querySelector('.item-set.sel[data-tp="' + tp + '"]');
-
-    if (sel.getAttribute('id') == did) return;
-
-    if (sel) {
-      sel.classList.remove('sel');
-    }
-    el.classList.add('sel');
-
-    this.setting_change(did, tp);
-  }
-
-  addClickSettings() {
-    document.querySelectorAll('.item-set').forEach(el => {
-      if (!this.fun.once(el, 'setting_click')) {
-        el.addEventListener('click', this.setting_click.bind(this));
-      }
-    });
-  }
-
   startShow(self_mic) {
     if (this.oin.ws.virt) {
       this.call(true);
@@ -454,7 +301,7 @@ class TalkerHandler {
           this.changeLocalStream(self_mic);
         }
 
-        this.taber.list_settings(this.localStream);
+        this.taber.list_settings();
 
         this.call(false);
       })
@@ -708,13 +555,11 @@ class TalkerHandler {
     if (this.localStream) {
       this.localStream.getTracks().forEach(tra => tra.stop());
     }
-
-    if (this.sharedStream) {
-      this.sharedStream.getTracks().forEach(tra => tra.stop());
-    }
-
     this.localStream = null;
-    this.sharedStream = null;
+
+    if (this.oin.sharer) {
+      this.oin.sharer.endSessionShare();
+    }
   }
 
   console_something() {

@@ -3,26 +3,12 @@ class Taber {
     this.fun = fun_in;
     this.oin = oin;
 
+    this.tab_chat = new TabChat(this.fun, this.oin);
+    this.tab_users = new TabUsers();
+    this.tab_set = new TabSet(this.fun, this.oin);
+
     this.tb = document.getElementById('v-tabs');
-    this.tb_btn_chat = document.getElementById('tab-tb-chat');
-    this.tb_us_cnt = document.getElementById('tb-us-cnt');
-    this.tb_chat = document.getElementById('tb-chat');
-
-    this.inp_chat = document.getElementById('ta-chat-inp');
-    this.btn_chat = document.getElementById('ta-chat-send');
-
-    this.ul_chat = document.getElementById('ta-ul-chat');
-    this.ul_users = document.getElementById('ta-ul-users');
-    this.ul_set_sound = document.getElementById('set-list-au');
-    this.ul_set_video = document.getElementById('set-list-vi');
-
-    if (!this.fun.once(this.inp_chat, 'inp_chat_press')) {
-      this.inp_chat.addEventListener('keypress', this.inp_chat_press.bind(this));
-    }
-
-    if (!this.fun.once(this.btn_chat, 'btn_chat_click')) {
-      this.btn_chat.addEventListener('click', this.btn_chat_click.bind(this));
-    }
+    this.tb_btn_toggle = document.getElementById('tab-tb-toggle');
 
     this.taids = [];
     document.querySelectorAll('.tab-btn').forEach(el => {
@@ -35,8 +21,8 @@ class Taber {
       }
     });
 
-    if (!this.fun.once(this.tb_btn_chat, 'tb_btn_chat_click')) {
-      this.tb_btn_chat.addEventListener('click', this.tb_btn_chat_click.bind(this))
+    if (!this.fun.once(this.tb_btn_toggle, 'tb_btn_toggle_click')) {
+      this.tb_btn_toggle.addEventListener('click', this.tb_btn_toggle_click.bind(this))
     }
   }
 
@@ -66,27 +52,7 @@ class Taber {
     this._clear_cls(tid);
   }
 
-  _clear_notif() {
-    if (!this.tb.classList.contains('tb-chat')) return;
-
-    setTimeout(() => {
-      this.tb_btn_chat.classList.remove('notif');
-      this.tb_chat.classList.remove('notif');
-      this.inp_chat.focus();
-    }, 300);
-  }
-
-  _add_notif() {
-    if (
-      !this.tb.classList.contains('tb-chat') ||
-      (this.tb.classList.contains('tb-chat') && !this.tb.classList.contains('sh'))
-    ) {
-      this.tb_btn_chat.classList.add('notif');
-      this.tb_chat.classList.add('notif');
-    }
-  }
-
-  tb_btn_chat_click(e) {
+  tb_btn_toggle_click(e) {
     let btn = e.currentTarget;
     let isa = btn.classList.contains('act');
 
@@ -101,7 +67,7 @@ class Taber {
       this._click_tid(tid);
     }
 
-    this._clear_notif();
+    this.tab_chat._clear_notif(this.tb, this.tb_btn_toggle);
     this.tb.classList.add('sh');
     btn.classList.add('act');
   }
@@ -110,189 +76,22 @@ class Taber {
     let btn = e.currentTarget;
     let tid = btn.getAttribute('id');
     this._click_tid(tid);
-    this._clear_notif();
-  }
-
-  send_message(msg) {
-    if (msg.length == 0) return;
-
-    let jo = {
-      'tp': this.oin.ws.TPS.CHAT,
-      'content': msg
-    };
-
-    this.oin.ws.handler.send(JSON.stringify(jo));
-  }
-
-  btn_chat_click() {
-    let msg = this.inp_chat.value;
-
-    this.send_message(msg);
-
-    this.inp_chat.value = '';
-    this.inp_chat.focus();
-  }
-
-  inp_chat_press(e) {
-    e.stopPropagation();
-
-    if (
-      e.ctrlKey ||
-      e.shiftKey
-    ) {
-      return true;
-    }
-
-    if (e.keyCode == 13) {
-      this.fun.trigger(this.btn_chat, 'click');
-      e.preventDefault();
-      return false;
-    }
-
-    return true;
-  }
-
-  create_el_chat(nik_in, msg_in) {
-    let isme = nik_in.length == 0;
-
-    let lis = '<li#CLS#> \
-      <div class="chat-item-cont">';
-
-    if (!isme) {
-      lis += '<div class="cha-nik">#NIK#</div>';
-    }
-
-    lis += '<div class="cha-msg">#MSG#</div> \
-      <div class="ch-tm">#TM#</div> \
-      </div> \
-      </li>';
-
-    if (isme) {
-      lis = lis.replace(/#CLS#/g, ' class="me"');
-    } else {
-      lis = lis.replace(/#CLS#/g, '');
-    }
-
-    let d = new Date();
-    let tms = ('0' + d.getHours().toString()).slice(-2) + ':' +
-      ('0' + d.getMinutes().toString()).slice(-2);
-
-    let msg_p = msg_in.replace(/(?:\r\n|\r|\n)/g, '<br>');
-
-    lis = lis
-      .replace(/#NIK#/, nik_in)
-      .replace(/#TM#/, tms)
-      .replace(/#MSG#/, msg_p);
-
-    let tem = document.createElement('template');
-    tem.innerHTML = lis;
-    tem.content.querySelectorAll('li').forEach(li => {
-      this.ul_chat.append(li);
-    });
-
-    this.ul_chat.scrollTop = this.ul_chat.scrollHeight;
-
-    this._add_notif();
-  }
-
-  set_count_users() {
-    let len = this.ul_users.children.length;
-    this.tb_us_cnt.textContent = len;
+    this.tab_chat._clear_notif(this.tb, this.tb_btn_toggle);
   }
 
   create_el_user(elid, oc) {
-    let cls = 'talker-uset';
-
-    if (oc.recording) {
-      cls = cls + ' ' + 'rec';
-    }
-
-    if (oc.crecording) {
-      cls = cls + ' ' + 'crec';
-    }
-
-    let lis = `
-        <li id="#LID#" class="${cls}">
-          <div class="talker-uset-nik">#NIK#</div>
-          <div class="talker-user-icos">
-          ${window.icos()}
-          </div>
-        </li>`;
-
-    let litID = elid + '-lit';
-
-    lis = lis
-      .replace(/#LID#/, litID)
-      .replace(/#NIK#/, oc.nik);
-
-    let tem = document.createElement('template');
-    tem.innerHTML = lis;
-    let li_set = tem.content.querySelector('li');
-    this.ul_users.prepend(li_set);
-
-    this.set_count_users();
-
-    return li_set;
+    return this.tab_users.create_el_user(elid, oc);
   }
 
   remove_el_user(elid) {
-    let litID = elid + '-lit';
-
-    let li = document.getElementById(litID);
-
-    if (!li) return;
-
-    li.remove();
-
-    this.set_count_users();
+    this.tab_users.remove_el_user(elid);
   }
 
-  list_settings(str) {
-    const tra = str.getAudioTracks()[0];
-    let did_au = '';
-    let did_vi = '';
-    if (tra) {
-      did_au = tra.getSettings().deviceId;
-    }
-    const trv = str.getVideoTracks()[0];
-    if (trv) {
-      did_vi = trv.getSettings().deviceId;
-    }
+  create_el_chat(nik_in, msg_in) {
+    this.tab_chat.create_el_chat(nik_in, msg_in, this.tb, this.tb_btn_toggle);
+  }
 
-    let lis = `
-        <li id="#LID#" class="item-set#CLS#" data-tp="#TP#">
-          <div class="set-circ"></div>
-          <div class="set-label">#LBL#</div>
-        </li>`;
-
-    window.navigator.mediaDevices.enumerateDevices()
-      .then(list => {
-        list.forEach(de => {
-          let cls = '';
-          let tag = lis;
-          if (de.deviceId == did_au || de.deviceId == did_vi) {
-            cls = ' sel';
-          }
-
-          tag = tag
-            .replace(/#LID#/, de.deviceId)
-            .replace(/#CLS#/, cls)
-            .replace(/#TP#/, de.kind)
-            .replace(/#LBL#/, de.label);
-
-          let tem = document.createElement('template');
-          tem.innerHTML = tag;
-          let li_set = tem.content.querySelector('li');
-
-          if (de.kind === 'audioinput') {
-            this.ul_set_sound.append(li_set);
-          }
-          if (de.kind === 'videoinput') {
-            this.ul_set_video.append(li_set);
-          }
-        });
-
-        this.oin.talker.addClickSettings();
-      });
+  list_settings() {
+    this.tab_set.list_settings();
   }
 }

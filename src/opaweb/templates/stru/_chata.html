@@ -1,5 +1,4 @@
 {{ define "_chata" }}
-  {{ $sets := (index . "sets") }}
   <div id="v-tabs">
     <div id="v-tabs-btns" class="clearfix">
       <button id="tb-chat" class="btn-rb tab-btn">
@@ -23,52 +22,9 @@
         </span>
       </button>
     </div>
-    <div id="ta-list-chat" class="v-tabs-content">
-      <ul id="ta-ul-chat" class="ta-ul-list"></ul>
-      <div id="ta-chat-bot-con">
-        <textarea id="ta-chat-inp" rows="1"></textarea>
-        <button id="ta-chat-send">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="#78C072" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 11 14-6-6 14-2-6-6-2Z"/></svg>
-        </button>
-      </div>
-    </div>
-    <div id="ta-list-users" class="v-tabs-content mid">
-      <div class="middle-container">
-        <div class="set-header">
-          <span class="set-header-ttl">{{ re "Number of participants" }}:</span>
-          <span id="tb-us-cnt" class="set-header-val"></span>
-        </div>
-        <ul id="ta-ul-users" class="ta-set-list">
-          <li id="self-user" class="talker-uset">
-            <div class="talker-uset-nik">
-              {{ $sets.Nik }}
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div id="ta-settings" class="v-tabs-content mid">
-      <div class="middle-container">
-        <div class="set-header">
-          {{ re "Sound" }}
-        </div>
-        <ul id="set-list-au" class="ta-set-list">
-        </ul>
-        <div class="set-header">
-          {{ re "Video" }}
-        </div>
-        <ul id="set-list-vi" class="ta-set-list">
-        </ul>
-      </div>
-    </div>
-    <div id="ta-list-logs" class="v-tabs-content mid">
-      <div class="middle-container">
-        <div class="set-header">
-          <span class="set-header-ttl">{{ re "Number of errors" }}:</span>
-          <span id="tb-err-cnt" class="set-header-val">0</span>
-        </div>
-        <ul id="ta-ul-logs" class="ta-set-list"></ul>
-      </div>
-    </div>
+    {{ template "_ta_chat" }}
+    {{ template "_ta_users" . }}
+    {{ template "_ta_settings" }}
+    {{ template "_ta_logs" }}
   </div>
 {{ end }}
