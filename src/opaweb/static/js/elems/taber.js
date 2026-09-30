@@ -5,13 +5,10 @@ class Taber {
 
     this.tab_chat = new TabChat(this.fun, this.oin);
     this.tab_users = new TabUsers();
+    this.tab_set = new TabSet(this.fun, this.oin);
 
     this.tb = document.getElementById('v-tabs');
-    this.tb_btn_chat = document.getElementById('tab-tb-chat');
-    this.tb_chat = document.getElementById('tb-chat');
-
-    this.ul_set_sound = document.getElementById('set-list-au');
-    this.ul_set_video = document.getElementById('set-list-vi');
+    this.tb_btn_toggle = document.getElementById('tab-tb-toggle');
 
     this.taids = [];
     document.querySelectorAll('.tab-btn').forEach(el => {
@@ -24,8 +21,8 @@ class Taber {
       }
     });
 
-    if (!this.fun.once(this.tb_btn_chat, 'tb_btn_chat_click')) {
-      this.tb_btn_chat.addEventListener('click', this.tb_btn_chat_click.bind(this))
+    if (!this.fun.once(this.tb_btn_toggle, 'tb_btn_toggle_click')) {
+      this.tb_btn_toggle.addEventListener('click', this.tb_btn_toggle_click.bind(this))
     }
   }
 
@@ -55,7 +52,7 @@ class Taber {
     this._clear_cls(tid);
   }
 
-  tb_btn_chat_click(e) {
+  tb_btn_toggle_click(e) {
     let btn = e.currentTarget;
     let isa = btn.classList.contains('act');
 
@@ -70,7 +67,7 @@ class Taber {
       this._click_tid(tid);
     }
 
-    this.tab_chat._clear_notif(this.tb, this.tb_btn_chat, this.tb_chat);
+    this.tab_chat._clear_notif(this.tb, this.tb_btn_toggle);
     this.tb.classList.add('sh');
     btn.classList.add('act');
   }
@@ -79,111 +76,22 @@ class Taber {
     let btn = e.currentTarget;
     let tid = btn.getAttribute('id');
     this._click_tid(tid);
-    this.tab_chat._clear_notif(this.tb, this.tb_btn_chat, this.tb_chat);
-  }
-
-  set_count_users() {
-    let len = this.ul_users.children.length;
-    this.tb_us_cnt.textContent = len;
+    this.tab_chat._clear_notif(this.tb, this.tb_btn_toggle);
   }
 
   create_el_user(elid, oc) {
-    let cls = 'talker-uset';
-
-    if (oc.recording) {
-      cls = cls + ' ' + 'rec';
-    }
-
-    if (oc.crecording) {
-      cls = cls + ' ' + 'crec';
-    }
-
-    let lis = `
-        <li id="#LID#" class="${cls}">
-          <div class="talker-uset-nik">#NIK#</div>
-          <div class="talker-user-icos">
-          ${window.icos()}
-          </div>
-        </li>`;
-
-    let litID = elid + '-lit';
-
-    lis = lis
-      .replace(/#LID#/, litID)
-      .replace(/#NIK#/, oc.nik);
-
-    let tem = document.createElement('template');
-    tem.innerHTML = lis;
-    let li_set = tem.content.querySelector('li');
-    this.ul_users.prepend(li_set);
-
-    this.set_count_users();
-
-    return li_set;
+    return this.tab_users.create_el_user(elid, oc);
   }
 
   remove_el_user(elid) {
-    let litID = elid + '-lit';
-
-    let li = document.getElementById(litID);
-
-    if (!li) return;
-
-    li.remove();
-
-    this.set_count_users();
-  }
-
-  list_settings(str) {
-    const tra = str.getAudioTracks()[0];
-    let did_au = '';
-    let did_vi = '';
-    if (tra) {
-      did_au = tra.getSettings().deviceId;
-    }
-    const trv = str.getVideoTracks()[0];
-    if (trv) {
-      did_vi = trv.getSettings().deviceId;
-    }
-
-    let lis = `
-        <li id="#LID#" class="item-set#CLS#" data-tp="#TP#">
-          <div class="set-circ"></div>
-          <div class="set-label">#LBL#</div>
-        </li>`;
-
-    window.navigator.mediaDevices.enumerateDevices()
-      .then(list => {
-        list.forEach(de => {
-          let cls = '';
-          let tag = lis;
-          if (de.deviceId == did_au || de.deviceId == did_vi) {
-            cls = ' sel';
-          }
-
-          tag = tag
-            .replace(/#LID#/, de.deviceId)
-            .replace(/#CLS#/, cls)
-            .replace(/#TP#/, de.kind)
-            .replace(/#LBL#/, de.label);
-
-          let tem = document.createElement('template');
-          tem.innerHTML = tag;
-          let li_set = tem.content.querySelector('li');
-
-          if (de.kind === 'audioinput') {
-            this.ul_set_sound.append(li_set);
-          }
-          if (de.kind === 'videoinput') {
-            this.ul_set_video.append(li_set);
-          }
-        });
-
-        this.oin.talker.addClickSettings();
-      });
+    this.tab_users.remove_el_user(elid);
   }
 
   create_el_chat(nik_in, msg_in) {
-    this.tab_chat.create_el_chat(nik_in, msg_in, this.tb, this.tb_btn_chat, this.tb_chat);
+    this.tab_chat.create_el_chat(nik_in, msg_in, this.tb, this.tb_btn_toggle);
+  }
+
+  list_settings() {
+    this.tab_set.list_settings();
   }
 }

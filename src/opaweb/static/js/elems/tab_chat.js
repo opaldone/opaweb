@@ -1,8 +1,9 @@
 class TabChat {
-  constructor(fun_in, oin) {
+  constructor(fun_in, oin_in) {
     this.fun = fun_in;
-    this.oin = oin;
+    this.oin = oin_in;
 
+    this.tb_chat = document.getElementById('tb-chat');
     this.inp_chat = document.getElementById('ta-chat-inp');
     this.btn_chat = document.getElementById('ta-chat-send');
     this.ul_chat = document.getElementById('ta-ul-chat');
@@ -16,23 +17,23 @@ class TabChat {
     }
   }
 
-  _clear_notif(tb_in, tb_btn_chat_in, tb_chat_in) {
+  _clear_notif(tb_in, tb_btn_toggle_in) {
     if (!tb_in.classList.contains('tb-chat')) return;
 
     setTimeout(() => {
-      tb_btn_chat_in.classList.remove('notif');
-      tb_chat_in.classList.remove('notif');
+      tb_btn_toggle_in.classList.remove('notif');
+      this.tb_chat.classList.remove('notif');
       this.inp_chat.focus();
     }, 300);
   }
 
-  _add_notif(tb_in, tb_btn_chat_in, tb_chat_in) {
+  _add_notif(tb_in, tb_btn_toggle_in) {
     if (
       !tb_in.classList.contains('tb-chat') ||
       (tb_in.classList.contains('tb-chat') && !tb_in.classList.contains('sh'))
     ) {
-      tb_btn_chat_in.classList.add('notif');
-      tb_chat_in.classList.add('notif');
+      tb_btn_toggle_in.classList.add('notif');
+      this.tb_chat.classList.add('notif');
     }
   }
 
@@ -75,7 +76,7 @@ class TabChat {
     return true;
   }
 
-  create_el_chat(nik_in, msg_in, tb_in, tb_btn_chat_in, tb_chat_in) {
+  create_el_chat(nik_in, msg_in, tb_in, tb_btn_toggle_in) {
     let isme = nik_in.length == 0;
 
     let lis = '<li#CLS#> \
@@ -115,6 +116,6 @@ class TabChat {
 
     this.ul_chat.scrollTop = this.ul_chat.scrollHeight;
 
-    this._add_notif(tb_in, tb_btn_chat_in, tb_chat_in);
+    this._add_notif(tb_in, tb_btn_toggle_in);
   }
 }

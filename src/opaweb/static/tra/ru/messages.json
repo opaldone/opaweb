@@ -33,5 +33,8 @@
   "Do You really want to start the server recording?": "Вы действительно хотите начать запись на сервере?",
   "Start": "Начать",
   "Number of participants": "Количество участников",
-  "Number of errors": "Количество ошибок"
+  "Number of errors": "Количество ошибок",
+  "Suppress background noise": "Подавление фонового шума",
+  "Automatically adjust microphone volume": "Автоматически регулировать громкость микрофона",
+  "Echo cancellation": "Подавление эха"
 }

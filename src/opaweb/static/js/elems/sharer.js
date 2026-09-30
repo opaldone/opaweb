@@ -23,68 +23,64 @@ class Sharer {
     this.oin.button.classList.remove('on');
   }
 
-  videoBack() {
-    this.sharedStream.getTracks().forEach(tra => tra.stop());
-    this.sharedStream = null;
-
-    this.deaButton();
-
+  _sendWs() {
     let se = this.oin.fnSe();
+
     let jo = {
       'tp': this.oin.ws.TPS.SCRE,
       'content': JSON.stringify(se)
     };
     this.oin.ws.handler.send(JSON.stringify(jo));
-
-    // this.localStream.getTracks().forEach(tr => {
-      // if (tr.kind != 'video') return;
-      // this.pc.getSenders().forEach((sender) => {
-        // if (!sender) return;
-        // if (!sender.track) return;
-        // if (sender.track.kind != 'video') return;
-
-        // sender.replaceTrack(tr);
-      // });
-    // });
   }
 
-  shareScreen(pcin) {
-    window.navigator.mediaDevices.getDisplayMedia({
-      'video': true,
-      'audio': {
-        echoCancellation: true,
-        noiseSuppression: true,
-        autoGainControl: true
-      },
+  videoBack(pcin, lsin) {
+    this.sharedStream.getTracks().forEach(tra => tra.stop());
+    this.sharedStream = null;
+
+    this.deaButton();
+
+    this._sendWs();
+
+    lsin.getTracks().forEach(tr => {
+      if (tr.kind != 'video') return;
+      pcin.getSenders().forEach((sender) => {
+        if (!sender) return;
+        if (!sender.track) return;
+        if (sender.track.kind != 'video') return;
+
+        sender.replaceTrack(tr);
+      });
+    });
+  }
+
+  shareScreen(pcin, lsin) {
+    const nm_vi = {
+      video: true,
+      audio: false,
       preferCurrentTab: false,
       selfBrowserSurface: "exclude",
       monitorTypeSurfaces: "include"
-    })
+    }
+
+    window.navigator.mediaDevices.getDisplayMedia(nm_vi)
       .then(st => {
         this.actButton();
 
-        let se = this.oin.fnSe();
-
-        let jo = {
-          'tp': this.oin.ws.TPS.SCRE,
-          'content': JSON.stringify(se)
-        };
-        this.oin.ws.handler.send(JSON.stringify(jo));
+        this._sendWs();
 
         this.sharedStream = st;
         let vtr = this.sharedStream.getVideoTracks()[0];
 
         vtr.onended = () => {
-          this.videoBack();
+          this.videoBack(pcin, lsin);
         };
 
         pcin.getSenders().forEach((sender) => {
           if (!sender) return;
           if (!sender.track) return;
+          if (sender.track.kind != 'video') return;
 
-          if (sender.track.kind == 'video') {
-            sender.replaceTrack(vtr);
-          }
+          sender.replaceTrack(vtr);
         });
       })
       .catch(e => {
@@ -93,13 +89,13 @@ class Sharer {
       });
   }
 
-  toggleShare(pcin) {
+  toggleShare(pcin, lsin) {
     if (this.sharedStream) {
-      this.videoBack();
+      this.videoBack(pcin, lsin);
       return;
     }
 
-    this.shareScreen(pcin);
+    this.shareScreen(pcin, lsin);
   }
 
   endSessionShare() {

@@ -101,6 +101,15 @@
   text-align: left;
 }
 
+.hid-set-con {
+  display: none;
+}
+
+#ta-settings.is-au #mc-au,
+#ta-settings.is-vi #mc-vi {
+  display: block;
+}
+
 .tb-users #ta-list-users {
   display: block;
 }
@@ -137,6 +146,10 @@
   overflow-y: auto;
 }
 
+.ta-set-list + .ta-set-list {
+  margin-top: 13px;
+}
+
 .set-header {
   padding: 30px 0 10px 0;
   font-weight: bold;
@@ -169,13 +182,20 @@
   border-top: 1px solid #272727;
 }
 
-.set-circ {
+.set-circ, .set-rec {
   position: relative;
   width: 16px;
   height: 16px;
   border: 2px solid #979797;
-  border-radius: 50%;
   margin-right: 7px;
+}
+
+.set-circ {
+  border-radius: 50%;
+}
+
+.set-rec {
+  border-radius: 3px;
 }
 
 .sel .set-circ::before {
@@ -189,12 +209,23 @@
   background-color: #fff;
 }
 
+.sel .set-rec::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 6px;
+  height: 6px;
+  background-color: #fff;
+}
+
 .ta-set-list li:hover {
   color: #fff;
   background-color: #272727;
 }
 
-.ta-set-list li:hover .set-circ {
+.ta-set-list li:hover .set-circ,
+.ta-set-list li:hover .set-rec {
   border-color: #d7d7d7;
 }
 
@@ -302,7 +333,6 @@
 }
 
 #ta-ul-logs li span {
-  float: left;
   font-size: 12px;
   line-height: 18px;
 }
