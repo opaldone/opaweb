@@ -142,7 +142,7 @@ class TalkerHandler {
     if (!this.pc) return;
     if (!this.oin.sharer) return;
 
-    this.oin.sharer.toggleShare(this.pc, this.localStream);
+    this.oin.sharer.toggleShare(this);
   }
 
   toggleRecordServ() {
