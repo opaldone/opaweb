@@ -33,7 +33,25 @@ class Sharer {
     this.oin.ws.handler.send(JSON.stringify(jo));
   }
 
-  videoBack(pcin, lsin) {
+  _viself(th, st) {
+    if (!th.oin.vid_self) return;
+    if (!th.oin.vw_self) return;
+
+    if (st) {
+      th.oin.vid_self.srcObject = st;
+      document.body.classList.add(th.oin.scr_on);
+      th.oin.vw_self.classList.add(th.oin.scr_on);
+      th.oin.res.resize();
+      return;
+    }
+
+    th.oin.vid_self.srcObject = th.localStream;
+    document.body.classList.remove(th.oin.scr_on);
+    th.oin.vw_self.classList.remove(th.oin.scr_on);
+    th.oin.res.resize();
+  }
+
+  videoBack(th) {
     this.sharedStream.getTracks().forEach(tra => tra.stop());
     this.sharedStream = null;
 
@@ -41,9 +59,12 @@ class Sharer {
 
     this._sendWs();
 
-    lsin.getTracks().forEach(tr => {
+    this._viself(th, null);
+
+    th.localStream.getTracks().forEach(tr => {
       if (tr.kind != 'video') return;
-      pcin.getSenders().forEach((sender) => {
+
+      th.pc.getSenders().forEach((sender) => {
         if (!sender) return;
         if (!sender.track) return;
         if (sender.track.kind != 'video') return;
@@ -53,7 +74,7 @@ class Sharer {
     });
   }
 
-  shareScreen(pcin, lsin) {
+  shareScreen(th) {
     const nm_vi = {
       video: true,
       audio: false,
@@ -68,14 +89,16 @@ class Sharer {
 
         this._sendWs();
 
+        this._viself(th, st);
+
         this.sharedStream = st;
         let vtr = this.sharedStream.getVideoTracks()[0];
 
         vtr.onended = () => {
-          this.videoBack(pcin, lsin);
+          this.videoBack(th);
         };
 
-        pcin.getSenders().forEach((sender) => {
+        th.pc.getSenders().forEach((sender) => {
           if (!sender) return;
           if (!sender.track) return;
           if (sender.track.kind != 'video') return;
@@ -89,13 +112,13 @@ class Sharer {
       });
   }
 
-  toggleShare(pcin, lsin) {
+  toggleShare(th) {
     if (this.sharedStream) {
-      this.videoBack(pcin, lsin);
+      this.videoBack(th);
       return;
     }
 
-    this.shareScreen(pcin, lsin);
+    this.shareScreen(th);
   }
 
   endSessionShare() {
