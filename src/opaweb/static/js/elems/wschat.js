@@ -63,6 +63,7 @@ class WSchat {
       this.ch_sound.addEventListener('change', this.avEventChange.bind(this));
       this.ch_video = document.getElementById('cb-cam');
       this.ch_video.addEventListener('change', this.avEventChange.bind(this));
+      this.cam_button = document.getElementById('camera-button');
 
       this.share_screen = document.getElementById('share-screen');
       if (this.share_screen) {
@@ -129,7 +130,8 @@ class WSchat {
     }
 
     if (this.th) {
-      this.th.changeLocalStream(mic);
+      this.th.changeLocalMic(mic);
+      this.th.changeLocalCam(cam);
     }
   }
 
@@ -236,7 +238,8 @@ class WSchat {
       'on_rec_serv': this.on_rec_serv.bind(this),
       'vid_self': null,
       'vw_self': null,
-      'scr_on': this.scr_on
+      'scr_on': this.scr_on,
+      'camNotAccess': this.camNotAccess.bind(this)
     };
 
     if (this.vid_self) {
@@ -440,6 +443,11 @@ class WSchat {
     this.avChange();
 
     return false
+  }
+
+  camNotAccess() {
+    if (!this.ch_video.checked) return;
+    this.fun.trigger(this.cam_button, 'click');
   }
 
   toggleShareScreen() {

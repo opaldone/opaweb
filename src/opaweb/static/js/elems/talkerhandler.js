@@ -200,6 +200,10 @@ class TalkerHandler {
         autoGainControl: true
       }
     }
+
+    if (this.media.video) {
+      this.media.video = this.oin.ws.cam;
+    }
   }
 
   onIceCandidate(e) {
@@ -251,6 +255,29 @@ class TalkerHandler {
     this.oin.who_con();
   }
 
+  checkVideoTrack() {
+    if (this.localStream.getVideoTracks()[0]) return;
+
+    const wi = 640;
+    const he = 480;
+
+    const canv = document.createElement('canvas');
+    canv.width = wi;
+    canv.height = he;
+
+    const ctx = canv.getContext('2d');
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, wi, he);
+
+    const stre = canv.captureStream(10);
+    const du = stre.getVideoTracks()[0];
+
+    du.isDummy = true;
+    du.enabled = false;
+
+    this.localStream.addTrack(du);
+  }
+
   call(invis) {
     this.pc = new RTCPeerConnection(this.servers)
 
@@ -258,6 +285,8 @@ class TalkerHandler {
     this.pc.ontrack = this.clientOnTrack.bind(this);
 
     if (this.localStream != null) {
+      this.checkVideoTrack();
+
       this.localStream.getTracks().forEach(track => {
         this.pc.addTrack(track, this.localStream)
       });
@@ -298,7 +327,7 @@ class TalkerHandler {
 
         if (this.oin.vw_self) {
           this.doMeter(this.localStream, this.oin.vw_self);
-          this.changeLocalStream(self_mic);
+          this.changeLocalMic(self_mic);
         }
 
         this.taber.list_settings();
@@ -531,7 +560,7 @@ class TalkerHandler {
       });
   }
 
-  changeLocalStream(mic) {
+  changeLocalMic(mic) {
     if (!this.localStream) return;
 
     const autr = this.localStream.getAudioTracks();
@@ -544,6 +573,44 @@ class TalkerHandler {
 
       tr.enabled = false;
     });
+  }
+
+  changeLocalCam(cam) {
+    if (!cam) return;
+    if (!this.pc) return;
+    if (!this.localStream) return;
+
+    const du = this.localStream.getVideoTracks()[0];
+
+    if (!du) return;
+    if (!du.isDummy) return;
+
+    window.navigator.mediaDevices.getUserMedia({audio: false, video: true})
+      .then(stre => {
+        du.stop();
+        this.localStream.removeTrack(du);
+
+        const retra = stre.getVideoTracks()[0];
+        this.localStream.addTrack(retra);
+
+        this.localStream.getTracks().forEach(vit => {
+          if (vit.kind != 'video') return;
+
+          this.pc.getSenders().forEach((sender) => {
+            if (!sender) return;
+            if (!sender.track) return;
+            if (sender.track.kind != 'video') return;
+
+            sender.replaceTrack(vit);
+          });
+        });
+
+        this.taber.list_settings();
+      })
+      .catch(e => {
+        this.oin.camNotAccess();
+        this.oin.showLog('changeLocalCam: ' + e.message, true);
+      });
   }
 
   endSession() {
