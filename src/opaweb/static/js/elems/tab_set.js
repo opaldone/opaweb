@@ -177,6 +177,13 @@ class TabSet {
     window.navigator.mediaDevices.enumerateDevices()
       .then(list => {
         list.forEach(de => {
+          if (de.deviceId.length == 0) return;
+          if (!['audioinput', 'videoinput'].includes(de.kind)) {
+            return;
+          }
+          const exli = document.getElementById(de.deviceId);
+          if (exli) return;
+
           let cls = '';
           let tag = lis;
           if (de.deviceId == did_au || de.deviceId == did_vi) {
