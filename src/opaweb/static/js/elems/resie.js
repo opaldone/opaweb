@@ -158,7 +158,6 @@ class Resie {
     this.hid_show_tg_tiles(m_chi);
 
     if (
-      // !this.is_virt &&
       this.show_one &&
       m_chi > 1 &&
       m_chi <= this._posi_cnt
