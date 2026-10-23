@@ -26,6 +26,10 @@ class TalkerHandler {
         'talker': this,
         'ws': this.oin.ws
       });
+
+      this.picvid = new PicVid({
+        'talker': this
+      });
     }
   }
 
@@ -46,6 +50,10 @@ class TalkerHandler {
     el.classList.remove('cam');
     if (oc.mic) el.classList.add('mic');
     if (oc.cam) el.classList.add('cam');
+
+    if (this.picvid) {
+      this.picvid.changePica();
+    }
   }
 
   avcChanged(cont) {
@@ -74,27 +82,29 @@ class TalkerHandler {
     let oc = this.talkers[js.strid];
     if (!oc) return;
 
+    oc.screen_on = js.screen_on;
+    oc.mic = js.mic;
+    oc.cam = js.cam;
     let cont_vw = document.getElementById(js.strid);
 
-    if (js.screen_on) {
+    if (oc.screen_on) {
       cont_vw.classList.add(this.oin.scr_on);
       document.body.classList.add(this.oin.scr_on);
-      if (!oc.screen_on) oc.screen_on = true;
+
+      if (this.picvid) {
+        this.picvid.changePica();
+      }
+
       this.oin.res.resize();
 
       return;
     }
 
     cont_vw.classList.remove(this.oin.scr_on);
-
-    if (oc.screen_on) oc.screen_on = false;
-
-    oc.mic = js.mic;
-    oc.cam = js.cam;
+    document.body.classList.remove(this.oin.scr_on);
 
     this.setMicCam(oc);
 
-    document.body.classList.remove(this.oin.scr_on);
     this.oin.res.resize();
   }
 
@@ -311,7 +321,7 @@ class TalkerHandler {
     }
   }
 
-  startShow(self_mic) {
+  startShow() {
     if (this.oin.ws.virt) {
       this.call(true);
       return;
@@ -327,7 +337,7 @@ class TalkerHandler {
 
         if (this.oin.vw_self) {
           this.doMeter(this.localStream, this.oin.vw_self);
-          this.changeLocalMic(self_mic);
+          this.changeLocalMic();
         }
 
         this.taber.list_settings();
@@ -560,13 +570,13 @@ class TalkerHandler {
       });
   }
 
-  changeLocalMic(mic) {
+  changeLocalMic() {
     if (!this.localStream) return;
 
     const autr = this.localStream.getAudioTracks();
 
     autr.forEach(tr => {
-      if (mic) {
+      if (this.oin.ws.mic) {
         tr.enabled = true;
         return;
       }
@@ -575,8 +585,9 @@ class TalkerHandler {
     });
   }
 
-  changeLocalCam(cam) {
-    if (!cam) return;
+  changeLocalCam() {
+    if (!this.oin.ws.cam) return;
+    if (this.oin.ws.screen_on) return;
     if (!this.pc) return;
     if (!this.localStream) return;
 

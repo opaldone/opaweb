@@ -58,6 +58,7 @@ W_FILES=(
     "$src/static/js/elems/ix_lister.js;$bin/static/js/elems/ix_lister.js"
     "$src/static/js/elems/ix_vids.js;$bin/static/js/elems/ix_vids.js"
     "$src/static/js/elems/dlg.js;$bin/static/js/elems/dlg.js"
+    "$src/static/js/elems/picvid.js;$bin/static/js/elems/picvid.js"
 # bash scripts
     "$src/envir/rec/aru/s_s;$bin/envir/rec/aru/s_s"
     "$src/envir/rec/aru/k_s;$bin/envir/rec/aru/k_s"
