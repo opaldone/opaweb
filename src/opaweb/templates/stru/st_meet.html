@@ -22,7 +22,14 @@
             {{ template "camic" (index $info "camic") }}
           </div>
           <div id="ws-form-cont">
-            <input class="inp-wid" type="text" id="nik-name" value="{{ index $info "nikin" }}" placeholder="{{ re "Enter name" }}" />
+            <input
+              id="nik-name"
+              class="inp-wid"
+              type="text"
+              value="{{ index $info "nikin" }}"
+              placeholder="{{ re "Enter name" }}"
+              autocomplete="off"
+            />
             <div class="form-btns clearfix">
               <input id="uqroom" type="hidden" value="{{ index $info "uqroom" }}">
               {{ if gt (len (index $info "st")) 0 }}
@@ -63,6 +70,7 @@
   <script src="/static/js/elems/tab_set.js"></script>
   <script src="/static/js/elems/taber.js"></script>
   <script src="/static/js/elems/loga.js"></script>
+  <script src="/static/js/elems/picvid.js"></script>
   <script src="/static/js/elems/talkerhandler.js"></script>
   <script src="/static/js/elems/wschat.js"></script>
   <script src="/static/js/elems/ix_lister.js"></script>

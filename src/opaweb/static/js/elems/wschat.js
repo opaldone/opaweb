@@ -13,6 +13,7 @@ class WSchat {
       handler: null,
       mic: false,
       cam: false,
+      screen_on: false,
       invis: false,
       virt: false,
       iceList: null,
@@ -120,22 +121,7 @@ class WSchat {
     this.res.resize();
   }
 
-  avSelfChange(cam, mic) {
-    if (!this.vid_self) return;
-
-    if (cam) {
-      this.vw_self.classList.add('cam');
-    } else {
-      this.vw_self.classList.remove('cam');
-    }
-
-    if (this.th) {
-      this.th.changeLocalMic(mic);
-      this.th.changeLocalCam(cam);
-    }
-  }
-
-  getAvSet() {
+  getCheckers() {
     let shs = false;
 
     if (this.share_screen) {
@@ -148,7 +134,48 @@ class WSchat {
       'screen_on': shs
     };
 
-    this.avSelfChange(se.video, se.sound);
+    return se;
+  }
+
+  setWsCheckers() {
+    const se = this.getCheckers();
+    this.ws.mic = se.sound;
+    this.ws.cam = se.video;
+    this.ws.screen_on = se.screen_on;
+
+    return se;
+  }
+
+  wsCheckersChanged() {
+    if (!this.vid_self) return;
+
+    const se = this.setWsCheckers();
+
+    if (this.ws.cam) {
+      this.vw_self.classList.add('cam');
+    } else {
+      this.vw_self.classList.remove('cam');
+    }
+
+    if (this.th) {
+      this.th.changeLocalMic();
+      this.th.changeLocalCam();
+    }
+
+    return se;
+  }
+
+  sendWsCheckers(msgcon) {
+    if (!this.ws.handler) return null;
+
+    const se = this.wsCheckersChanged()
+
+    let jo = {
+      'tp': msgcon,
+      'content': JSON.stringify(se)
+    };
+
+    this.ws.handler.send(JSON.stringify(jo));
 
     return se;
   }
@@ -179,7 +206,7 @@ class WSchat {
     this.rem_button(this.tg_rec_serv, false);
     this.rem_button(this.tg_rec, false);
 
-    this.avSelfChange(false, false);
+    this.wsCheckersChanged();
   }
 
   who_con() {
@@ -220,7 +247,7 @@ class WSchat {
       sharer_s = new Sharer({
         'ws': this.ws,
         'button': this.share_screen,
-        'fnSe': this.getAvSet.bind(this)
+        'sendWsCheckers': this.sendWsCheckers.bind(this)
       });
     }
 
@@ -251,9 +278,9 @@ class WSchat {
     }
 
     this.th = new TalkerHandler(this.fun, ob);
-    this.th.startShow(this.ws.mic)
+    this.th.startShow()
 
-    this.avSelfChange(this.ws.cam, this.ws.mic);
+    this.wsCheckersChanged();
 
     this.res.resize();
   }
@@ -282,12 +309,13 @@ class WSchat {
 
   wsClear() {
     this.ws.handler = null;
-
     if (this.th) {
       this.th.endSession();
     }
-
     this.th = null;
+    if (this.vw_self) {
+      this.vw_self.classList.remove('cam');
+    }
   }
 
   wsError(ev) {
@@ -382,13 +410,13 @@ class WSchat {
 
     self.showLog('Network is online', false);
 
-    let se = self.getAvSet();
+    this.wsCheckersChanged();
 
     let obj = {
       'uqroom': self.ws.uqroom,
       'nik': self.ws.nik,
-      'mic': se.sound,
-      'cam': se.video
+      'mic': self.ws.mic,
+      'cam': self.ws.cam
     };
 
     let cs = document.getElementsByName("gorilla.csrf.Token")[0].value;
@@ -417,37 +445,18 @@ class WSchat {
     this.clearTalkers();
   }
 
-  avChange() {
-    if (!this.ws.handler) return null;
-
-    let se = this.getAvSet();
-
-    if (se.screen_on && !se.video) {
-      se.video = true;
-    }
-
-    let jo = {
-      'tp': this.ws.TPS.AVC,
-      'content': JSON.stringify(se)
-    };
-
-    this.ws.handler.send(JSON.stringify(jo));
-
-    return se;
+  camNotAccess() {
+    if (!this.ch_video.checked) return;
+    this.fun.trigger(this.cam_button, 'click');
   }
 
   avEventChange(ev) {
     ev.stopPropagation();
     ev.preventDefault();
 
-    this.avChange();
+    this.sendWsCheckers(this.ws.TPS.AVC);
 
     return false
-  }
-
-  camNotAccess() {
-    if (!this.ch_video.checked) return;
-    this.fun.trigger(this.cam_button, 'click');
   }
 
   toggleShareScreen() {

@@ -1,7 +1,7 @@
 class Taber {
-  constructor(fun_in, oin) {
+  constructor(fun_in, oin_in) {
     this.fun = fun_in;
-    this.oin = oin;
+    this.oin = oin_in;
 
     this.tab_chat = new TabChat(this.fun, this.oin);
     this.tab_users = new TabUsers();

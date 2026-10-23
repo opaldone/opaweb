@@ -24,13 +24,7 @@ class Sharer {
   }
 
   _sendWs() {
-    let se = this.oin.fnSe();
-
-    let jo = {
-      'tp': this.oin.ws.TPS.SCRE,
-      'content': JSON.stringify(se)
-    };
-    this.oin.ws.handler.send(JSON.stringify(jo));
+    this.oin.sendWsCheckers(this.oin.ws.TPS.SCRE);
   }
 
   _viself(th, st) {
