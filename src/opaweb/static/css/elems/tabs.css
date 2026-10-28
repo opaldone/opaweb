@@ -272,17 +272,42 @@
   text-align: right;
 }
 
+.cha-msg,
+.cha-msg-file {
+  border-radius: 0 0 13px 13px;
+  background-color: #272727;
+}
+
 .cha-msg {
   padding: 10px 45px 12px 10px;
   line-height: 22px;
   color: #fff;
-  background-color: #272727;
-  border-radius: 0 0 13px 13px;
 }
 
-#ta-ul-chat li.me .cha-msg {
+.cha-msg-file {
+  padding: 10px 45px 10px 10px;
+  line-height: 0;
+}
+
+#ta-ul-chat li.me .cha-msg,
+#ta-ul-chat li.me .cha-msg-file {
   background: inherit;
   border-radius: 13px;
+}
+
+.ch-img-cont {
+  width: 120px;
+  height: auto;
+  border-radius: 13px;
+  overflow: hidden;
+}
+.cha-msg-file img {
+  width: 100%;
+  cursor: pointer;
+}
+
+.cha-msg-file .ch-img-cont:hover {
+  outline: 2px dashed #575757;
 }
 
 #ta-chat-bot-con {
@@ -311,7 +336,8 @@
   outline: 2px dashed #575757;
 }
 
-#ta-chat-send {
+.ta-chat-button {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -323,8 +349,17 @@
   cursor: pointer;
 }
 
-#ta-chat-send:hover {
+.ta-chat-button:hover {
   background-color: #010911;
+}
+
+#chat-image-file {
+  position: absolute;
+  z-index: -1;
+  width: 1px;
+  height: 1px;
+  left: 0;
+  top: 0;
 }
 
 #ta-ul-logs li {

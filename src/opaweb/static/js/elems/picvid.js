@@ -9,10 +9,6 @@ class PicVid {
     this.hidden = false;
     this.pica = null;
 
-    this.dlg = new Dlg({
-      'fun': this.oin.talker.fun
-    });
-
     document.addEventListener('visibilitychange', this.docvis.bind(this));
   }
 

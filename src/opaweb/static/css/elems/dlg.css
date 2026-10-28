@@ -27,6 +27,15 @@ body.show-dlg-screen {
   transform: translateX(-50%);
 }
 
+.big #dlg-container {
+  left: 250px;
+  top: 70px;
+  width: calc(100% - 500px);
+  height: calc(100% - 140px);
+  max-width: unset;
+  transform: none;
+}
+
 #dlg-close {
   position: absolute;
   display: flex;
@@ -40,13 +49,13 @@ body.show-dlg-screen {
   width: 35px;
   height: 35px;
   border-radius: 50%;
-  background-color: #373737;
+  background-color: #171717;
   color: #ffffff;
   cursor: pointer;
 }
 
 #dlg-close:hover {
-  background-color: #171717;
+  background-color: #000;
 }
 
 #dlg-content {
@@ -56,11 +65,19 @@ body.show-dlg-screen {
   overflow: hidden;
 }
 
+.big #dlg-content {
+  height: 100%;
+}
+
 #dlg-header {
   background-color: #272727;
   font-weight: 500;
   color: #78C072;
   padding: 10px 20px 13px 20px;
+}
+
+.big #dlg-msg-cont {
+  height: 100%;
 }
 
 #dlg-msg {
@@ -69,11 +86,32 @@ body.show-dlg-screen {
   padding: 20px 20px 24px 20px;
 }
 
+#dlg-img {
+  line-height: 0;
+  text-align: center;
+}
+
+.big #dlg-img {
+  height: 100%;
+  overflow: auto;
+}
+
+.big #dlg-img img {
+  width: 100%;
+}
+
 #dlg-btns {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 10px 20px 10px 20px;
+}
+
+#dlg-header.emp,
+#dlg-msg.emp,
+#dlg-btns.emp {
+  padding: 0;
+  line-height: 0;
 }
 
 .dlg-btn {
@@ -118,5 +156,12 @@ body.show-dlg-screen {
   #dlg-container {
     width: 70%;
     transform: translateX(-50%);
+  }
+
+  .big #dlg-container {
+    left: 20px;
+    top: 20px;
+    width: calc(100% - 40px);
+    height: calc(100% - 40px);
   }
 }

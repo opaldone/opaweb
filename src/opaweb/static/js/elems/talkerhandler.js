@@ -1,6 +1,5 @@
 class TalkerHandler {
-  constructor(fun_in, oin_in) {
-    this.fun = fun_in;
+  constructor(oin_in) {
     this.oin = oin_in;
 
     this.CC = {
@@ -22,7 +21,7 @@ class TalkerHandler {
     };
 
     if (!this.oin.ws.virt) {
-      this.taber = new Taber(this.fun, {
+      this.taber = new Taber({
         'talker': this,
         'ws': this.oin.ws
       });
@@ -169,7 +168,7 @@ class TalkerHandler {
     this.oin.saver_client.toggleRecord(this.talkers, this.localStream);
   }
 
-  procChatMessage(cont) {
+  procChatMessage(cont, msgcon) {
     if (!this.taber) return;
 
     let js = JSON.parse(cont);
@@ -179,14 +178,14 @@ class TalkerHandler {
     }
 
     if (js.uquser == this.oin.ws.uquser) {
-      this.taber.create_el_chat('', js.chat_message);
+      this.taber.create_el_chat('', js.chat_message, msgcon);
       return;
     }
 
     let oc = this.talkers[js.strid];
     if (!oc) return;
 
-    this.taber.create_el_chat(oc.nik, js.chat_message);
+    this.taber.create_el_chat(oc.nik, js.chat_message, msgcon);
   }
 
   setMediaSettings(ds) {

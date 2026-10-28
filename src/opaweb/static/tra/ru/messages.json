@@ -36,5 +36,7 @@
   "Number of errors": "Количество ошибок",
   "Suppress background noise": "Подавление фонового шума",
   "Automatically adjust microphone volume": "Автоматически регулировать громкость микрофона",
-  "Echo cancellation": "Подавление эха"
+  "Echo cancellation": "Подавление эха",
+  "Send image": "Отправить картинку",
+  "Send message": "Отправить сообщение"
 }

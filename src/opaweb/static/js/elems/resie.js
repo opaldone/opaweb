@@ -3,8 +3,7 @@ class Resie {
   _ratio = this.ratio();
   _posi_cnt = 4;
 
-  constructor(fun_in, dish_in, scr_on_in, is_virt_in) {
-    this.fun = fun_in;
+  constructor(dish_in, scr_on_in, is_virt_in) {
     this._dish = dish_in;
     this.scr_on = scr_on_in;
     this.show_one = true;
@@ -140,7 +139,7 @@ class Resie {
   hid_show_tg_tiles(m_chi) {
     if (!this.tg_tiles) return;
 
-    let lbl = this.fun.parent(this.tg_tiles, '.lbl-tha');
+    let lbl = window.fun.parent(this.tg_tiles, '.lbl-tha');
 
     if (m_chi > this._posi_cnt) {
       lbl.classList.add('hid');
