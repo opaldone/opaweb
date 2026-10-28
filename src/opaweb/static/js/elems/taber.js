@@ -1,11 +1,10 @@
 class Taber {
-  constructor(fun_in, oin_in) {
-    this.fun = fun_in;
+  constructor(oin_in) {
     this.oin = oin_in;
 
-    this.tab_chat = new TabChat(this.fun, this.oin);
+    this.tab_chat = new TabChat(this.oin);
     this.tab_users = new TabUsers();
-    this.tab_set = new TabSet(this.fun, this.oin);
+    this.tab_set = new TabSet(this.oin);
 
     this.tb = document.getElementById('v-tabs');
     this.tb_btn_toggle = document.getElementById('tab-tb-toggle');
@@ -16,12 +15,12 @@ class Taber {
       if (!this.taids.includes(elid)) {
         this.taids.push(elid);
       }
-      if (!this.fun.once(el, 'tb_click')) {
+      if (!window.fun.once(el, 'tb_click')) {
         el.addEventListener('click', this.tb_click.bind(this));
       }
     });
 
-    if (!this.fun.once(this.tb_btn_toggle, 'tb_btn_toggle_click')) {
+    if (!window.fun.once(this.tb_btn_toggle, 'tb_btn_toggle_click')) {
       this.tb_btn_toggle.addEventListener('click', this.tb_btn_toggle_click.bind(this))
     }
   }
@@ -87,8 +86,8 @@ class Taber {
     this.tab_users.remove_el_user(elid);
   }
 
-  create_el_chat(nik_in, msg_in) {
-    this.tab_chat.create_el_chat(nik_in, msg_in, this.tb, this.tb_btn_toggle);
+  create_el_chat(nik_in, msg_in, msgcon) {
+    this.tab_chat.create_el_chat(nik_in, msg_in, this.tb, this.tb_btn_toggle, msgcon);
   }
 
   list_settings() {

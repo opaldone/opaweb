@@ -1,6 +1,5 @@
 class TabSet {
-  constructor(fun_in, oin_in) {
-    this.fun = fun_in;
+  constructor(oin_in) {
     this.oin = oin_in;
 
     this.ul_set_sound = document.getElementById('set-list-au');
@@ -142,12 +141,12 @@ class TabSet {
 
   addClickSettings() {
     document.querySelectorAll('.item-set').forEach(el => {
-      if (this.fun.once(el, 'device_click')) return;
+      if (window.fun.once(el, 'device_click')) return;
       el.addEventListener('click', this.device_click.bind(this));
     });
 
     document.querySelectorAll('.item-set-au').forEach(el => {
-      if (this.fun.once(el, 'set_au_click')) return;
+      if (window.fun.once(el, 'set_au_click')) return;
       el.addEventListener('click', this.set_au_click.bind(this));
     });
 

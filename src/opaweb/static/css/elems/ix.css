@@ -173,7 +173,7 @@ input:-webkit-autofill:valid {
 .link-back:focus,
 .btn-rb:focus,
 .tab-btn:focus,
-#ta-chat-send:focus {
+.ta-chat-button:focus {
   outline: 2px dashed #575757;
 }
 

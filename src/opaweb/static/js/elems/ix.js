@@ -1,8 +1,7 @@
 ;"use strict";
 class Starter {
   constructor() {
-    this.fun = new Funcs();
-    this.fun.ready(this.handler.bind(this));
+    window.fun.ready(this.handler.bind(this));
 
     this.nik_name = null;
     this.start_ws = null;
@@ -17,7 +16,7 @@ class Starter {
 
     if (ev.key !== "Enter") return;
 
-    this.fun.trigger(this.start_ws, 'click');
+    window.fun.trigger(this.start_ws, 'click');
 
     ev.preventDefault();
   }
@@ -27,7 +26,7 @@ class Starter {
     ev.preventDefault();
 
     let th = ev.currentTarget;
-    let pa = this.fun.parent(th, '.lbl-tha');
+    let pa = window.fun.parent(th, '.lbl-tha');
     let ch = pa.querySelector('.tp-tha-rb');
 
     if (ch.checked) {
@@ -38,7 +37,7 @@ class Starter {
       ch.checked = true;
     }
 
-    this.fun.trigger(ch, 'change');
+    window.fun.trigger(ch, 'change');
 
     return false;
   }
@@ -83,12 +82,12 @@ class Starter {
     this.ix_vids.set_dur();
 
     document.querySelectorAll('.camic-button').forEach(btn_rb => {
-      if (this.fun.once(btn_rb, 'btn_rb_click')) return;
+      if (window.fun.once(btn_rb, 'btn_rb_click')) return;
       btn_rb.addEventListener('click', this.btn_rb_click.bind(this));
     });
 
     let cp_link = document.getElementById('cp-link');
-    if (!this.fun.once(cp_link, 'cp_link_click')) {
+    if (!window.fun.once(cp_link, 'cp_link_click')) {
       cp_link.addEventListener('click', this.cp_link_click.bind(this));
     }
 
@@ -127,7 +126,7 @@ class Starter {
         this.docon();
         document.title = re.data.sets.nik;
 
-        let ws = new WSchat(this.fun, false);
+        let ws = new WSchat(false);
         re.data.sets.startURL = url;
         ws.connectWs(re.data.sets);
       })
@@ -146,7 +145,7 @@ class Starter {
   }
 
   handler() {
-    this.ix_vids = new IxVids(this.fun);
+    this.ix_vids = new IxVids();
 
     this.is_mobile = window.is_mobile();
 

@@ -40,3 +40,6 @@ window.is_mobile = () => {
   const mobileReg = /android|iphone|kindle|ipad|mobi|series([46])0|symbian|treo|windows ce|xda|xiino/i;
   return mobileReg.test(userAg);
 }
+
+window.fun = new Funcs();
+window.lang = new Lang();

@@ -1,8 +1,4 @@
 class IxVids {
-  constructor(fun_in) {
-    this.fun = fun_in;
-  }
-
   get_dur(sec) {
     const ho = Math.round(Math.floor(sec / 3600));
     const mi = Math.round(Math.floor((sec % 3600) / 60));
@@ -43,8 +39,6 @@ class IxVids {
     ev.stopPropagation();
     ev.preventDefault();
 
-    let self = this;
-
     let del_btn = ev.currentTarget;
     let uqroom = del_btn.getAttribute('data-roo');
     let filename = del_btn.getAttribute('data-fn');
@@ -54,9 +48,7 @@ class IxVids {
     if (!filename) return false;
     if (!url) return false;
 
-    let dlg = new Dlg({
-      'fun': self.fun
-    });
+    const dlg = new Dlg();
     dlg.show({
       'header': window.lang.re('Confirmation'),
       'msg': window.lang.re('Do You really want to delete the video?'),
@@ -66,7 +58,7 @@ class IxVids {
       ]
     })
       .then(res => {
-        if (res <= 0) return;
+        if (res <= 0) return null;
 
         let cs = document.getElementsByName('gorilla.csrf.Token')[0].value;
         let obj = {
@@ -78,13 +70,14 @@ class IxVids {
         });
       })
       .then((re) => {
+        if (!re) return false;
         if (!re.data.res) return false;
-        let parli = self.fun.parent(del_btn, '.list-vid-li');
+        let parli = window.fun.parent(del_btn, '.list-vid-li');
         if (!parli) return false;
         let lidt = parli.getAttribute('data-lidt');
-        let contul = self.fun.parent(parli, '#list-vid');
+        let contul = window.fun.parent(parli, '#list-vid');
         if (!contul) return false;
-        let cont = self.fun.parent(contul, '.ws-st-cone');
+        let cont = window.fun.parent(contul, '.ws-st-cone');
         if (!cont) return false;
 
         parli.remove();
@@ -108,7 +101,7 @@ class IxVids {
 
   set_del_vid_click() {
     document.querySelectorAll('.delvid').forEach(del_btn => {
-      if (this.fun.once(del_btn, 'del_vid_click')) return;
+      if (window.fun.once(del_btn, 'del_vid_click')) return;
       del_btn.addEventListener('click', this.del_vid_click.bind(this));
     });
   }

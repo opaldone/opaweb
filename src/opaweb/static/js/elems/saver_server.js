@@ -1,7 +1,7 @@
 class SaverServer {
-  constructor(fun_in, oin_in) {
-    this.fun = fun_in;
+  constructor(oin_in) {
     this.oin = oin_in;
+
     this.tmrec = null;
     this.secs = 0;
     this.TIMER_SEC = 3;
@@ -9,7 +9,7 @@ class SaverServer {
   }
 
   getLbl() {
-    return this.fun.parent(this.oin.button, '.lbl-tha');
+    return window.fun.parent(this.oin.button, '.lbl-tha');
   }
 
   toggleHint() {
@@ -128,9 +128,7 @@ class SaverServer {
       return;
     }
 
-    let dlg = new Dlg({
-      'fun': this.fun
-    });
+    const dlg = new Dlg();
 
     if (document.querySelector('.talker-uset.rec')) {
       dlg.show({

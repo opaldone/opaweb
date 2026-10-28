@@ -1,7 +1,6 @@
 class WSchat {
-  constructor(fun_in, is_virt_in) {
+  constructor(is_virt_in) {
     this.is_virt = is_virt_in;
-    this.fun = fun_in;
 
     this.ws = {
       startURL: '',
@@ -35,6 +34,7 @@ class WSchat {
         CLBREC: "clbeginrecord",
         CLEREC: "clendrecord",
         CHAT: "chat",
+        CHATFILE: "chatfile",
         TALKERST: "talkerstopped"
       }
     };
@@ -50,7 +50,7 @@ class WSchat {
     this.id_talkers = 'talkers'
     this.talkers_cont = document.getElementById(this.id_talkers);
 
-    this.res = new Resie(this.fun, this.talkers_cont, this.scr_on, this.is_virt);
+    this.res = new Resie(this.talkers_cont, this.scr_on, this.is_virt);
 
     window.addEventListener('resize', this.docResize.bind(this));
 
@@ -183,7 +183,7 @@ class WSchat {
   rem_button(el, ch) {
     if (!el) return;
 
-    let par = this.fun.parent(el, '.lbl-tha');
+    let par = window.fun.parent(el, '.lbl-tha');
 
     if (ch) {
       par.classList.remove('checked');
@@ -238,7 +238,7 @@ class WSchat {
         'button': this.tg_rec
       });
 
-      saver_s = new SaverServer(this.fun, {
+      saver_s = new SaverServer({
         'ws': this.ws,
         'button': this.tg_rec_serv,
         'showLog': this.showLog.bind(this)
@@ -277,7 +277,7 @@ class WSchat {
       ob.vw_self = this.vw_self;
     }
 
-    this.th = new TalkerHandler(this.fun, ob);
+    this.th = new TalkerHandler(ob);
     this.th.startShow()
 
     this.wsCheckersChanged();
@@ -288,7 +288,7 @@ class WSchat {
   on_rec_serv(hide) {
     if (!this.tg_rec_serv) return;
 
-    let lbl = this.fun.parent(this.tg_rec_serv, '.lbl-tha');
+    let lbl = window.fun.parent(this.tg_rec_serv, '.lbl-tha');
 
     if (hide) {
       lbl.classList.add('hid');
@@ -371,7 +371,8 @@ class WSchat {
           this.th.stoppedRecord(msg.content, 'crec');
           break;
         case this.ws.TPS.CHAT:
-          this.th.procChatMessage(msg.content);
+        case this.ws.TPS.CHATFILE:
+          this.th.procChatMessage(msg.content, msg.tp);
           break;
         case this.ws.TPS.TALKERST:
           this.th.removeMediaTag(msg.content);
@@ -447,7 +448,7 @@ class WSchat {
 
   camNotAccess() {
     if (!this.ch_video.checked) return;
-    this.fun.trigger(this.cam_button, 'click');
+    window.fun.trigger(this.cam_button, 'click');
   }
 
   avEventChange(ev) {
