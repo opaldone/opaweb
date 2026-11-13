@@ -187,7 +187,11 @@
   width: 16px;
   height: 16px;
   border: 2px solid #979797;
-  margin-right: 7px;
+}
+
+.set-label {
+  width: calc(100% - 16px);
+  padding-left: 7px;
 }
 
 .set-circ {
@@ -364,7 +368,7 @@
 
 #ta-ul-logs li {
   justify-content: space-between;
-  color: #fff;
+  color: #d7d7d7;
 }
 
 #ta-ul-logs li span {
@@ -373,7 +377,7 @@
 }
 
 #ta-ul-logs li.err {
-  color: #f51;
+  color: #78C072;
 }
 
 .lg-msg {

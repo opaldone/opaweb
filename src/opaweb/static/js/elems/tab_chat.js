@@ -33,7 +33,6 @@ class TabChat {
     setTimeout(() => {
       tb_btn_toggle_in.classList.remove('notif');
       this.tb_chat.classList.remove('notif');
-      this.inp_chat.focus();
     }, 300);
   }
 
