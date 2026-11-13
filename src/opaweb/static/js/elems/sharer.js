@@ -4,22 +4,13 @@ class Sharer {
     this.sharedStream = null;
   }
 
-  toggleHint() {
-    const thint = this.oin.button.getAttribute('data-thint');
-    const hint = this.oin.button.getAttribute('data-hint');
-    this.oin.button.setAttribute('data-hint', thint);
-    this.oin.button.setAttribute('data-thint', hint);
-  }
-
   actButton() {
     if (!this.oin.button) return;
-    this.toggleHint();
     this.oin.button.classList.add('on');
   }
 
   deaButton() {
     if (!this.oin.button) return;
-    this.toggleHint();
     this.oin.button.classList.remove('on');
   }
 

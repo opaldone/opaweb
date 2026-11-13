@@ -42,6 +42,13 @@ class Starter {
     return false;
   }
 
+  btn_hi_click(e) {
+    if (e.target.classList.contains('data-hint')) {
+      e.stopImmediatePropagation();
+    }
+    return true;
+  }
+
   cp_link_click(ev) {
     ev.stopPropagation();
     ev.preventDefault();
@@ -84,6 +91,11 @@ class Starter {
     document.querySelectorAll('.camic-button').forEach(btn_rb => {
       if (window.fun.once(btn_rb, 'btn_rb_click')) return;
       btn_rb.addEventListener('click', this.btn_rb_click.bind(this));
+    });
+
+    document.querySelectorAll('.hint-able-span').forEach(btn_hi => {
+      if (window.fun.once(btn_hi, 'btn_hi_click')) return;
+      btn_hi.addEventListener('click', this.btn_hi_click.bind(this));
     });
 
     let cp_link = document.getElementById('cp-link');

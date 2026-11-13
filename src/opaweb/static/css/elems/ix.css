@@ -74,8 +74,8 @@ input:-webkit-autofill:valid {
   margin: 0;
   padding: 0;
   background-color: #2f2f2f;
-  box-shadow: 0 0 13px #171717;
-  color: #d7d7d7;
+  color: #fff;
+  border: 2px solid #373737;
   border-radius: 23px;
 }
 
@@ -88,18 +88,20 @@ input:-webkit-autofill:valid {
 }
 
 .ws-btn span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  position: relative;
   font-size: 18px;
   line-height: 20px;
   font-weight: 500;
+  padding: 0 7px 5px 7px;
 }
 
-.ws-btn svg {
-  display: inline-block;
-  margin-bottom: 15px;
+.ws-btn span:after {
+  position: absolute;
+  content: '';
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-bottom: 1px solid #fff;
 }
 
 #ws-form-cont {
@@ -213,32 +215,39 @@ input:-webkit-autofill:valid {
   background-color: #202020;
 }
 
-.hint-able {
+.hint-able-span {
   position: relative;
 }
 
-.hint-able:hover::after {
+.data-hint {
+  display: none;
   position: absolute;
   z-index: 5;
-  content: attr(data-hint);
   bottom: -100%;
   left: 50%;
   background-color: #000;
+  color: #fff;
   font-size: 12px;
   line-height: 15px;
   white-space: nowrap;
   width: fit-content;
   padding: 8px 13px 9px 13px;
-  color: #fff;
+  border-style: solid;
+  border-color: #373737;
+  border-width: 1px;
   border-radius: 7px;
 }
 
-.hint-able.top-hint:hover::after {
+.hint-able-span:hover .data-hint {
+  display: block;
+}
+
+.hint-able-span.top-hint .data-hint {
   bottom: 100%;
   transform: translate(10%, -30%);
 }
 
-.hint-able.le-hint:hover::after {
+.hint-able-span.le-hint .data-hint {
   transform: translateX(-100%);
 }
 

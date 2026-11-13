@@ -12,13 +12,6 @@ class SaverServer {
     return window.fun.parent(this.oin.button, '.lbl-tha');
   }
 
-  toggleHint() {
-    const thint = this.oin.button.getAttribute('data-thint');
-    const hint = this.oin.button.getAttribute('data-hint');
-    this.oin.button.setAttribute('data-hint', thint);
-    this.oin.button.setAttribute('data-thint', hint);
-  }
-
   clear_timer_rec() {
     clearTimeout(this.tmrec);
     this.tmrec = null;
@@ -73,7 +66,6 @@ class SaverServer {
 
   startRec() {
     let self = this;
-    self.toggleHint();
 
     let obj = {
       'uqroom': self.oin.ws.uqroom
@@ -103,7 +95,6 @@ class SaverServer {
 
   stopRec() {
     let self = this;
-    self.toggleHint();
 
     let obj = {
       'uqroom': self.oin.ws.uqroom

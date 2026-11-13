@@ -3,6 +3,7 @@ class WSchat {
     this.is_virt = is_virt_in;
 
     this.ws = {
+      refTimerInterval: 3000,
       startURL: '',
       uqroom: null,
       uquser: null,
@@ -55,6 +56,7 @@ class WSchat {
     window.addEventListener('resize', this.docResize.bind(this));
 
     this.loga = null;
+    this.timer_online = null;
 
     if (!this.is_virt) {
       window.addEventListener('offline', this.windowOffline.bind(this));
@@ -298,38 +300,61 @@ class WSchat {
     lbl.classList.remove('hid');
   }
 
-  clearTalkers() {
+  clearTimerOnline() {
+    if (this.timer_online == null) return;
+    clearTimeout(this.timer_online);
+    this.timer_online = null;
+  }
+
+  startTimerOnline() {
+    this.timer_online = setTimeout(() => {
+      this.showLog('Reconnecting');
+      this.windowOnline();
+    }, this.ws.refTimerInterval);
+  }
+
+  wsClear(needReconnect) {
+    this.clearTimerOnline();
+
+    if (this.ws.handler) {
+      this.ws.handler.close();
+    }
+    this.ws.handler = null;
+
+    if (this.th) {
+      this.th.endSession();
+    }
+    this.th = null;
+
+    if (this.vw_self) {
+      this.vw_self.classList.remove('cam');
+    }
+
     this.talkers_cont.querySelectorAll('.vw').forEach(vw => {
       if (vw.getAttribute('id') === this.vw_self_id) return;
       vw.remove();
     });
 
     this.res.resize();
-  }
 
-  wsClear() {
-    this.ws.handler = null;
-    if (this.th) {
-      this.th.endSession();
+    if (needReconnect) {
+      this.startTimerOnline();
     }
-    this.th = null;
-    if (this.vw_self) {
-      this.vw_self.classList.remove('cam');
-    }
-  }
-
-  wsError(ev) {
-    this.showLog('WebSocket error: ' + ev.target.url, true);
-    this.clearTalkers();
-  }
-
-  wsOpen() {
-    this.talk()
-    this.who_con_invis();
   }
 
   wsClose() {
-    this.wsClear();
+    this.wsClear(true);
+  }
+
+  wsError() {
+    this.showLog('WS error', true);
+    this.wsClear(true);
+  }
+
+  wsOpen() {
+    this.showLog('Connected', false);
+    this.talk()
+    this.who_con_invis();
   }
 
   wsMessage(e) {
@@ -381,16 +406,8 @@ class WSchat {
     }
   }
 
-  startWs() {
-    this.ws.handler = new WebSocket(this.ws.wsurl);
-    this.ws.handler.onopen = this.wsOpen.bind(this);
-    this.ws.handler.onclose = this.wsClose.bind(this);
-    this.ws.handler.onmessage = this.wsMessage.bind(this);
-    this.ws.handler.onerror = this.wsError.bind(this);
-  }
-
   connectWs(re) {
-    this.wsClear();
+    this.wsClear(false);
 
     this.ws.startURL = re.startURL;
     this.ws.uqroom = re.uqroom;
@@ -403,13 +420,15 @@ class WSchat {
     this.ws.virt = re.virt;
     this.ws.iceList = re.iceList;
 
-    this.startWs()
+    this.ws.handler = new WebSocket(this.ws.wsurl);
+    this.ws.handler.onopen = this.wsOpen.bind(this);
+    this.ws.handler.onclose = this.wsClose.bind(this);
+    this.ws.handler.onmessage = this.wsMessage.bind(this);
+    this.ws.handler.onerror = this.wsError.bind(this);
   }
 
   windowOnline() {
     let self = this;
-
-    self.showLog('Network is online', false);
 
     this.wsCheckersChanged();
 
@@ -436,14 +455,8 @@ class WSchat {
   }
 
   windowOffline() {
-    if (!this.ws) return;
-    if (!this.ws.handler) return;
-
-    this.showLog('Network is offline', true);
-    this.ws.handler.close();
-    this.wsClear();
-
-    this.clearTalkers();
+    this.showLog('Offline', true);
+    this.wsClear(false);
   }
 
   camNotAccess() {
