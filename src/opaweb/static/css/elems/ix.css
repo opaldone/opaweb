@@ -75,8 +75,11 @@ input:-webkit-autofill:valid {
   padding: 0;
   background-color: #2f2f2f;
   color: #fff;
-  border: 2px solid #373737;
+  border-style: solid;
+  border-color: #373737;
+  border-width: 2px 0 0 2px;
   border-radius: 23px;
+  box-shadow: 1px 1px 5px #171717;
 }
 
 .ws-btn:hover {
@@ -85,6 +88,8 @@ input:-webkit-autofill:valid {
 
 .ws-btn:active {
   background-color: #202020;
+  border-color: #171717;
+  box-shadow: inset -1px -1px 1px #373737;
 }
 
 .ws-btn span {
@@ -92,16 +97,8 @@ input:-webkit-autofill:valid {
   font-size: 18px;
   line-height: 20px;
   font-weight: 500;
-  padding: 0 7px 5px 7px;
-}
-
-.ws-btn span:after {
-  position: absolute;
-  content: '';
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  border-bottom: 1px solid #fff;
+  padding: 0 10px 5px 10px;
+  border-bottom: 1px solid #777777;
 }
 
 #ws-form-cont {
@@ -244,11 +241,15 @@ input:-webkit-autofill:valid {
 
 .hint-able-span.top-hint .data-hint {
   bottom: 100%;
-  transform: translate(10%, -30%);
+  transform: translateY(-30%);
 }
 
 .hint-able-span.le-hint .data-hint {
   transform: translateX(-100%);
+}
+
+.hint-able-span.top-hint.le-hint .data-hint {
+  transform: translate(-100%, -30%);
 }
 
 .ra-ico {

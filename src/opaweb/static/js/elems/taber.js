@@ -82,8 +82,8 @@ class Taber {
     return this.tab_users.create_el_user(elid, oc);
   }
 
-  remove_el_user(elid) {
-    this.tab_users.remove_el_user(elid);
+  set_count_users() {
+    this.tab_users.set_count_users();
   }
 
   create_el_chat(nik_in, msg_in, msgcon) {

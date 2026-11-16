@@ -330,16 +330,11 @@ class WSchat {
       this.vw_self.classList.remove('cam');
     }
 
-    this.talkers_cont.querySelectorAll('.vw').forEach(vw => {
-      if (vw.getAttribute('id') === this.vw_self_id) return;
-      vw.remove();
-    });
-
-    this.res.resize();
-
     if (needReconnect) {
       this.startTimerOnline();
     }
+
+    this.res.resize();
   }
 
   wsClose() {

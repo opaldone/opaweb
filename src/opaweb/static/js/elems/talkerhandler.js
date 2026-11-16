@@ -33,12 +33,15 @@ class TalkerHandler {
   }
 
   initTalker(elid) {
-    if (this.talkers[elid] == undefined) this.talkers[elid] = {};
+    if (this.talkers[elid] == undefined) this.talkers[elid] = {
+      'streams': {},
+      'elems': {}
+    };
   }
 
   setMicCam(oc) {
-    let elc = oc['el_container'];
-    let el = oc['el_uset'];
+    let elc = oc['elems']['el_container'];
+    let el = oc['elems']['el_uset'];
 
     elc.classList.remove('cam');
     if (oc.cam) elc.classList.add('cam');
@@ -118,7 +121,7 @@ class TalkerHandler {
     let oc = this.talkers[js.strid];
     if (!oc) return;
 
-    let el = oc['el_uset'];
+    let el = oc['elems']['el_uset'];
     el.classList.add(clstag);
   }
 
@@ -143,7 +146,7 @@ class TalkerHandler {
       return;
     }
 
-    let el = oc['el_uset'];
+    let el = oc['elems']['el_uset'];
     el.classList.remove(clstag);
   }
 
@@ -228,6 +231,24 @@ class TalkerHandler {
     this.oin.ws.handler.send(JSON.stringify(jo));
   }
 
+  removeTalker(elid) {
+    const oc = this.talkers[elid];
+
+    if (!oc) return;
+
+    for (let kel in oc['elems']) {
+      oc['elems'][kel].remove();
+    }
+
+    for (let ks in oc['streams']) {
+      oc['streams'][ks].getTracks().forEach(tra => {
+        tra.stop();
+      });
+    }
+
+    delete this.talkers[elid];
+  }
+
   removeMediaTag(cont) {
     let js = JSON.parse(cont);
 
@@ -239,15 +260,10 @@ class TalkerHandler {
 
     if (!elid) return;
 
-    let oc = this.talkers[elid];
-
-    if (!oc) return;
-
-    oc['el_container'].remove();
-    delete this.talkers[elid];
+    this.removeTalker(elid);
 
     if (this.taber) {
-      this.taber.remove_el_user(elid);
+      this.taber.set_count_users();
     }
 
     this.oin.res.resize()
@@ -259,7 +275,7 @@ class TalkerHandler {
 
     this.initTalker(elid);
 
-    this.talkers[elid][e.track.kind] = str;
+    this.talkers[elid]['streams'][e.track.kind] = str;
 
     this.oin.who_con();
   }
@@ -415,8 +431,8 @@ class TalkerHandler {
     vid.muted = true;
     vid.autoplay = true;
     vid.controls = false;
-    if (oc['video']) {
-      vid.srcObject = oc['video'];
+    if (oc['streams']['video']) {
+      vid.srcObject = oc['streams']['video'];
     }
 
     // We create audio cause user didn't click the video checkbox before start chatting,
@@ -426,8 +442,8 @@ class TalkerHandler {
     au.autoplay = true;
     au.muted = false;
     au.controls = false;
-    if (oc['audio']) {
-      au.srcObject = oc['audio'];
+    if (oc['streams']['audio']) {
+      au.srcObject = oc['streams']['audio'];
     }
 
     let ta_co = document.createElement('div');
@@ -449,14 +465,14 @@ class TalkerHandler {
       uset_el = this.taber.create_el_user(elid, oc);
     }
 
-    oc['el_video'] = vid;
-    oc['el_audio'] = au;
-    oc['el_container'] = ta_co;
-    oc['el_nik'] = nik_el;
-    oc['el_uset'] = uset_el;
+    oc['elems']['el_video'] = vid;
+    oc['elems']['el_audio'] = au;
+    oc['elems']['el_container'] = ta_co;
+    oc['elems']['el_nik'] = nik_el;
+    oc['elems']['el_uset'] = uset_el;
 
     this.setMicCam(oc);
-    this.doMeter(oc['audio'], ta_co);
+    this.doMeter(oc['streams']['audio'], ta_co);
     this.oin.res.resize();
   }
 
@@ -465,10 +481,10 @@ class TalkerHandler {
       let oc = this.talkers[tk];
       if (oc == undefined) continue;
 
-      let vid = oc['el_video'];
-      let au = oc['el_audio']
-      let mkv = oc['video'];
-      let mka = oc['audio'];
+      let vid = oc['elems']['el_video'];
+      let au = oc['elems']['el_audio']
+      let mkv = oc['streams']['video'];
+      let mka = oc['streams']['audio'];
 
       if (vid == undefined) continue;
       if (au == undefined) continue;
@@ -505,7 +521,7 @@ class TalkerHandler {
       oc.crecording = lio.crecording;
       oc.screen_on = lio.screen_on;
 
-      if (oc['el_container']) {
+      if (oc['elems']['el_container']) {
         continue;
       }
 
@@ -521,6 +537,11 @@ class TalkerHandler {
   doMeter(str, vcont) {
     if (str == undefined) return;
 
+    const autra = str.getAudioTracks()[0];
+    if (!autra) return;
+
+    const aums = new MediaStream([autra]);
+
     if (!vcont.data) {
       vcont.data = {
         'stop_speak_tm': null,
@@ -532,13 +553,12 @@ class TalkerHandler {
 
     ctx.audioWorklet.addModule('/static/js/elems/vmeter.js')
       .then(() => {
-        const mic = ctx.createMediaStreamSource(str);
+        const mic = ctx.createMediaStreamSource(aums);
         const meter = new AudioWorkletNode(ctx, 'volume-meter');
 
         meter.port.onmessage = ({data}) => {
           let eda = data * 1000;
           if (eda < 30) return;
-
 
           if (vcont.data.stop_speak_tm) {
             clearTimeout(vcont.data.stop_speak_tm);
@@ -636,6 +656,10 @@ class TalkerHandler {
 
     if (this.oin.sharer) {
       this.oin.sharer.endSessionShare();
+    }
+
+    for (let tk in this.talkers) {
+      this.removeTalker(tk);
     }
   }
 
