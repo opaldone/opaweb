@@ -10,6 +10,13 @@ class TabUsers {
   }
 
   create_el_user(elid, oc) {
+    const litID = elid + '-lit';
+    const li_ch = document.getElementById(litID);
+
+    if (li_ch) {
+      return li_ch;
+    }
+
     let cls = 'talker-uset';
 
     if (oc.recording) {
@@ -28,8 +35,6 @@ class TabUsers {
           </div>
         </li>`;
 
-    let litID = elid + '-lit';
-
     lis = lis
       .replace(/#LID#/, litID)
       .replace(/#NIK#/, oc.nik);
@@ -42,17 +47,5 @@ class TabUsers {
     this.set_count_users();
 
     return li_set;
-  }
-
-  remove_el_user(elid) {
-    let litID = elid + '-lit';
-
-    let li = document.getElementById(litID);
-
-    if (!li) return;
-
-    li.remove();
-
-    this.set_count_users();
   }
 }
